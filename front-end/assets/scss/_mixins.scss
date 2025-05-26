@@ -1,0 +1,145 @@
+// LAYOUT
+
+@mixin grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-gap: var(--gutter-size);
+}
+
+// TYPO
+
+@mixin title {
+  font-family: var(--display-font);
+  line-height: 0.85;
+  font-weight: normal;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0;
+  transform: skew(-5deg, -5deg);
+  -webkit-text-stroke: 0.025em var(--background-color);
+  // text-shadow: -0.025em -0.025em 0 var(--background-color),
+  //   0.025em -0.025em 0 var(--background-color),
+  //   -0.025em 0.025em 0 var(--background-color),
+  //   0.025em 0.025em 0 var(--background-color);
+}
+
+@mixin main-title {
+  @include title;
+  font-size: 5.75rem;
+
+  @media screen and (max-aspect-ratio: 14 / 8) {
+    font-size: 5rem;
+  }
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    font-size: 4rem;
+  }
+
+  @media screen and (max-aspect-ratio: 10 / 8) {
+    font-size: 3.25rem;
+  }
+
+  @media screen and (orientation: portrait) {
+    font-size: 2.75rem;
+  }
+}
+
+@mixin section-title {
+  @include title;
+  font-size: 4.5rem;
+
+  @media screen and (orientation: portrait) {
+    font-size: 2.375rem;
+  }
+}
+
+@mixin interaction-title {
+  @include title;
+  font-size: 3rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(100% - var(--gutter-size) * 2);
+  transform: translate3d(-50%, -50%, 0) skew(-5deg, -5deg);
+  z-index: 1;
+  pointer-events: none;
+
+  @media (prefers-reduced-motion) {
+    display: none;
+  }
+
+  @media screen and (max-aspect-ratio: 10 / 8) {
+    font-size: 2.5rem;
+  }
+
+  @media screen and (orientation: portrait) {
+    font-size: 2rem;
+  }
+}
+
+@mixin left-column-text {
+  grid-column: 2 / 6;
+  padding: 3rem 0;
+  font-size: 1.5rem;
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    grid-column: 2 / 8;
+  }
+
+  @media screen and (max-aspect-ratio: 10 / 8) {
+    font-size: 1.25rem;
+    grid-column: 2 / 12;
+  }
+}
+
+@mixin right-column-text {
+  grid-column: 8 / 12;
+  padding: 3rem 0;
+  font-size: 1.5rem;
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    grid-column: 6 / 12;
+  }
+
+  @media screen and (max-aspect-ratio: 10 / 8) {
+    font-size: 1.25rem;
+    grid-column: 2 / 12;
+  }
+}
+
+// SEPARATORS
+
+@mixin separator {
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  left: 0;
+  height: var(--height-space);
+}
+
+@mixin top-separator {
+  @include separator;
+  top: calc(var(--height-space) * -1);
+}
+
+@mixin bottom-separator {
+  @include separator;
+  bottom: calc(var(--height-space) * -1);
+}
+
+// A11Y
+
+/* Hiding class, making content visible only to screen readers but not visually */
+/* "sr" meaning "screen-reader" */
+/* https://css-tricks.com/inclusively-hidden/ */
+@mixin sr-only {
+  &:not(:focus):not(:active) {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+}

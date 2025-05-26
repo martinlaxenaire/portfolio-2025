@@ -1,0 +1,8 @@
+@function ease($key) {
+  @if map-has-key($ease-curves, $key) {
+    @return map-get($ease-curves, $key);
+  }
+
+  @warn "Unkown '#{$key}' in $ease-curves.";
+  @return null;
+}

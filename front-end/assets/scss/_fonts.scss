@@ -1,0 +1,29 @@
+@font-face {
+    font-family: "MonumentExtended Regular";
+    src: url('/fonts/MonumentExtended-Regular.woff2') format('woff2'),
+    url('/fonts/MonumentExtended-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    /*unicode-range: U+000-5FF;*/
+}
+
+@font-face {
+    font-family: "MonumentExtended UltraBold";
+    src: url('/fonts/MonumentExtended-UltraBold.woff2') format('woff2'),
+    url('/fonts/MonumentExtended-UltraBold.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    /*unicode-range: U+000-5FF;*/
+}
+
+@font-face {
+    font-family: "Swiss";
+    src: url('/fonts/Swiss-721-BT-Regular.woff2') format('woff2'),
+    url('/fonts/Swiss-721-BT-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+000-5FF;
+}

@@ -1,0 +1,73 @@
+import { hoistUseStatements } from "./utils/hoist-use-statements";
+
+const runtimeConfig = {
+  sanityProjectId: process.env.NUXT_SANITY_PROJECT_ID,
+  googleClientId: process.env.NUXT_GOOGLE_CLIENT_ID,
+  googleAPIKey: process.env.NUXT_GOOGLE_API_KEY,
+  invoiceSheetId: process.env.NUXT_INVOICE_SHEET_ID,
+  githubAccessToken: process.env.NUXT_GITHUB_GRAPHQL_TOKEN,
+  public: {
+    siteBaseUrl: process.env.NUXT_SITE_BASE_URL,
+  },
+};
+
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  app: {
+    baseURL: "/test/portfolio-2025/",
+    head: {
+      htmlAttrs: {
+        lang: "en",
+      },
+    },
+  },
+  compatibilityDate: "2024-11-01",
+  devtools: { enabled: true },
+  runtimeConfig,
+
+  // proxying sanity images
+  // from https://github.com/sanity-io/sanity/issues/3210#issuecomment-1381626655
+  // nitro: {
+  //     routeRules: {
+  //         "/images/**": { proxy: "https://cdn.sanity.io/images/**" },
+  //     },
+  // },
+
+  modules: ["@nuxtjs/sanity", "lenis/nuxt"],
+  sanity: {
+    projectId: runtimeConfig.sanityProjectId,
+  },
+  css: ["~/assets/scss/main.scss"],
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: hoistUseStatements(
+            `@import "~/assets/scss/_style-resources.scss";`
+          ),
+          quietDeps: true,
+          api: "modern-compiler", // silence deprecation warnings https://github.com/sass/dart-sass/issues/2280
+          // For now, just silence the deprecation warning.
+          // But we have to use Dart Sass modern API https://sass-lang.com/documentation/breaking-changes/legacy-js-api/ soon.
+          // Vite 5.x uses the legacy API as default https://vitejs.dev/config/shared-options.html#css-preprocessoroptions
+          // Probably for best performance we should use `api: "modern-compiler"` and `sass-embedded` package.
+          // Waiting on Vite fixing the missing sourcemap files https://github.com/vitejs/vite/pull/18113 warning.
+          silenceDeprecations: [
+            "mixed-decls",
+            "color-functions",
+            "import",
+            "global-builtin",
+          ],
+        },
+      },
+    },
+    esbuild: {
+      keepNames: true,
+    },
+  },
+  components: [
+    "~/components/atoms",
+    "~/components/molecules",
+    "~/components/organisms",
+  ],
+});

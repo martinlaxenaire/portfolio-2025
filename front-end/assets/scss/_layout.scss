@@ -1,0 +1,11 @@
+@import "~//assets/scss/_mixins";
+
+.container {
+  padding: 0 var(--gutter-size);
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+.grid {
+  @include grid;
+}

@@ -1,0 +1,30 @@
+{
+  "name": "martin-laxenaire-folio-2025",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@martinlaxenaire/color-palette-generator": "^2.0.0",
+    "@nuxtjs/sanity": "1.13.3",
+    "@sanity/image-url": "^1.1.0",
+    "@vueuse/core": "^12.7.0",
+    "gpu-curtains": "^0.12.4",
+    "gsap": "^3.12.7",
+    "lenis": "^1.3.3",
+    "nuxt": "^3.15.4",
+    "tweakpane": "^4.0.5",
+    "vue": "latest",
+    "vue-router": "latest"
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610",
+  "devDependencies": {
+    "@tweakpane/core": "^2.0.5",
+    "sass": "^1.85.1"
+  }
+}

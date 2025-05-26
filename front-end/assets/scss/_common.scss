@@ -1,0 +1,84 @@
+:root {
+  --light-color: #ffffff;
+  /*--main-text-color: #0505af;*/
+  --dark-color: #121212;
+
+  --background-color: var(--light-color);
+  --foreground-color: var(--dark-color);
+
+  //--base-font-size: clamp(16px, 1vw, 22px);
+  //--base-font-size: max(16px, 1vw);
+  --base-font-size: max(2vh, 1vw);
+
+  --value: 16;
+  --design-width: 1920;
+  --design-height: 1080;
+  --vw-ratio: 0.5;
+  --vh-ratio: 0.8;
+
+  --fluid: calc(
+    (
+        (
+            (100vw / var(--design-width) * (var(--value) * var(--vw-ratio))) +
+              (1 - var(--vw-ratio)) * (var(--value) * 1px)
+          ) +
+          (
+            (100vh / var(--design-height) * (var(--value) * var(--vh-ratio))) +
+              (1 - var(--vh-ratio)) * (var(--value) * 1px)
+          ) / 2
+      ) / 16
+  );
+
+  --base-font-size: calc(16 * var(--fluid));
+
+  --text-font: "Swiss", serif;
+  --display-font: "MonumentExtended UltraBold", Arial, sans-serif;
+  --light-display-font: "MonumentExtended Regular", Arial, sans-serif;
+  --gutter-size: 1rem;
+  --height-space: 15rem;
+
+  --small-font-size: 0.85rem;
+  --tiny-font-size: 0.775rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: var(--dark-color);
+    --foreground-color: var(--light-color);
+  }
+}
+
+body.is-light {
+  --background-color: var(--light-color);
+  --foreground-color: var(--dark-color);
+}
+
+body.is-dark {
+  --background-color: var(--dark-color);
+  --foreground-color: var(--light-color);
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+html {
+  font-size: var(--base-font-size);
+}
+
+::selection {
+  color: var(--background-color);
+  background: var(--foreground-color);
+}
+
+body {
+  margin: 0;
+  font-family: var(--text-font);
+  background: var(--background-color);
+  color: var(--foreground-color);
+  line-height: 1.2;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  //overscroll-behavior: contain;
+}
