@@ -4,6 +4,8 @@ export class CanvasFaviconScene extends Scene {
   canvas: OffscreenCanvas;
   ctx: OffscreenCanvasRenderingContext2D;
 
+  foregroundColor: string;
+
   size: number;
 
   constructor({ container, progress = 0, colors = [] }: SceneParams) {

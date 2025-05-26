@@ -39,6 +39,28 @@ export type SanityImageDimensions = {
   aspectRatio?: number;
 };
 
+export type SanityFileAsset = {
+  _id: string;
+  _type: "sanity.fileAsset";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  originalFilename?: string;
+  label?: string;
+  title?: string;
+  description?: string;
+  altText?: string;
+  sha1hash?: string;
+  extension?: string;
+  mimeType?: string;
+  size?: number;
+  assetId?: string;
+  uploadId?: string;
+  path?: string;
+  url?: string;
+  source?: SanityAssetSourceData;
+};
+
 export type Geopoint = {
   _type: "geopoint";
   lat?: number;
@@ -96,49 +118,6 @@ export type Social = {
   slug?: Slug;
   date?: string;
   url?: string;
-};
-
-export type Year = {
-  _id: string;
-  _type: "year";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  slug?: Slug;
-  date?: string;
-  videos?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
-    };
-    _type: "file";
-    _key: string;
-  }>;
-};
-
-export type SanityFileAsset = {
-  _id: string;
-  _type: "sanity.fileAsset";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  originalFilename?: string;
-  label?: string;
-  title?: string;
-  description?: string;
-  altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
-  uploadId?: string;
-  path?: string;
-  url?: string;
-  source?: SanityAssetSourceData;
 };
 
 export type Project = {
@@ -240,24 +219,6 @@ export type SanityImageMetadata = {
   isOpaque?: boolean;
 };
 
-export type Menu = {
-  _id: string;
-  _type: "menu";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  slug?: Slug;
-  date?: string;
-  pages?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "page";
-  }>;
-};
-
 export type Page = {
   _id: string;
   _type: "page";
@@ -333,13 +294,6 @@ export type Page = {
     _key: string;
   }>;
   yearsTitle?: string;
-  years?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "year";
-  }>;
   processDescription?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -448,17 +402,9 @@ export type Slug = {
   source?: string;
 };
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | Geopoint | GameContent | GameItem | Social | Year | SanityFileAsset | Project | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Menu | Page | Slug;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | GameContent | GameItem | Social | Project | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Page | Slug;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/sanity.queries.ts
-// Variable: mainMenuQuery
-// Query: *[  _type == "menu"  && slug.current == "main-menu"][0]{  "pages": pages[]->{    title,    "slug": slug.current  }}
-export type MainMenuQueryResult = {
-  pages: Array<{
-    title: string | null;
-    slug: string | null;
-  }> | null;
-} | null;
 // Variable: homeQuery
 // Query: *[  _type == "page"  && slug.current == "martin-laxenaire"][0]{  title,  seoTitle,  seoDescription,  baseline,  intro,  projectsTitle,  projectsDescription,  "projects": projects[]->{    title,    date,    url,    stack,    "cover": select(      defined(cover.asset) => cover.asset->{        _id,        url      },      null    )  },  yearsTitle,  processDescription,  invoicesTitle,  invoicesDescription,  recognition,  openSourceTitle,  openSourceDescription,  openSourceLegend,  footerTitle,  footerDescription,  "socials": socials[]->{    title,    date,    url,  },}
 export type HomeQueryResult = {
@@ -655,7 +601,6 @@ export type GameQueryResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "*[\n  _type == \"menu\"\n  && slug.current == \"main-menu\"\n][0]{\n  \"pages\": pages[]->{\n    title,\n    \"slug\": slug.current\n  }\n}": MainMenuQueryResult;
     "*[\n  _type == \"page\"\n  && slug.current == \"martin-laxenaire\"\n][0]{\n  title,\n  seoTitle,\n  seoDescription,\n  baseline,\n  intro,\n  projectsTitle,\n  projectsDescription,\n  \"projects\": projects[]->{\n    title,\n    date,\n    url,\n    stack,\n    \"cover\": select(\n      defined(cover.asset) => cover.asset->{\n        _id,\n        url\n      },\n      null\n    )\n  },\n  yearsTitle,\n  processDescription,\n  invoicesTitle,\n  invoicesDescription,\n  recognition,\n  openSourceTitle,\n  openSourceDescription,\n  openSourceLegend,\n  footerTitle,\n  footerDescription,\n  \"socials\": socials[]->{\n    title,\n    date,\n    url,\n  },\n}": HomeQueryResult;
     "*[\n  _type == \"gameContent\"\n  && slug.current == \"game\"\n][0]{\n  title,\n  \"levels\": levels[]->{\n    title,\n    type,\n    pointsNeeded,\n    contentUnlocked,\n    tip\n  },\n  \"features\": features[]->{\n    title,\n    type,\n    pointsNeeded,\n    contentUnlocked,\n    tip\n  },\n}": GameQueryResult;
   }

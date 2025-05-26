@@ -70,16 +70,6 @@ export const pageType = defineType({
       name: 'yearsTitle',
       type: 'string',
     }),
-    defineField({
-      name: 'years',
-      type: 'array',
-      of: [
-        {
-          type: 'reference',
-          to: [{type: 'year'}],
-        },
-      ],
-    }),
     // PROCESS & INVOICES
     defineField({
       name: 'processDescription',
