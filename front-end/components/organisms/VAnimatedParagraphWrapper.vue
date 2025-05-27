@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { gsap } from "gsap";
 import { SplitText } from "gsap/all";
-import { useIntersectionObserver } from "@vueuse/core";
 
 const props = defineProps<{
   index: number;
@@ -66,12 +65,6 @@ onBeforeUnmount(() => {
   <p :class="$style.root" ref="content">
     <slot />
   </p>
-
-  <!--
-  <p :class="$style['sr-only']">
-    <slot />
-  </p>
-  -->
 </template>
 
 <style lang="scss" module>

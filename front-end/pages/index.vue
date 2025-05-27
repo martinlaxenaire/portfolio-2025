@@ -1,14 +1,6 @@
 <script lang="ts" setup>
 import type { HomeQueryResult } from "~/types/sanity.types";
 import { homeQueryString } from "../../studio/src/queries-strings";
-import { CanvasFaviconScene } from "~/scenes/favicon/CanvasFaviconScene";
-
-// debug
-// const { colors, generator } = usePaletteGenerator();
-// const isDev = ref(import.meta.env.DEV);
-
-// TODO dynamic favicon based on color palette?
-// https://stackoverflow.com/questions/260857/changing-website-favicon-dynamically
 
 const { currentLevel } = useLevelExperience();
 
@@ -54,30 +46,10 @@ if (import.meta.server) {
     },
   });
 }
-
-// favicon
-const { colors } = usePaletteGenerator();
-
-let faviconScene: CanvasFaviconScene | null;
-
-onMounted(() => {
-  faviconScene = new CanvasFaviconScene({
-    container: document.body as HTMLElement, // whatever
-    colors: colors.value,
-  });
-});
-
-watch(colors, () => {
-  if (faviconScene) {
-    faviconScene.setColors(colors.value);
-  }
-});
 </script>
 
 <template>
   <div :class="$style.root" v-if="data">
-    <VHeader :title="data.title" />
-
     <VHero :baseline="data.baseline" />
 
     <section
@@ -85,35 +57,6 @@ watch(colors, () => {
       id="level-1"
     >
       <VIntro :intro="data.intro" />
-
-      <!-- debug -->
-      <!--
-      <ClientOnly>
-        <div v-if="isDev" :class="$style.debug">
-          <div :class="$style['debug-main-palette']">
-            <div
-              :style="{ 'background-color': color.hex }"
-              v-for="(color, i) in colors"
-              :key="i"
-            ></div>
-          </div>
-
-          <div :class="$style['debug-all-palettes']">
-            <div
-              v-for="(palette, i) in generator?.palettes"
-              :key="i"
-              :class="$style['debug-all-palettes-palette']"
-            >
-              <div
-                :style="{ 'background-color': color.hex }"
-                v-for="(color, i) in palette"
-                :key="i"
-              ></div>
-            </div>
-          </div>
-        </div>
-      </ClientOnly>
-    -->
 
       <VProjectsList
         :title="data.projectsTitle"

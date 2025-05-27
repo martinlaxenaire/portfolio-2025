@@ -846,8 +846,6 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
   }
 
   createPixelPass() {
-    const nullVector = new Vec2();
-
     this.pingPongPlane = new PingPongPlane(this.renderer, {
       label: "Ping pong mouse trail",
       shaders: {

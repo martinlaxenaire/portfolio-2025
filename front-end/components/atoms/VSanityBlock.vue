@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { PortableTextBlock } from "@portabletext/types";
-import VSanityBlockContent from "~/components/organisms/VSanityBlockContent.vue";
+import VAnimatedParagraphWrapper from "~/components/organisms/VAnimatedParagraphWrapper.vue";
 
 const props = defineProps<{
   content: PortableTextBlock[];
@@ -13,7 +13,7 @@ let index = 0;
 const serializers = {
   styles: {
     normal: (props: any, children: any) =>
-      h(VSanityBlockContent, { index: index++ }, children.slots),
+      h(VAnimatedParagraphWrapper, { index: index++ }, children.slots),
   },
   marks: {
     link: (props: any, children: any) =>

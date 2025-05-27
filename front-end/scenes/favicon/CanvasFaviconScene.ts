@@ -4,19 +4,23 @@ export class CanvasFaviconScene extends Scene {
   canvas: OffscreenCanvas;
   ctx: OffscreenCanvasRenderingContext2D;
 
-  foregroundColor: string;
+  strokeColor: string;
 
   size: number;
 
   constructor({ container, progress = 0, colors = [] }: SceneParams) {
     super({ container, progress, colors });
 
-    this.size = 256;
+    this.size = 512;
 
     this.canvas = new OffscreenCanvas(this.size, this.size);
     this.ctx = this.canvas.getContext(
       "2d"
     ) as OffscreenCanvasRenderingContext2D;
+
+    this.strokeColor = window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? window.getComputedStyle(document.body).getPropertyValue("--light-color")
+      : window.getComputedStyle(document.body).getPropertyValue("--dark-color");
 
     this.draw();
   }
@@ -57,6 +61,20 @@ export class CanvasFaviconScene extends Scene {
 
       angle = endAngle;
     }
+
+    this.ctx.strokeStyle = this.strokeColor;
+    const lineWidth = this.size * 0.05;
+    this.ctx.lineWidth = lineWidth;
+
+    this.ctx.beginPath();
+    this.ctx.arc(
+      center,
+      center,
+      this.size * 0.5 - lineWidth * 0.5,
+      0,
+      Math.PI * 2
+    );
+    this.ctx.stroke();
 
     this.updateFavicon();
   }

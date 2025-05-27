@@ -2,10 +2,11 @@ import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
+import {siteConfig} from './site-config'
 
 export default defineConfig({
   name: 'default',
-  title: 'Martin Laxenaire',
+  title: siteConfig.siteTitle,
 
   projectId: 'ubnf9pq5',
   dataset: 'production',

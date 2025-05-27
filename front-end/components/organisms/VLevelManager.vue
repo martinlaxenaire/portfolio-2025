@@ -155,32 +155,32 @@ const percentComplete = computed(() => {
 });
 
 // debug feature/level
-onMounted(() => {
-  const url = new URL(window.location.href);
-  const searchParams = new URLSearchParams(url.search);
-  const startLevel = searchParams.has("level")
-    ? parseInt(searchParams.get("level") as string)
-    : 0;
+// onMounted(() => {
+//   const url = new URL(window.location.href);
+//   const searchParams = new URLSearchParams(url.search);
+//   const startLevel = searchParams.has("level")
+//     ? parseInt(searchParams.get("level") as string)
+//     : 0;
 
-  const startFeature = searchParams.has("feature")
-    ? parseInt(searchParams.get("feature") as string)
-    : 0;
+//   const startFeature = searchParams.has("feature")
+//     ? parseInt(searchParams.get("feature") as string)
+//     : 0;
 
-  currentLevel.value = startLevel;
-  currentFeature.value = startFeature;
+//   currentLevel.value = startLevel;
+//   currentFeature.value = startFeature;
 
-  // console.log(levels.value.length, levels.value[startLevel - 1], startLevel);
+//   // console.log(levels.value.length, levels.value[startLevel - 1], startLevel);
 
-  // currentLevelPoints.value =
-  //   levels.value.length && levels.value.length >= startLevel - 1
-  //     ? levels.value[startLevel - 1].pointsNeeded
-  //     : currentLevelPoints.value;
+//   // currentLevelPoints.value =
+//   //   levels.value.length && levels.value.length >= startLevel - 1
+//   //     ? levels.value[startLevel - 1].pointsNeeded
+//   //     : currentLevelPoints.value;
 
-  // currentFeaturePoints.value =
-  //   features.value.length && features.value.length >= startFeature - 1
-  //     ? features.value[startFeature - 1].pointsNeeded
-  //     : currentFeaturePoints.value;
-});
+//   // currentFeaturePoints.value =
+//   //   features.value.length && features.value.length >= startFeature - 1
+//   //     ? features.value[startFeature - 1].pointsNeeded
+//   //     : currentFeaturePoints.value;
+// });
 </script>
 
 <template>

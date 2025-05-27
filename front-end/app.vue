@@ -1,11 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import { VueLenis, useLenis } from "lenis/vue";
 import gsap from "gsap";
 
 const lenisRef = ref();
 
 watchEffect((onInvalidate) => {
-  function update(time) {
+  function update(time: number) {
     lenisRef.value?.lenis?.raf(time * 1000);
   }
   gsap.ticker.add(update);
@@ -28,18 +28,23 @@ onMounted(() => {
 
 <template>
   <VueLenis :root="true" ref="lenisRef" :options="{ autoRaf: false }">
-    <main>
+    <NuxtLayout>
       <NuxtPage />
-    </main>
-    <div id="debug" :class="$style.debug" />
+    </NuxtLayout>
   </VueLenis>
 </template>
 
-<style module lang="scss">
-.debug {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  z-index: 9999;
+<style lang="scss">
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.5s;
+
+  @media (prefers-reduced-motion) {
+    transition: none;
+  }
+}
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
 }
 </style>

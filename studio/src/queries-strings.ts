@@ -21,7 +21,7 @@ export const gameQueryString = `*[
 
 export const homeQueryString = `*[
   _type == "page"
-  && slug.current == "martin-laxenaire"
+  && slug.current == "home"
 ][0]{
   title,
   seoTitle,
@@ -59,33 +59,3 @@ export const homeQueryString = `*[
     url,
   },
 }`
-
-// export const homeQueryString = `*[
-//   _type == "page"
-//   && slug.current == "martin-laxenaire"
-// ][0]{
-//   title,
-//   baseline,
-//   intro,
-//   "years": years[]->{
-//     title,
-//     date,
-//     videos
-//   },
-//   projectsTitle,
-//   "projects": projects[]->{
-//     title,
-//     date,
-//     url,
-//     stack,
-//     "cover": select(
-//       defined(cover.asset) => cover.asset->{
-//         _id,
-//         url
-//       },
-//       null
-//     )
-//   },
-//   recognition,
-//   openSource
-// }`

@@ -2,7 +2,6 @@ import { WebGPUScene, type WebGPUSceneParams } from "../WebGPUScene";
 import { GPURenderer, FullscreenPlane, Vec2 } from "gpu-curtains";
 import { gsap } from "gsap";
 import { heroPlaneFs } from "./shaders/hero-plane.wgsl";
-import type { useThrottledRefHistory } from "@vueuse/core/index.js";
 
 export class WebGPUHeroScene extends WebGPUScene {
   renderer: GPURenderer;

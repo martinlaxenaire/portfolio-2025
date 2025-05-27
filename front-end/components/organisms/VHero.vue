@@ -99,7 +99,7 @@ watch(isGameActive, () => {
 </script>
 
 <template>
-  <div
+  <section
     :class="[$style.root, $style['root--is-visible']]"
     :style="{ '--slider-progress': sliderProgress }"
   >
@@ -116,7 +116,7 @@ watch(isGameActive, () => {
     </div>
 
     <VHeroRangeSlider v-model="sliderProgress" />
-  </div>
+  </section>
 </template>
 
 <style module lang="scss">
