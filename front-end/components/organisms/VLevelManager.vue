@@ -294,7 +294,7 @@ const percentComplete = computed(() => {
   pointer-events: auto;
   border-radius: 1em;
 
-  transition: background 0.25s, color 0.25s;
+  transition: background 0.35s, color 0.35s;
 
   @media (prefers-reduced-motion) {
     transition: none;

@@ -31,7 +31,7 @@ const { isVisible } = useIsVisible(header);
             >
               <div
                 :class="$style.palette"
-                v-if="currentFeature >= 2 || isReducedMotion"
+                v-if="currentFeature >= 3 || isReducedMotion"
               >
                 <VColorPaletteButton />
               </div>
@@ -45,13 +45,28 @@ const { isVisible } = useIsVisible(header);
               :leave-to-class="$style['header-element-leave-to']"
             >
               <div
-                v-if="currentFeature >= 1 || isReducedMotion"
+                v-if="currentFeature >= 2 || isReducedMotion"
                 :class="$style['theme-switcher']"
               >
                 <VThemeSwitcher />
               </div>
             </Transition>
           </ClientOnly>
+
+          <Transition
+            appear
+            :enter-active-class="$style['header-element-enter-active']"
+            :leave-active-class="$style['header-element-leave-active']"
+            :enter-from-class="$style['header-element-enter-from']"
+            :leave-to-class="$style['header-element-leave-to']"
+          >
+            <div
+              :class="$style['source-code']"
+              v-show="currentFeature >= 1 || isReducedMotion"
+            >
+              <VSourceCodeLink />
+            </div>
+          </Transition>
 
           <div :class="$style.level">
             <VLevelManager />
