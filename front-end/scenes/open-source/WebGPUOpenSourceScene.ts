@@ -870,11 +870,11 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
             // closer to 1 = no dissipation
             dissipation: {
               type: "f32",
-              value: 0.99,
+              value: 0.995,
             },
             cursorSize: {
               type: "f32",
-              value: 0.2, // size of the mouse cursor
+              value: 0.4, // size of the mouse cursor
             },
             // alpha of the cursor
             alpha: {
