@@ -125,7 +125,7 @@ onBeforeUnmount(() => {
 }
 
 .canvas {
-  position: absolute;
+  position: fixed;
   inset: 0;
 }
 </style>
