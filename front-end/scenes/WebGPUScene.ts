@@ -181,7 +181,6 @@ export class WebGPUScene extends Scene {
   compilteMaterialOnIdle(material: ComputeMaterial | RenderMaterial) {
     if (!this.isVisible && "requestIdleCallback" in window) {
       window.requestIdleCallback(() => {
-        console.log("compile material", material.options.label);
         material.compileMaterial();
       });
     }

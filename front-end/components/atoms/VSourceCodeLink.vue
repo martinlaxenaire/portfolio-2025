@@ -1,4 +1,15 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+let firstLinkClick = false;
+
+const { addFeaturePoints } = useLevelExperience();
+
+const onLinkClick = () => {
+  if (!firstLinkClick) {
+    firstLinkClick = true;
+    addFeaturePoints(1);
+  }
+};
+</script>
 
 <template>
   <a
@@ -6,6 +17,7 @@
     target="_blank"
     rel="noopener"
     :class="$style.root"
+    @click="onLinkClick"
   >
     &lt;/&gt;
   </a>

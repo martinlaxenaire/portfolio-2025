@@ -9,8 +9,10 @@ struct VSOutput {
 
     // convert to -1 -> 1
     uv = uv * 2.0 - 1.0;
+    // spread over X axis
     uv.x = uv.x * 0.925 + (0.0375 * pow(uv.x, 2.0) * 2.0 * sign(uv.x));
-    uv.y += params.spreadUp;
+    // make smoke rise
+    uv.y += params.spreadUp * 0.75 + fsInput.uv.y * params.spreadUp * 0.25;
     // convert back to 0 -> 1
     uv = uv * 0.5 + 0.5;
 
@@ -24,7 +26,7 @@ struct VSOutput {
 
     var cursor: vec2f = fsInput.uv - mouseUvPos;
     cursor.x *= params.resolution.x / params.resolution.y;
-    cursor *= 4.0 / params.size;
+    cursor *= params.size;
 
     var color: vec4f = vec4(vec3(1.0 - length(cursor)), 1.0);
 

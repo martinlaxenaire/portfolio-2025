@@ -1734,9 +1734,9 @@
     vue "^3.5.13"
 
 "@webgpu/types@^0.1.54":
-  version "0.1.60"
-  resolved "https://registry.yarnpkg.com/@webgpu/types/-/types-0.1.60.tgz#4f58e763ce060a81b03ab7ee1ad879c7024923fd"
-  integrity sha512-8B/tdfRFKdrnejqmvq95ogp8tf52oZ51p3f4QD5m5Paey/qlX4Rhhy5Y8tgFMi7Ms70HzcMMw3EQjH/jdhTwlA==
+  version "0.1.61"
+  resolved "https://registry.yarnpkg.com/@webgpu/types/-/types-0.1.61.tgz#60ac1756bbeeae778b5357a94d4e6e160592d6f1"
+  integrity sha512-w2HbBvH+qO19SB5pJOJFKs533CdZqxl3fcGonqL321VHkW7W/iBo6H8bjDy6pr/+pbMwIu5dnuaAxH7NxBqUrQ==
 
 abbrev@^3.0.0:
   version "3.0.0"
@@ -3008,9 +3008,9 @@ globby@^14.0.2:
     unicorn-magic "^0.3.0"
 
 gpu-curtains@^0.12.4:
-  version "0.12.11"
-  resolved "https://registry.yarnpkg.com/gpu-curtains/-/gpu-curtains-0.12.11.tgz#3d91dd6486f023b6fbf2e5ccd84d69fce7059517"
-  integrity sha512-rmfKhh8RG7fdjISVU4c38giXffoiC3Dtn7XizzljNJK8xjGgckKbwYPlvpRHtq8SX76VItYXkzx4ZaKBKljH7Q==
+  version "0.12.12"
+  resolved "https://registry.yarnpkg.com/gpu-curtains/-/gpu-curtains-0.12.12.tgz#7ba6db9ecb95b7924f24da277f274ae974e03b80"
+  integrity sha512-OOee9oTkP5QRfP5fjr+GSzsyKFDM9dHUIeLX3mLZk2/ZbYzNywUnpMqC0iypFJ+FHfjA7Es9DBNDE+nbifyh3Q==
   dependencies:
     "@webgpu/types" "^0.1.54"
 

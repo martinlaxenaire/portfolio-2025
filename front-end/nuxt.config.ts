@@ -62,9 +62,6 @@ export default defineNuxtConfig({
         },
       },
     },
-    esbuild: {
-      keepNames: true,
-    },
   },
   components: [
     "~/components/atoms",

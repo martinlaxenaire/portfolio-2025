@@ -1,19 +1,5 @@
 <script setup lang="ts">
 import { VueLenis, useLenis } from "lenis/vue";
-import gsap from "gsap";
-
-const lenisRef = ref();
-
-watchEffect((onInvalidate) => {
-  function update(time: number) {
-    lenisRef.value?.lenis?.raf(time * 1000);
-  }
-  gsap.ticker.add(update);
-
-  onInvalidate(() => {
-    gsap.ticker.remove(update);
-  });
-});
 
 const { $isReducedMotion } = useNuxtApp();
 
@@ -27,7 +13,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <VueLenis :root="true" ref="lenisRef" :options="{ autoRaf: false }">
+  <VueLenis :root="true">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>

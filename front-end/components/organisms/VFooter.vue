@@ -21,6 +21,12 @@ watch(isCreditsVisible, () => {
     addFeaturePoints(1);
   }
 });
+
+const isGridHelperVisible = ref(false);
+
+const toggleGridHelper = () => {
+  isGridHelperVisible.value = !isGridHelperVisible.value;
+};
 </script>
 
 <template>
@@ -66,10 +72,15 @@ watch(isCreditsVisible, () => {
           isCreditsVisible && $style['credit--is-visible'],
         ]"
         ref="credits"
+        @click="toggleGridHelper"
       >
         {{ new Date().getFullYear() }} - {{ siteTitle }}
       </div>
     </div>
+
+    <ClientOnly>
+      <VGridHelper :is-visible="isGridHelperVisible" />
+    </ClientOnly>
   </footer>
 </template>
 

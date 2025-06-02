@@ -120,7 +120,7 @@ export class WebGPU404Scene extends WebGPUScene {
             },
             size: {
               type: "f32",
-              value: 1,
+              value: 4,
             },
             density: {
               type: "f32",
@@ -262,7 +262,6 @@ export class WebGPU404Scene extends WebGPUScene {
       this.qualityManager.fpsWatcher.average === 0
         ? 60
         : this.qualityManager.fpsWatcher.average;
-    console.log(fps);
 
     this.mouse.velocity
       .set(

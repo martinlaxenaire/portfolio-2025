@@ -48,7 +48,6 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
   contributions: GithubContribution[];
   cameraLookAt: Vec3;
   particlesPosition: Vec3;
-  reflectionLookAtRatio: number;
 
   visibleSize: PerspectiveCamera["visibleSize"];
 
@@ -63,11 +62,12 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
   computeBindGroup!: BindGroup;
 
   isReflectionActive!: boolean;
+  reflectionCameraPositionRatio: Vec3;
   reflectionTarget!: RenderTarget;
   reflectionQuality!: number;
   particlesSystem!: LitMesh;
-
   reflectionCameraBindGroup!: BindGroup;
+
   floor!: LitMesh;
   floorColor!: ColorModel;
 
@@ -127,12 +127,14 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
 
     this.setTheme();
 
+    // this.renderer.camera.position.y = 900;
+    // this.renderer.camera.position.z = 450;
     this.renderer.camera.position.y = 600;
     this.renderer.camera.position.z = 550;
 
     this.cameraLookAt = new Vec3(0, 250, 0);
     this.particlesPosition = new Vec3(0, 300, 0);
-    this.reflectionLookAtRatio = 0.85;
+    this.reflectionCameraPositionRatio = new Vec3(2, -1, 0.25);
 
     this.renderer.camera.lookAt(this.cameraLookAt);
 
@@ -738,15 +740,11 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
       }
 
       // negate Y position and lookAt
-      reflectionCamera.position.copy(this.renderer.camera.actualPosition);
-      reflectionCamera.position.y *= -1;
+      reflectionCamera.position
+        .copy(this.renderer.camera.actualPosition)
+        .multiply(this.reflectionCameraPositionRatio);
 
-      reflectionCameraLookAt.set(
-        0,
-        this.cameraLookAt.y * this.reflectionLookAtRatio,
-        0
-      );
-      reflectionCameraLookAt.y *= -1;
+      reflectionCameraLookAt.set(0, -1 * this.cameraLookAt.y, 0);
       reflectionCamera.lookAt(reflectionCameraLookAt);
 
       // update reflection camera matrices
@@ -832,15 +830,27 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
     this.floor.userData.time = 0;
 
     this.floor.parent = floorPivot;
-    this.floor.scale.set(6000, 6000, 1);
+    this.floor.scale.set(
+      this.visibleSize.width * 2,
+      this.visibleSize.height,
+      1
+    );
 
-    this.floor.onBeforeRender(() => {
-      this.floor.uniforms.params.frostedIntensity.value =
-        frostedIntensity +
-        Math.cos(this.floor.userData.time * 0.01) * frostedIntensity * 0.1;
+    this.floor
+      .onBeforeRender(() => {
+        this.floor.uniforms.params.frostedIntensity.value =
+          frostedIntensity +
+          Math.cos(this.floor.userData.time * 0.01) * frostedIntensity * 0.1;
 
-      this.floor.userData.time++;
-    });
+        this.floor.userData.time++;
+      })
+      .onAfterResize(() => {
+        this.floor.scale.set(
+          this.visibleSize.width * 2,
+          this.visibleSize.height,
+          1
+        );
+      });
 
     this.compilteMaterialOnIdle(this.floor.material);
   }
@@ -1329,12 +1339,12 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
 
         this.addDebugBinding(
           this,
-          "reflectionLookAtRatio",
+          "reflectionCameraPositionRatio",
           {
-            label: "Reflection look at ratio",
-            min: 0.1,
-            max: 1.5,
-            step: 0.05,
+            label: "Reflection camera position ratio",
+            x: { step: 0.05, min: 0.05, max: 3 },
+            y: { min: -1, max: -1 },
+            z: { step: 0.05, min: 0.05, max: 3 },
           },
           reflectionFolder
         );

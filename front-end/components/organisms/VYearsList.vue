@@ -215,7 +215,7 @@ onBeforeUnmount(() => {
 .root {
   position: relative;
   padding: 3rem 0 0 0;
-  background: var(--background-color);
+  //background: var(--background-color);
 }
 
 .top {
