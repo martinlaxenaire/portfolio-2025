@@ -113,12 +113,17 @@ export class CanvasSeparatorScene extends Scene {
     const foregroundColorModel = new ColorModel(foregroundColor);
 
     const palette = [...this.colors];
+    // const palette = [...this.colors].flatMap((i) => [i, i]);
 
     if (this.theme === "light") {
       this.orderedPalette = [foregroundColorModel, ...palette];
     } else {
       this.orderedPalette = [foregroundColorModel, ...[...palette].reverse()];
     }
+
+    this.orderedPalette = this.orderedPalette.flatMap((color, i) =>
+      i > palette.length * 0.5 ? [color, color] : [color]
+    );
 
     // invert colors on the opposite of the flag
     // since they are drawn in the inverse order after that
@@ -127,7 +132,7 @@ export class CanvasSeparatorScene extends Scene {
     }
 
     // duplicate items
-    //this.orderedPalette = this.orderedPalette.flatMap((i) => [i, i]);
+    // this.orderedPalette = this.orderedPalette.flatMap((i) => [i, i]);
   }
 
   setTheme(theme: Theme = "light") {

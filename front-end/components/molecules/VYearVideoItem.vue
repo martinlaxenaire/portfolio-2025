@@ -16,7 +16,6 @@ const onTimeUpdate = () => {
     const ts = video.value.currentTime;
 
     if (ts < lastTs) {
-      console.log("VIDEO LOOPED", video.value.src);
       addLevelPoints(5);
       video.value.removeEventListener("timeupdate", onTimeUpdate);
     }

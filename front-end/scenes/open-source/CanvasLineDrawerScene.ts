@@ -23,6 +23,7 @@ export class CanvasLineDrawerScene extends Scene {
   resizeObserver: ResizeObserver;
 
   isDrawing: boolean;
+  hasStarted: boolean;
   firstPoint: PointCoords;
   secondPoint: PointCoords;
 
@@ -57,6 +58,7 @@ export class CanvasLineDrawerScene extends Scene {
     };
 
     this.isDrawing = false;
+    this.hasStarted = false;
 
     this.onStarted = onStarted;
     this.onSceneComplete = onSceneComplete;
@@ -169,7 +171,7 @@ export class CanvasLineDrawerScene extends Scene {
   }
 
   get minStartSize(): number {
-    return this.minCompleteSize * 0.5;
+    return Math.min(this.minCompleteSize * 0.5, 150);
   }
 
   onPointerMove(e: MouseEvent | TouchEvent) {
@@ -180,6 +182,7 @@ export class CanvasLineDrawerScene extends Scene {
       if (this.lineLength >= this.minStartSize) {
         this.hideTl.kill();
         this.opacity = 1;
+        this.hasStarted = true;
         this.onStarted();
       }
     }
@@ -193,6 +196,7 @@ export class CanvasLineDrawerScene extends Scene {
 
   onPointerUp(e: PointerEvent | TouchEvent) {
     this.isDrawing = false;
+    this.hasStarted = false;
     this.onStopDrawing();
   }
 

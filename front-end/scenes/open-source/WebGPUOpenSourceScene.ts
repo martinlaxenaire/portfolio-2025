@@ -482,7 +482,7 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
       .onBeforeRender(() => {
         (this.computePass.uniforms.params.time.value as number)++;
 
-        if (this.lineDrawerScene.isDrawing) {
+        if (this.lineDrawerScene.hasStarted) {
           const firstPointNDC = this.boundingRectToNDC(
             this.lineDrawerScene.firstPoint.x,
             this.lineDrawerScene.firstPoint.y
