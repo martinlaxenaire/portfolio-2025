@@ -3,7 +3,7 @@ import { useIntersectionObserver } from "@vueuse/core";
 
 const props = defineProps<{ url?: string }>();
 
-const { addLevelPoints } = useLevelExperience();
+const { addFeaturePoints } = useLevelExperience();
 
 const video = useTemplateRef("video");
 
@@ -16,7 +16,7 @@ const onTimeUpdate = () => {
     const ts = video.value.currentTime;
 
     if (ts < lastTs) {
-      addLevelPoints(5);
+      addFeaturePoints(1);
       video.value.removeEventListener("timeupdate", onTimeUpdate);
     }
 

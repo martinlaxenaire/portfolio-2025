@@ -16,7 +16,7 @@ const { addFeaturePoints } = useLevelExperience();
 const canvas = useTemplateRef("canvas");
 const { isVisible } = useIsVisible(canvas, false);
 
-const { data, pending, error } = await useFetch("/api/github");
+const { data, status } = await useFetch("/api/github");
 //console.log(data);
 
 let scene: WebGPUOpenSourceScene | CanvasOpenSourceScene | null;
@@ -64,12 +64,12 @@ onMounted(async () => {
   };
 
   // If data is still loading when component mounts, wait for it
-  if (pending.value) {
+  if (status.value === "pending") {
     // Wait for pending to become false (data loaded)
     await new Promise<void>((resolve) => {
       // One-time watcher that automatically stops after pending becomes false
       const stopWatcher = watch(
-        () => pending.value,
+        () => status.value === "pending",
         (isPending) => {
           if (!isPending) {
             stopWatcher(); // Clean up the watcher
@@ -163,13 +163,13 @@ const toggleInstance = (index = 0) => {
     </div>
 
     <div :class="$style.content" class="container grid">
-      <h2 :class="$style.title" v-if="title">
-        <VAnimatedTextByLetters :align="'center'" :label="title" />
-      </h2>
-
       <div :class="$style.description" v-if="description">
         <VSanityBlock :content="description" />
       </div>
+
+      <h2 :class="$style.title" v-if="title">
+        <VAnimatedTextByLetters :align="'center'" :label="title" />
+      </h2>
 
       <div :class="$style['middle-separator']">
         <VCanvasSeparator />
@@ -178,25 +178,13 @@ const toggleInstance = (index = 0) => {
 
     <div :class="$style.experiment">
       <div :class="$style.wrapper">
-        <Transition
-          appear
-          :enter-active-class="$style['instant-in-fade-out-enter-active']"
-          :leave-active-class="$style['instant-in-fade-out-leave-active']"
-          :enter-from-class="$style['instant-in-fade-out-enter-from']"
-          :leave-to-class="$style['instant-in-fade-out-leave-to']"
-        >
+        <Transition appear name="instant-in-fade-out">
           <div v-if="!hasStarted" :class="$style.guideline">
             <VAnimatedTextByLetters label="Draw a line" />
           </div>
         </Transition>
 
-        <Transition
-          appear
-          :enter-active-class="$style['instant-in-fade-out-enter-active']"
-          :leave-active-class="$style['instant-in-fade-out-leave-active']"
-          :enter-from-class="$style['instant-in-fade-out-enter-from']"
-          :leave-to-class="$style['instant-in-fade-out-leave-to']"
-        >
+        <Transition appear name="instant-in-fade-out">
           <div v-if="showCongratulations" :class="$style.congratulations">
             <VAnimatedTextByLetters label="Excellent!!" />
           </div>
@@ -251,13 +239,15 @@ const toggleInstance = (index = 0) => {
 .content {
   position: relative;
   z-index: 1;
-  padding-top: calc(var(--height-space) * 0.5);
-  margin-bottom: var(--height-space);
+  // padding-top: calc(var(--height-space) * 0.5);
+  padding-top: calc(var(--height-space) + 3rem);
+  margin-bottom: calc(var(--height-space) * 0.5);
 }
 
 .title {
   @include section-title;
-  grid-column: 3 / 11;
+  //grid-column: 3 / 11;
+  grid-column: 4 / 10;
 
   @media screen and (max-aspect-ratio: 14 / 8) {
     grid-column: 2 / 12;
@@ -275,7 +265,7 @@ const toggleInstance = (index = 0) => {
 .middle-separator {
   @include top-separator;
   top: auto;
-  bottom: calc(var(--height-space) * -1);
+  bottom: calc(var(--height-space) * -0.5);
 }
 
 .experiment {
@@ -298,22 +288,6 @@ const toggleInstance = (index = 0) => {
 
 .congratulations {
   @include interaction-title;
-}
-
-.instant-in-fade-out-enter-active,
-.instant-in-fade-out-leave-active {
-  opacity: 1;
-  transition: opacity 0s;
-
-  @media (prefers-reduced-motion) {
-    transition: none !important;
-  }
-}
-
-.instant-in-fade-out-enter-from,
-.instant-in-fade-out-leave-to {
-  opacity: 0;
-  transition: opacity 0.35s;
 }
 
 .canvas {

@@ -391,9 +391,6 @@ export class CanvasOpenSourceScene extends Scene {
       this.ctx.beginPath();
       this.ctx.moveTo(0, 0);
 
-      console.log(this.params.rotateCanvas);
-      const directionSign = this.params.rotateCanvas ? 1 : -1;
-
       // const direction =
       //   Math.cos(value) * Math.sign(Math.sin(value));
 

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { HomeQueryResult } from "~/types/sanity.types";
 import { WebGPUYearsScene } from "~/scenes/years/WebGPUYearsScene";
+import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/all";
 
 const props = defineProps<{
@@ -76,6 +77,7 @@ const years = ref([
   },
 ]);
 
+const yearsWrapper = useTemplateRef("years-wrapper");
 const yearsContainer = useTemplateRef("years-container");
 const yearsItems = useTemplateRef("years-items");
 const canvas = useTemplateRef("canvas");
@@ -84,27 +86,18 @@ let seen = false;
 
 let scene: WebGPUYearsScene | null;
 
-// const containerScroll = useContainerScroll({
-//   element: yearsContainer,
-//   threshold: 0,
-//   topTriggerPadding: 0.5, // from 0->1 relative to window height
-//   bottomTriggerPadding: 0.5, // from 0->1 relative to window height
-// });
-
-// watch(containerScroll, (newScroll) => {
-//   if (scene) {
-//     scene.progress = newScroll;
-//   }
-// });
-
 const { colors } = usePaletteGenerator();
 
 const { currentLevel, addLevelPoints } = useLevelExperience();
 
 let scrollTrigger: ScrollTrigger | null = null;
 
+const hasStarted = ref(currentLevel.value >= 2);
+const sceneComplete = ref(false);
+
 onMounted(() => {
-  const { $gpuCurtains, $hasWebGPU, $debugPane } = useNuxtApp();
+  const { $gpuCurtains, $hasWebGPU, $debugPane, $isReducedMotion } =
+    useNuxtApp();
 
   let progress = 0;
 
@@ -114,24 +107,76 @@ onMounted(() => {
       container: canvas.value,
       items: yearsItems.value,
       debugPane: $debugPane,
-      //progress: isNaN(containerScroll.value) ? 0 : containerScroll.value,
       progress,
       colors: colors.value,
     });
 
     scene.setSceneVisibility(isVisible.value);
+  }
 
+  if (yearsWrapper.value && yearsContainer.value && !$isReducedMotion) {
     // scroll trigger
     scrollTrigger = ScrollTrigger.create({
       trigger: yearsContainer.value,
-      start: () => `${window.innerHeight * 0.5}px top`,
-      end: "+=50% top",
+      scroller: yearsWrapper.value,
+      horizontal: true,
+      start: "left left",
+      end: () => `right ${window.innerWidth}px`,
       //markers: true,
       onUpdate: (self) => {
         progress = self.progress;
-        if (scene) scene.progress = progress;
+
+        if (!hasStarted.value && progress > 0.1) {
+          hasStarted.value = true;
+          addLevelPoints(5);
+        }
+
+        if (!sceneComplete.value && progress > 0.985) {
+          sceneComplete.value = true;
+          addLevelPoints(10);
+        }
+
+        if (scene) {
+          scene.progress = progress;
+        }
       },
     });
+
+    let startScroll = yearsWrapper.value.scrollLeft;
+
+    if (ScrollTrigger.isTouch !== 1) {
+      ScrollTrigger.observe({
+        target: yearsContainer.value,
+        type: "pointer",
+        onPress: function () {
+          startScroll = scrollTrigger.scroll();
+        },
+        onDragStart: function () {
+          gsap.killTweensOf(scrollTrigger);
+        },
+        onDrag: function (self) {
+          scrollTrigger?.scroll(
+            gsap.utils.clamp(
+              0,
+              scrollTrigger.end,
+              startScroll + self.startX - self.x
+            )
+          );
+        },
+        onDragEnd: function (self) {
+          gsap.to(scrollTrigger, {
+            inertia: {
+              scroll: {
+                velocity: -self.velocityX,
+                min: 0,
+                max: scrollTrigger.end,
+              },
+              resistance: scrollTrigger.end,
+            },
+          });
+        },
+      });
+    }
   }
 });
 
@@ -171,7 +216,10 @@ watch(colors, () => {
 });
 
 onBeforeUnmount(() => {
-  scrollTrigger?.kill();
+  if (scrollTrigger) {
+    gsap.killTweensOf(scrollTrigger);
+    scrollTrigger.kill();
+  }
 
   if (scene) {
     scene.destroy();
@@ -193,20 +241,28 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <div :class="$style.years">
+    <div :class="$style.content">
       <div :class="$style.canvas" ref="canvas"></div>
+      <div :class="$style.years" ref="years-wrapper">
+        <ul
+          :class="$style.list"
+          v-if="years"
+          ref="years-container"
+          :style="{ '--nb-items': years.length }"
+        >
+          <li v-for="(year, i) in years" :key="i" ref="years-items">
+            <VYearItem :year="year" :key="i" />
+          </li>
+        </ul>
+      </div>
 
-      <ul
-        :class="$style.list"
-        v-if="years"
-        class="container"
-        ref="years-container"
-        :style="{ '--nb-items': years.length }"
-      >
-        <li v-for="(year, i) in years" :key="i" ref="years-items">
-          <VYearItem :year="year" :key="i" />
-        </li>
-      </ul>
+      <ClientOnly>
+        <Transition appear name="instant-in-fade-out">
+          <div v-if="!hasStarted" :class="$style.guideline">
+            <VAnimatedTextByLetters label="Drag left" />
+          </div>
+        </Transition>
+      </ClientOnly>
     </div>
   </div>
 </template>
@@ -215,7 +271,6 @@ onBeforeUnmount(() => {
 .root {
   position: relative;
   padding: 3rem 0 0 0;
-  //background: var(--background-color);
 }
 
 .top {
@@ -240,45 +295,78 @@ onBeforeUnmount(() => {
   }
 }
 
+.content {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
 .years {
   position: relative;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  user-select: none;
+  scrollbar-color: #aaa #252525;
+  cursor: grab;
+
+  body:global(.is-light) & {
+    scrollbar-color: #666 #eee;
+  }
+
+  @media (prefers-reduced-motion) {
+    overflow: hidden;
+    user-select: auto;
+    cursor: auto;
+  }
 }
 
 .canvas {
-  position: sticky;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100lvh;
   pointer-events: none;
 }
 
 .list {
   list-style: none;
   padding: 0;
-  margin: -100vh 0 0 0;
-  height: calc(100vh * var(--nb-items));
-  position: sticky;
+  margin: 0;
+  height: 100lvh;
+  display: flex;
+  flex-wrap: nowrap;
+  width: calc(100% * var(--nb-items));
+  max-width: none;
 
   opacity: 0;
-  pointer-events: none;
 
   body:global(.no-webgpu) & {
     opacity: 1;
-    pointer-events: auto;
+  }
+
+  @media (prefers-reduced-motion) {
+    height: auto;
+    width: 100%;
+    display: block;
   }
 
   li {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100vh;
+    position: relative;
+    height: 100lvh;
+    width: 100%;
+    pointer-events: none;
 
-    body:global(.no-webgpu) & {
-      position: relative;
-      top: auto;
-      left: auto;
+    @media (prefers-reduced-motion) {
+      width: auto;
+      pointer-events: auto;
     }
   }
+}
+
+.guideline {
+  @include interaction-title;
+  top: 100%;
+  transform: translate3d(-50%, calc(-100% - var(--gutter-size) * 2), 0);
 }
 </style>

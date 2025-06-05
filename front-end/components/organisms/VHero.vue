@@ -12,9 +12,9 @@ const canvas = useTemplateRef("canvas");
 const { isVisible } = useIsVisible(canvas, false);
 
 const { colors } = usePaletteGenerator();
-const { isGameActive, addLevelPoints } = useLevelExperience();
+const { isGameActive, currentLevel, addLevelPoints } = useLevelExperience();
 
-const sliderProgress = ref(0);
+const sliderProgress = ref(currentLevel.value >= 1 ? 1 : 0);
 
 onMounted(async () => {
   // At this point, data has loaded

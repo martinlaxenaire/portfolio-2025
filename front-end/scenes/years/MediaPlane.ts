@@ -111,14 +111,14 @@ export class MediaPlane {
 
     this.plane.parent = this.pivot;
 
-    this.setPlanePosition();
+    // this.setPlanePosition();
 
-    this.plane.onAfterResize(() => this.setPlanePosition());
+    // this.plane.onAfterResize(() => this.setPlanePosition());
   }
 
-  setPlanePosition() {
-    this.pivot.position.x = -this.yearIndex * this.yearsScene.visibleSize.width;
-  }
+  // setPlanePosition() {
+  //   this.pivot.position.x = -this.yearIndex * this.yearsScene.visibleSize.width;
+  // }
 
   togglePlayback(shouldPlay = false) {
     if (!shouldPlay) {

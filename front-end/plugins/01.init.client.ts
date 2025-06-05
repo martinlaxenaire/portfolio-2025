@@ -1,6 +1,8 @@
 import { gsap } from "gsap";
 import { SplitText } from "gsap/all";
 import { ScrollTrigger } from "gsap/all";
+import { InertiaPlugin } from "gsap/all";
+import { Draggable } from "gsap/all";
 
 export default defineNuxtPlugin({
   name: "init",
@@ -8,6 +10,8 @@ export default defineNuxtPlugin({
     // gsap
     gsap.registerPlugin(SplitText);
     gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(InertiaPlugin);
+    gsap.registerPlugin(Draggable);
 
     // theme
     const theme = useState<"light" | "dark">("theme");
@@ -25,20 +29,20 @@ export default defineNuxtPlugin({
     document.body.classList.toggle("is-light", theme.value === "light");
 
     // debug levels
-    const { currentLevel, currentFeature } = useLevelExperience();
+    // const { currentLevel, currentFeature } = useLevelExperience();
 
-    const url = new URL(window.location.href);
-    const searchParams = new URLSearchParams(url.search);
-    const startLevel = searchParams.has("level")
-      ? parseInt(searchParams.get("level") as string)
-      : 0;
+    // const url = new URL(window.location.href);
+    // const searchParams = new URLSearchParams(url.search);
+    // const startLevel = searchParams.has("level")
+    //   ? parseInt(searchParams.get("level") as string)
+    //   : 0;
 
-    const startFeature = searchParams.has("feature")
-      ? parseInt(searchParams.get("feature") as string)
-      : 0;
+    // const startFeature = searchParams.has("feature")
+    //   ? parseInt(searchParams.get("feature") as string)
+    //   : 0;
 
-    currentLevel.value = startLevel;
-    currentFeature.value = startFeature;
+    // currentLevel.value = startLevel;
+    // currentFeature.value = startFeature;
 
     // console.log(levels.value.length, levels.value[startLevel - 1], startLevel);
 

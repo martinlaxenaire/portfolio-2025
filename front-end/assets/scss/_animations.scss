@@ -1,0 +1,15 @@
+.instant-in-fade-out-enter-active,
+.instant-in-fade-out-leave-active {
+  opacity: 1;
+  transition: opacity 0s;
+
+  @media (prefers-reduced-motion) {
+    transition: none !important;
+  }
+}
+
+.instant-in-fade-out-enter-from,
+.instant-in-fade-out-leave-to {
+  opacity: 0;
+  transition: opacity 0.35s;
+}
