@@ -30,12 +30,12 @@ export const computeCurl: string = /* wgsl */ `
       vVel *= params.speed * (0.25 + 0.75 * params.maxLifeRatio);
 
       // move towards second mouse position
-      var directionToCenter = vPos - params.secondMousePosition;
-      let distanceToCenter = length(directionToCenter);
+      var directionToPos = vPos - params.secondMousePosition;
+      let distanceToPos = length(directionToPos);
       let pointDistance = distance(params.firstMousePosition, params.secondMousePosition);
 
       if(pointDistance > 0.0) {
-        vVel -= normalize(directionToCenter) * params.mouseStrength * max(distanceToCenter, 0.1);
+        vVel -= normalize(directionToPos) * params.mouseStrength * max(distanceToPos, 0.1);
       }
       
       if (life <= 0.0) {

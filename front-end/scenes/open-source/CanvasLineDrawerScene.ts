@@ -114,7 +114,7 @@ export class CanvasLineDrawerScene extends Scene {
       })
       .to(this, {
         opacity: 0,
-        duration: 0.75,
+        duration: 0.5,
         onUpdate: this.draw.bind(this),
       });
   }
@@ -134,8 +134,6 @@ export class CanvasLineDrawerScene extends Scene {
     this.boundingRect = boundingRect;
     this.canvas.width = this.boundingRect.width;
     this.canvas.height = this.boundingRect.height;
-
-    //this.draw();
   }
 
   setPointCoords(e: MouseEvent | TouchEvent, point = this.firstPoint) {
@@ -163,11 +161,11 @@ export class CanvasLineDrawerScene extends Scene {
   }
 
   get minDrawSize(): number {
-    return this.minSize * 0.01;
+    return 20;
   }
 
   get minCompleteSize(): number {
-    return this.minSize * 0.325;
+    return this.minSize * 0.425;
   }
 
   get minStartSize(): number {
@@ -179,9 +177,12 @@ export class CanvasLineDrawerScene extends Scene {
       this.setPointCoords(e, this.secondPoint);
       this.draw();
 
-      if (this.lineLength >= this.minStartSize) {
+      if (this.lineLength >= this.minDrawSize) {
         this.hideTl.kill();
         this.opacity = 1;
+      }
+
+      if (this.lineLength >= this.minStartSize) {
         this.hasStarted = true;
         this.onStarted();
       }
@@ -213,9 +214,15 @@ export class CanvasLineDrawerScene extends Scene {
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    if (this.lineLength < 20) return;
+    if (this.lineLength < this.minDrawSize) return;
 
-    this.ctx.strokeStyle = `rgba(${this.color.rgb.r}, ${this.color.rgb.g}, ${this.color.rgb.b}, ${this.opacity})`;
+    let opacity = this.opacity * 0.5;
+
+    if (this.lineLength > this.minCompleteSize && this.isDrawing) {
+      opacity += 0.5;
+    }
+
+    this.ctx.strokeStyle = `rgba(${this.color.rgb.r}, ${this.color.rgb.g}, ${this.color.rgb.b}, ${opacity})`;
     this.ctx.lineCap = "round";
     this.ctx.lineWidth =
       Math.max(this.boundingRect.width, this.boundingRect.height) * 0.005;

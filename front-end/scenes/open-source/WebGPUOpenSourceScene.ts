@@ -77,6 +77,7 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
   mouse: {
     current: Vec2;
     lerped: Vec2;
+    strength: number;
   };
 
   private _pointerMoveHandler: (e: MouseEvent | TouchEvent) => void;
@@ -144,6 +145,7 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
     this.mouse = {
       current: new Vec2(0.5), // center
       lerped: new Vec2(0.5),
+      strength: 4,
     };
 
     this.linePoints = {
@@ -451,7 +453,8 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
             mouseStrength: {
               type: "f32",
               value:
-                2 / Math.hypot(this.visibleSize.width, this.visibleSize.height),
+                this.mouse.strength /
+                Math.hypot(this.visibleSize.width, this.visibleSize.height),
             },
             firstMousePosition: {
               type: "vec3f",
@@ -529,7 +532,8 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
       })
       .onAfterResize(() => {
         (this.computePass.uniforms.params.mouseStrength.value as number) =
-          2 / Math.hypot(this.visibleSize.width, this.visibleSize.height);
+          this.mouse.strength /
+          Math.hypot(this.visibleSize.width, this.visibleSize.height);
       });
 
     this.compilteMaterialOnIdle(this.computePass.material);
@@ -1248,6 +1252,26 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
           },
           computeFolder
         );
+
+        const mouseStrengthBinding = this.addDebugBinding(
+          this.mouse,
+          "strength",
+          {
+            label: "Mouse strength",
+            min: 1,
+            max: 10,
+            step: 0.25,
+          },
+          computeFolder
+        );
+
+        if (mouseStrengthBinding) {
+          mouseStrengthBinding.on("change", (value) => {
+            (this.computePass.uniforms.params.mouseStrength.value as number) =
+              this.mouse.strength /
+              Math.hypot(this.visibleSize.width, this.visibleSize.height);
+          });
+        }
       }
     }
 
