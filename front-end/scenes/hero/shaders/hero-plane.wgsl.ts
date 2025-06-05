@@ -40,13 +40,13 @@ fn noise(p: vec2<f32>) -> f32 {
   centeredUV.x *= aspect; // Scale x to match y
 
   // Compute Concentric Expanding Circles Effect
-  let numCircles = 5.0; // Number of circles
-  let waveSpeed = params.speed * 15.0; // Speed of expansion
+  let numCircles = 4.0; // Number of circles
+  let waveSpeed = params.speed * 10.0; // Speed of expansion
   let wave = sin(radialDist * numCircles - params.time * waveSpeed);
 
   // Map wave from [-1,1] to [0,1]
   var concentricCircles = 0.5 + 0.5 * wave;
-  concentricCircles = smoothstep(1.0, 0.0, concentricCircles);
+  concentricCircles = smoothstep(1.1, 0.1, concentricCircles);
 
   let computedNoise = noise(centeredUV * params.noiseScale + params.time * params.speed * 2.0);
 
@@ -56,7 +56,7 @@ fn noise(p: vec2<f32>) -> f32 {
     computedNoise - 0.5
   ) * params.noiseStrength;
 
-  noiseOffset = mix(vec2(0.0), noiseOffset, vec2(concentricCircles));
+  noiseOffset = mix(noiseOffset, vec2(0.0), vec2(concentricCircles));
   
   centeredUV += noiseOffset; // Apply noise to UVs
 

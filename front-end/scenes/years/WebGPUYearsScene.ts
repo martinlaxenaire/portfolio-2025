@@ -111,14 +111,11 @@ export class WebGPUYearsScene extends WebGPUScene {
 
     this.renderer.camera.position.z = 25;
     this.visibleSize = this.renderer.camera.getVisibleSizeAtDepth();
-    //this.titlePivot.position.y = this.visibleSize.height * 0.325;
 
     this.renderer
       .onBeforeRender(() => this.onRender())
       .onResize(() => {
         this.visibleSize = this.renderer.camera.getVisibleSizeAtDepth();
-
-        //this.titlePivot.position.y = this.visibleSize.height * 0.25;
 
         this.setTitleBoundingRects();
 
@@ -159,14 +156,14 @@ export class WebGPUYearsScene extends WebGPUScene {
   override onProgress(): void {
     if (this.rotation) {
       this.rotation.current.y =
-        -Math.PI *
+        Math.PI *
         2 *
         ((this.progress * (this.items.length - 1)) / this.items.length);
 
       //
 
       this.translation.current.x =
-        this.visibleSize.width *
+        -this.visibleSize.width *
         this.items.length *
         ((this.progress * (this.items.length - 1)) / this.items.length);
     }
@@ -178,7 +175,7 @@ export class WebGPUYearsScene extends WebGPUScene {
 
   set lerpedProgress(value: number) {
     if (this.backgroundComputePass) {
-      this.backgroundComputePass.uniforms.params.progress.value = value;
+      this.backgroundComputePass.uniforms.params.progress.value = 1 - value;
       this.backgroundComputePass.uniforms.params.intensity.value = Math.min(
         1,
         Math.abs(this.#lerpedProgress - value) * 20
@@ -234,7 +231,7 @@ export class WebGPUYearsScene extends WebGPUScene {
 
       // offset along uv.x
       const u = i % this.items.length;
-      rectPositions[i * 2] = Math.random() - u;
+      rectPositions[i * 2] = u - Math.random();
       rectPositions[i * 2 + 1] = Math.random();
 
       const colorIndex = Math.floor(Math.random() * this.colors.length);

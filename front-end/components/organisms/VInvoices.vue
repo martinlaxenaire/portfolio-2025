@@ -14,7 +14,7 @@ let scene: WebGPUInvoicesScene | CanvasInvoicesScene | null;
 const { theme } = useTheme();
 const canvas = useTemplateRef("canvas");
 
-const { data, pending } = await useFetch("/api/google-sheets");
+const { data, status } = await useFetch("/api/google-sheets");
 
 const { isVisible } = useIsVisible(canvas, false);
 
@@ -32,7 +32,7 @@ onMounted(async () => {
 
   const onStarted = () => {
     if (!hasStarted.value) {
-      addLevelPoints(5);
+      addLevelPoints(8);
     }
     hasStarted.value = true;
   };
@@ -51,12 +51,12 @@ onMounted(async () => {
   };
 
   // If data is still loading when component mounts, wait for it
-  if (pending.value) {
+  if (status.value === "pending") {
     // Wait for pending to become false (data loaded)
     await new Promise<void>((resolve) => {
       // One-time watcher that automatically stops after pending becomes false
       const stopWatcher = watch(
-        () => pending.value,
+        () => status.value === "pending",
         (isPending) => {
           if (!isPending) {
             stopWatcher(); // Clean up the watcher
@@ -176,25 +176,13 @@ const parsedDescription = computed(() => {
           <VCanvasSeparator />
         </div>
 
-        <Transition
-          appear
-          :enter-active-class="$style['instant-in-fade-out-enter-active']"
-          :leave-active-class="$style['instant-in-fade-out-leave-active']"
-          :enter-from-class="$style['instant-in-fade-out-enter-from']"
-          :leave-to-class="$style['instant-in-fade-out-leave-to']"
-        >
+        <Transition appear name="instant-in-fade-out">
           <div v-if="!hasStarted" :class="$style.guideline">
             <VAnimatedTextByLetters label="Click & hold" />
           </div>
         </Transition>
 
-        <Transition
-          appear
-          :enter-active-class="$style['instant-in-fade-out-enter-active']"
-          :leave-active-class="$style['instant-in-fade-out-leave-active']"
-          :enter-from-class="$style['instant-in-fade-out-enter-from']"
-          :leave-to-class="$style['instant-in-fade-out-leave-to']"
-        >
+        <Transition appear name="instant-in-fade-out">
           <div v-if="showCongratulations" :class="$style.congratulations">
             <VAnimatedTextByLetters label="Well done!!" />
           </div>
@@ -270,22 +258,6 @@ const parsedDescription = computed(() => {
 
 .congratulations {
   @include interaction-title;
-}
-
-.instant-in-fade-out-enter-active,
-.instant-in-fade-out-leave-active {
-  opacity: 1;
-  transition: opacity 0s;
-
-  @media (prefers-reduced-motion) {
-    transition: none !important;
-  }
-}
-
-.instant-in-fade-out-enter-from,
-.instant-in-fade-out-leave-to {
-  opacity: 0;
-  transition: opacity 0.35s;
 }
 
 .canvas {

@@ -17,11 +17,11 @@ fn sdfRectangle(center: vec2f, size: vec2f) -> f32 {
         let nbRectangles: u32 = arrayLength(&rectangles);
 
         for (var i: u32 = 0; i < nbRectangles; i++) {
-        let rectangle = rectangles[i];
+            let rectangle = rectangles[i];
 
-        let rectDist = sdfRectangle(uv - rectangle.positions, vec2(rectangle.sizes.x * params.intensity, rectangle.sizes.y));
+            let rectDist = sdfRectangle(uv - rectangle.positions, vec2(rectangle.sizes.x * params.intensity, rectangle.sizes.y));
 
-        color = select(color, rectangle.colors * params.intensity, rectDist < 0.0);
+            color = select(color, rectangle.colors * params.intensity, rectDist < 0.0);
         }
 
         textureStore(backgroundStorageTexture, vec2<i32>(GlobalInvocationID.xy), color);

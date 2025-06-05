@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { GameQueryResult } from "~/types/sanity.types";
-import { gameQueryString } from "../../../studio/src/queries-strings";
 import { useTimeoutFn } from "@vueuse/core";
 
 const {
@@ -13,21 +11,6 @@ const {
   currentFeaturePoints,
   addFeaturePoints,
 } = useLevelExperience();
-
-const gameQuery = groq`${gameQueryString}`;
-useSanityQuery<GameQueryResult>(gameQuery).then((result) => {
-  if (result && result.data && result.data.value) {
-    levels.value =
-      result.data.value.levels && result.data.value.levels.length
-        ? result.data.value.levels
-        : [];
-
-    features.value =
-      result.data.value.features && result.data.value.features.length
-        ? result.data.value.features
-        : [];
-  }
-});
 
 let hasInteracted = false;
 const isLegendVisible = ref(false);
@@ -66,19 +49,23 @@ onBeforeUnmount(() => {
   document.removeEventListener("click", onDocumentClick);
 });
 
-watch(currentLevelPoints, () => {
-  if (currentLevel.value >= levels.value.length) return;
+watch(
+  currentLevelPoints,
+  () => {
+    if (currentLevel.value >= levels.value.length) return;
 
-  for (let i = 0; i < levels.value.length; i++) {
-    const level = levels.value[i];
-    if (
-      currentLevelPoints.value >= level.pointsNeeded &&
-      currentLevel.value <= i
-    ) {
-      currentLevel.value = i + 1;
+    for (let i = 0; i < levels.value.length; i++) {
+      const level = levels.value[i];
+      if (
+        currentLevelPoints.value >= level.pointsNeeded &&
+        currentLevel.value <= i
+      ) {
+        currentLevel.value = i + 1;
+      }
     }
-  }
-});
+  },
+  { immediate: true }
+);
 
 const nextLevelExperienceNeeded = computed(() =>
   currentLevel.value >= levels.value.length
@@ -106,19 +93,23 @@ watch(currentLevel, () => {
   }, 5000);
 });
 
-watch(currentFeaturePoints, () => {
-  if (currentFeature.value >= features.value.length) return;
+watch(
+  currentFeaturePoints,
+  () => {
+    if (currentFeature.value >= features.value.length) return;
 
-  for (let i = 0; i < features.value.length; i++) {
-    const feature = features.value[i];
-    if (
-      currentFeaturePoints.value >= feature.pointsNeeded &&
-      currentFeature.value <= i
-    ) {
-      currentFeature.value = i + 1;
+    for (let i = 0; i < features.value.length; i++) {
+      const feature = features.value[i];
+      if (
+        currentFeaturePoints.value >= feature.pointsNeeded &&
+        currentFeature.value <= i
+      ) {
+        currentFeature.value = i + 1;
+      }
     }
-  }
-});
+  },
+  { immediate: true }
+);
 
 const activeFeatureLegend = ref([] as number[]);
 
@@ -153,34 +144,6 @@ const percentComplete = computed(() => {
         (currentLevel.value / Math.max(1, levels.value.length)) * 0.75)
   );
 });
-
-// debug feature/level
-// onMounted(() => {
-//   const url = new URL(window.location.href);
-//   const searchParams = new URLSearchParams(url.search);
-//   const startLevel = searchParams.has("level")
-//     ? parseInt(searchParams.get("level") as string)
-//     : 0;
-
-//   const startFeature = searchParams.has("feature")
-//     ? parseInt(searchParams.get("feature") as string)
-//     : 0;
-
-//   currentLevel.value = startLevel;
-//   currentFeature.value = startFeature;
-
-//   // console.log(levels.value.length, levels.value[startLevel - 1], startLevel);
-
-//   // currentLevelPoints.value =
-//   //   levels.value.length && levels.value.length >= startLevel - 1
-//   //     ? levels.value[startLevel - 1].pointsNeeded
-//   //     : currentLevelPoints.value;
-
-//   // currentFeaturePoints.value =
-//   //   features.value.length && features.value.length >= startFeature - 1
-//   //     ? features.value[startFeature - 1].pointsNeeded
-//   //     : currentFeaturePoints.value;
-// });
 </script>
 
 <template>

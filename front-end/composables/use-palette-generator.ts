@@ -28,26 +28,10 @@ export const usePaletteGenerator = () => {
 
   const generatePalette = (regenerate = true) => {
     if (regenerate || !generator || !initPalette) {
-      // generator = new ColorPaletteGenerator({
-      //   precision: 4,
-      //   baseSaturation: 75,
-      //   //hueRange: 135,
-      //   //hueRange: 225,
-      //   //hueRange: 150,
-      // });
-
-      // initPalette = generator.getDistributedPalette({
-      //   length: paletteLength,
-      //   //minSaturation: 35,
-      //   minBrightness: 5,
-      //   maxBrightness: 85,
-      // });
-
       const precision = 3;
 
       generator = new ColorPaletteGenerator({
         precision,
-        //baseSaturation: 50,
         hueRange: 150 + Math.random() * 50,
       });
 
@@ -62,30 +46,10 @@ export const usePaletteGenerator = () => {
     palette = initPalette.map((color, i) => {
       const indexRatio = i / (paletteLength - 1);
 
-      //const c = color.clone().saturateHsl(25);
-      //const c = color.clone().saturateHsl(20);
-      //const c = color.clone();
-      //c.saturateHsl(30);
-      //c.saturateHsv(10 + indexRatio * 20);
-
-      // if (theme.value === "light") {
-      //   c.lighten(10 - (i / paletteLength - 1) * 10);
-      // } else {
-      //   c.lighten(15 - (i / paletteLength - 1) * 15);
-      // }
-
-      //c.brighten(25);
-
       const newColor = new ColorModel();
       const hue = newColor.addToHue(0, color.hsl.h);
 
       const endValue = theme.value === "light" ? 90 : 100;
-
-      // newColor.hsv = {
-      //   h: hue,
-      //   s: 55 + Math.pow(indexRatio, 0.75) * 45,
-      //   v: endValue - Math.pow(indexRatio, 0.75) * 55,
-      // };
 
       newColor.hsv = {
         h: hue,
@@ -93,21 +57,8 @@ export const usePaletteGenerator = () => {
         v: endValue - Math.pow(indexRatio, 5) * 50,
       };
 
-      //console.log(newColor.hsv);
-
       return newColor;
     });
-
-    // sort again because we modified value
-    //palette.sort((a, b) => a.hsl.l - b.hsl.l || a.hsl.h - b.hsl.h);
-    //palette.sort((a, b) => a.hsl.l - b.hsl.l);
-
-    // const getLuminance = ({ r = 0, g = 0, b = 0 }) => {
-    //   return (0.2126 * r) / 255 + (0.7152 * g) / 255 + (0.0722 * b) / 255;
-    // };
-
-    //palette.sort((a, b) => a.hsv.v - b.hsv.v);
-    //palette.sort((a, b) => getLuminance(a.rgb) - getLuminance(b.rgb));
 
     palette.reverse();
 

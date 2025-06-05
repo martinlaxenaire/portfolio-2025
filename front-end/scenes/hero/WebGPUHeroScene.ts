@@ -63,7 +63,7 @@ export class WebGPUHeroScene extends WebGPUScene {
             },
             noiseStrength: {
               type: "f32",
-              value: 0.05,
+              value: 0.075,
             },
             noiseScale: {
               type: "f32",

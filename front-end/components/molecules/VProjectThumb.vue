@@ -50,10 +50,6 @@ const projectComponentAttrs = computed(() => {
         {{ project.title }}
       </h3>
 
-      <!--<div v-if="project.cover && project.cover._id" :class="$style.image">
-        <SanityImage :asset-id="project.cover._id" auto="format" />
-      </div>-->
-
       <div v-if="formattedStack" :class="$style.stack">
         {{ formattedStack }}
       </div>
@@ -83,7 +79,7 @@ const projectComponentAttrs = computed(() => {
       background: var(--foreground-color);
       transform-origin: 0% 50%;
       transform: scale3d(0, 1, 1);
-      transition: transform 0.5s ease(out-expo);
+      transition: transform 0.35s ease(out-expo);
 
       @media (prefers-reduced-motion) {
         transform: scale3d(1, 1, 1);
@@ -102,7 +98,8 @@ const projectComponentAttrs = computed(() => {
     background: var(--foreground-color);
     transform-origin: 0% 50%;
     transform: scale3d(0, 1, 1);
-    transition: transform 0.5s calc(0.1s + 0.1s * var(--index)) ease(out-expo);
+    transition: transform 0.35s calc(0.05s + 0.05s * var(--index))
+      ease(out-expo);
 
     @media (prefers-reduced-motion) {
       transform: scale3d(1, 1, 1);
@@ -242,7 +239,7 @@ const projectComponentAttrs = computed(() => {
   margin: 0;
 
   opacity: 0;
-  transition: opacity 0.5s calc(0.15s + 0.1s * var(--index)) ease(in-quad);
+  transition: opacity 0.35s calc(0.1s + 0.05s * var(--index)) ease(in-quad);
 
   @media (prefers-reduced-motion) {
     opacity: 1;
@@ -254,36 +251,8 @@ const projectComponentAttrs = computed(() => {
   }
 }
 
-// .image {
-//   display: flex;
-//   overflow: hidden;
-//   width: 25%;
-//   position: absolute;
-//   left: 50%;
-//   transform: translate3d(-50%, 0, 0);
-//   display: none;
-
-//   .root:hover & {
-//     //display: flex;
-//   }
-
-//   img,
-//   video {
-//     object-fit: cover;
-//     min-width: 100%;
-//     min-height: 100%;
-//     width: auto;
-//     height: auto;
-//   }
-// }
-
 .stack {
   text-transform: uppercase;
-  // text-shadow: -0.025em -0.025em 0 var(--background-color),
-  //   0.025em -0.025em 0 var(--background-color),
-  //   -0.025em 0.025em 0 var(--background-color),
-  //   0.025em 0.025em 0 var(--background-color);
-
   opacity: 0;
   transition: opacity 0.5s calc(0.2s + 0.1s * var(--index)) ease(in-quad);
 

@@ -105,7 +105,7 @@ export class YearTitlePlane {
 
     this.setPlaneScale();
 
-    this.plane.rotation.y = (this.index / this.nbTitles) * Math.PI * 2;
+    this.plane.rotation.y = (this.index / this.nbTitles) * -Math.PI * 2;
 
     this.plane.parent = this.yearsScene.titlePivot;
 
