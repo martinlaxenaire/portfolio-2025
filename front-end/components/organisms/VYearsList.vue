@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { HomeQueryResult } from "~/types/sanity.types";
-import { WebGPUYearsScene } from "~/scenes/years/WebGPUYearsScene";
+import type { WebGPUYearsScene } from "~/scenes/years/WebGPUYearsScene";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/all";
 
@@ -95,13 +95,17 @@ let scrollTrigger: ScrollTrigger | null = null;
 const hasStarted = ref(currentLevel.value >= 2);
 const sceneComplete = ref(false);
 
-onMounted(() => {
+onMounted(async () => {
   const { $gpuCurtains, $hasWebGPU, $debugPane, $isReducedMotion } =
     useNuxtApp();
 
   let progress = 0;
 
   if ($hasWebGPU && canvas.value && yearsItems.value) {
+    const { WebGPUYearsScene } = await import(
+      "~/scenes/years/WebGPUYearsScene"
+    );
+
     scene = new WebGPUYearsScene({
       gpuCurtains: $gpuCurtains,
       container: canvas.value,
@@ -153,6 +157,7 @@ onMounted(() => {
         },
         onDragStart: function () {
           gsap.killTweensOf(scrollTrigger);
+          yearsWrapper.value.style.cursor = "grabbing";
         },
         onDrag: function (self) {
           scrollTrigger?.scroll(
@@ -164,6 +169,7 @@ onMounted(() => {
           );
         },
         onDragEnd: function (self) {
+          yearsWrapper.value.style.cursor = "grab";
           gsap.to(scrollTrigger, {
             inertia: {
               scroll: {

@@ -92,16 +92,7 @@ export class CanvasOpenSourceScene extends Scene {
 
     this.canvas = document.createElement("canvas");
     this.container.appendChild(this.canvas);
-
-    this.onResize();
-
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-
-    this.resizeObserver = new ResizeObserver(() => {
-      this.onResize();
-    });
-
-    this.resizeObserver.observe(document.body);
 
     this.lineDrawerScene = null;
     if (!this.isReducedMotion) {
@@ -117,7 +108,13 @@ export class CanvasOpenSourceScene extends Scene {
       });
     }
 
-    this.draw();
+    this.onResize();
+
+    this.resizeObserver = new ResizeObserver(() => {
+      this.onResize();
+    });
+
+    this.resizeObserver.observe(document.body);
   }
 
   override onResize() {
@@ -134,14 +131,16 @@ export class CanvasOpenSourceScene extends Scene {
     }
 
     this.boundingRect = boundingRect;
-    this.canvas.width = this.boundingRect.width;
-    this.canvas.height = this.boundingRect.height;
+    this.canvas.width = this.boundingRect.width * window.devicePixelRatio;
+    this.canvas.height = this.boundingRect.height * window.devicePixelRatio;
+    this.canvas.style.width = this.boundingRect.width + "px";
+    this.canvas.style.height = this.boundingRect.height + "px";
+
+    this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
     this.setParams();
 
-    if (this.ctx) {
-      this.draw();
-    }
+    this.draw();
   }
 
   override setColors(colors: ColorModelBase[]): void {

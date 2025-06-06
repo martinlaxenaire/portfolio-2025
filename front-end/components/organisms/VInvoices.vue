@@ -2,7 +2,7 @@
 import type { HomeQueryResult } from "~/types/sanity.types";
 import { useTimeoutFn } from "@vueuse/core";
 import { CanvasInvoicesScene } from "~/scenes/invoices/CanvasInvoicesScene";
-import { WebGPUInvoicesScene } from "~/scenes/invoices/WebGPUInvoicesScene";
+import type { WebGPUInvoicesScene } from "~/scenes/invoices/WebGPUInvoicesScene";
 
 const props = defineProps<{
   process?: NonNullable<HomeQueryResult>["processDescription"];
@@ -68,6 +68,10 @@ onMounted(async () => {
   }
 
   if ($hasWebGPU && canvas.value) {
+    const { WebGPUInvoicesScene } = await import(
+      "~/scenes/invoices/WebGPUInvoicesScene"
+    );
+
     scene = new WebGPUInvoicesScene({
       gpuCurtains: $gpuCurtains,
       container: canvas.value,
@@ -285,8 +289,6 @@ const parsedDescription = computed(() => {
   }
 
   &-desc {
-    //font-size: 0.8rem;
-    //text-transform: uppercase;
     padding-right: calc(var(--gutter-size) * 2);
 
     p {

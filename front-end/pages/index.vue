@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { HomeQueryResult } from "~/types/sanity.types";
 import { homeQueryString } from "../../studio/src/queries-strings";
+import { usePiwikPro } from "@piwikpro/nuxt-piwik-pro/composables";
 
 const { currentLevel } = useLevelExperience();
 
@@ -46,6 +47,23 @@ if (import.meta.server) {
     },
   });
 }
+
+const { $piwikPRO } = useNuxtApp();
+// $piwikPRO won't be available on server-side code!
+// if (import.meta.client) {
+//   $piwikPRO.PageViews.trackPageView(data.value?.title);
+//   //$piwikPRO.GoalConversions.trackGoal(1, 100);
+// }
+
+onMounted(() => {
+  $piwikPRO.PageViews.trackPageView("Homepage");
+});
+
+// const userId = usePiwikPro(({ PageViews, GoalConversions, UserManagement }) => {
+//   PageViews.trackPageView(data.value?.title);
+//   //GoalConversions.trackGoal(1, 100);
+//   return UserManagement.getUserId();
+// });
 </script>
 
 <template>

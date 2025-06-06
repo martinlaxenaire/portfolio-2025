@@ -159,6 +159,8 @@ const toggleGridHelper = () => {
       text-decoration: none;
       text-transform: uppercase;
       display: inline-block;
+      backface-visibility: hidden;
+      will-change: transform;
 
       transition: transform 0.35s ease(out-expo);
 

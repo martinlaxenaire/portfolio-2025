@@ -37,10 +37,10 @@ const props = defineProps<{
 
 .col {
   height: 100%;
-  background: color-mix(in srgb, var(--color-palette-0) 50%, transparent);
+  background: color-mix(in srgb, var(--color-palette-0) 25%, transparent);
 
   body:global(.is-light) & {
-    background: color-mix(in srgb, var(--color-palette-4) 50%, transparent);
+    background: color-mix(in srgb, var(--color-palette-4) 25%, transparent);
   }
 }
 </style>

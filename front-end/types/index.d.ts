@@ -3,6 +3,7 @@ import type {
   ColorPaletteGenerator,
 } from "@martinlaxenaire/color-palette-generator";
 import type { GPUCurtains } from "gpu-curtains";
+import type PiwikPROServicesType from "@piwikpro/nuxt-piwik-pro";
 
 declare module "#app" {
   interface NuxtApp {
@@ -12,5 +13,6 @@ declare module "#app" {
     $debugPane: DebugPane;
     $paletteGenerator: ColorPaletteGenerator;
     $palette: ColorPalette;
+    $piwikPRO: PiwikPROServicesType;
   }
 }

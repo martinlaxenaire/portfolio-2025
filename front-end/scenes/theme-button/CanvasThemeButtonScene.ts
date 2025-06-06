@@ -38,14 +38,13 @@ export class CanvasThemeButtonScene extends Scene {
 
     this.canvas = document.createElement("canvas");
     this.container.appendChild(this.canvas);
+    this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
     this.tween = null;
     this.drawValue = theme === "light" ? 1 : 0;
 
-    this.onResize();
     this.setColor();
-
-    this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+    this.onResize();
 
     this._renderHandler = this.onRender.bind(this);
 
@@ -54,8 +53,6 @@ export class CanvasThemeButtonScene extends Scene {
     });
 
     this.resizeObserver.observe(document.body);
-
-    this.draw();
   }
 
   setColor() {
@@ -77,10 +74,8 @@ export class CanvasThemeButtonScene extends Scene {
     this.canvas.style.width = this.boundingRect.width + "px";
     this.canvas.style.height = this.boundingRect.height + "px";
 
-    if (this.ctx) {
-      this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-      this.draw();
-    }
+    this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    this.draw();
   }
 
   setTheme(theme: Theme = "light") {

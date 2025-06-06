@@ -7,7 +7,7 @@ const {
   timelineDelay = 0.2,
   duration = 0.65,
   stagger = 0.0375,
-  ease = "power3.out",
+  ease = "power2.out",
   nbCharsDelay = 2,
   onComplete = () => {},
 } = defineProps<{
@@ -39,8 +39,6 @@ const playTimeline = computed(() => {
 });
 
 const { theme } = useTheme();
-// non reactive
-//const themeValue = theme.value;
 
 const { colors } = usePaletteGenerator();
 
@@ -92,7 +90,7 @@ onMounted(() => {
         autoAlpha: 1,
         duration: tweenDuration,
         stagger: tweenStagger,
-        ease,
+        ease: "power3.out",
       });
 
     for (let i = 1; i < hexColors.length; i++) {
@@ -104,7 +102,7 @@ onMounted(() => {
           stagger: tweenStagger,
           ease,
         },
-        i * tweenStagger * nbCharsDelay
+        i * tweenStagger * nbCharsDelay + tweenDuration * 0.15
       );
     }
 
@@ -117,7 +115,7 @@ onMounted(() => {
           scale: 1.25,
           rotateZ: -2.5,
           duration: popinDuration,
-          ease: "power3.out",
+          ease: "power2.out",
           stagger: tweenStagger,
         },
         0.05
@@ -128,7 +126,7 @@ onMounted(() => {
           scale: 1,
           rotateZ: 0,
           duration: popinDuration,
-          ease: "power2.out",
+          ease: "power1.out",
           stagger: tweenStagger,
         },
         popinDuration + 0.05

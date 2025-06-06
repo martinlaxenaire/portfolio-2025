@@ -116,6 +116,8 @@ watch(theme, () => {
     );
     border-radius: 50%;
     border: 2px solid var(--foreground-color);
+    backface-visibility: hidden;
+    will-change: transform;
 
     transition: transform 0.25s ease(in-out-quad),
       border-width 0.25s ease(in-out-quad);

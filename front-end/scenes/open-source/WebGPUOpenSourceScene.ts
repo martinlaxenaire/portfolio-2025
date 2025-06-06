@@ -145,7 +145,7 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
     this.mouse = {
       current: new Vec2(0.5), // center
       lerped: new Vec2(0.5),
-      strength: 4,
+      strength: 3,
     };
 
     this.linePoints = {
@@ -884,11 +884,11 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
             // closer to 1 = no dissipation
             dissipation: {
               type: "f32",
-              value: 0.995,
+              value: 0.99,
             },
             cursorSize: {
               type: "f32",
-              value: 0.4, // size of the mouse cursor
+              value: 0.25, // size of the mouse cursor
             },
             // alpha of the cursor
             alpha: {

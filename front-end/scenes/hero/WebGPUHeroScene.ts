@@ -36,6 +36,7 @@ export class WebGPUHeroScene extends WebGPUScene {
 
     this.plane = new FullscreenPlane(this.renderer, {
       label: "Hero fullscreen plane",
+      transparent: true,
       shaders: {
         fragment: {
           code: heroPlaneFs,
@@ -76,6 +77,10 @@ export class WebGPUHeroScene extends WebGPUScene {
                 this.renderer.boundingRect.height
               ),
             },
+            borderRadius: {
+              type: "f32",
+              value: this.borderRadius,
+            },
             fillColorRatio: {
               type: "f32",
               value: 6, // how much the colored triangles scale compared to empty areas
@@ -110,6 +115,8 @@ export class WebGPUHeroScene extends WebGPUScene {
           this.renderer.boundingRect.width,
           this.renderer.boundingRect.height
         );
+
+        this.plane.uniforms.params.borderRadius.value = this.borderRadius;
       });
 
     this.renderer.onBeforeRender(() => this.onRender());
@@ -117,6 +124,10 @@ export class WebGPUHeroScene extends WebGPUScene {
     this.setShowTl();
 
     this.addDebug();
+  }
+
+  get borderRadius(): number {
+    return parseFloat(window.getComputedStyle(document.body).fontSize);
   }
 
   setShowTl() {
@@ -131,14 +142,14 @@ export class WebGPUHeroScene extends WebGPUScene {
         ease: "power2.inOut",
         onUpdate: () => {
           this.plane.uniforms.params.showProgress.value =
-            this.showProgress * 0.3 + this.progress * 0.7;
+            this.showProgress * 0.75 + this.progress * 0.25;
         },
       });
   }
 
   override onProgress(): void {
     this.plane.uniforms.params.showProgress.value =
-      this.showProgress * 0.3 + this.progress * 0.7;
+      this.showProgress * 0.75 + this.progress * 0.25;
   }
 
   override setSceneVisibility(isVisible = false) {

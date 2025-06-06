@@ -1003,6 +1003,25 @@
     "@parcel/watcher-win32-ia32" "2.5.1"
     "@parcel/watcher-win32-x64" "2.5.1"
 
+"@piwikpro/nuxt-piwik-pro@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@piwikpro/nuxt-piwik-pro/-/nuxt-piwik-pro-1.3.0.tgz#8226fc5a3d1b18b7cf1b100cde78bcae1f8db744"
+  integrity sha512-rJwOjK/k3naudvZdaZaBaXvXW+S8VnU2XJDazJhIyB+P/L2vG4R4T+LkdYMyfnAACO1fI5a52VLf1NJ3EBXdkQ==
+  dependencies:
+    "@piwikpro/vue-piwik-pro" "^1.6.0"
+
+"@piwikpro/tracking-base-library@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@piwikpro/tracking-base-library/-/tracking-base-library-1.6.0.tgz#c08ac7331c514e9c2610669720cac9f99bad6a9b"
+  integrity sha512-jd88qqxGAtjSfdDLPuFzrk1hjnIQKCdSFynm3GE/fHB0drPsXZ/o1oXPY9YpAVX2dIkurrycRAzEhtC6KwSlfw==
+
+"@piwikpro/vue-piwik-pro@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@piwikpro/vue-piwik-pro/-/vue-piwik-pro-1.6.0.tgz#ee9d8a03c99e32bcdd589c44de38ade48c38fd2e"
+  integrity sha512-PMwHf2+9DL31KvK6N+ELbFaD37rodNDYqXKWewmmToNGGeYKrFQUcTkp6Ud0rls1IIi+K1HR2n+EUvdZg4JoWw==
+  dependencies:
+    "@piwikpro/tracking-base-library" "^1.6.0"
+
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"

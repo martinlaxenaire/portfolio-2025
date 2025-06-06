@@ -39,12 +39,14 @@
 
   --small-font-size: 0.85rem;
   --tiny-font-size: 0.775rem;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
+  @media (prefers-color-scheme: dark) {
     --background-color: var(--dark-color);
     --foreground-color: var(--light-color);
+  }
+
+  @media screen and (orientation: portrait) {
+    --gutter-size: 0.725rem;
   }
 }
 
@@ -81,4 +83,10 @@ body {
   overflow-y: scroll;
   overflow-x: hidden;
   //overscroll-behavior: contain;
+}
+
+// hide piwik popup
+// should not happen anyway
+div[id^="ppms_cm"] {
+  display: none;
 }

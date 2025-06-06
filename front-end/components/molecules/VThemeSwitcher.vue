@@ -78,6 +78,8 @@ onBeforeUnmount(() => {
   border: 0;
   pointer-events: auto;
   cursor: pointer;
+  backface-visibility: hidden;
+  will-change: transform;
 
   transition: transform 0.25s ease(out-cubic);
 

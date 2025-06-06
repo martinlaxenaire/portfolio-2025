@@ -23,6 +23,8 @@ export class CanvasSeparatorScene extends Scene {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
 
+  boundingRect!: DOMRect;
+
   shown: boolean;
   isComplete: boolean;
 
@@ -56,9 +58,6 @@ export class CanvasSeparatorScene extends Scene {
 
     this.canvas = document.createElement("canvas");
     this.container.appendChild(this.canvas);
-
-    this.onResize();
-
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
     this.applyColors();
@@ -67,6 +66,8 @@ export class CanvasSeparatorScene extends Scene {
     });
 
     this.timeline = null;
+
+    this.onResize();
 
     if (this.isReducedMotion) {
       this.drawValues.forEach((v) => (v.value = 1));
@@ -142,9 +143,24 @@ export class CanvasSeparatorScene extends Scene {
   }
 
   override onResize() {
+    super.onResize();
     const boundingRect = this.container.getBoundingClientRect();
-    this.canvas.width = boundingRect.width;
-    this.canvas.height = boundingRect.height;
+
+    if (
+      this.boundingRect &&
+      this.boundingRect.width === boundingRect.width &&
+      this.boundingRect.height === boundingRect.height
+    ) {
+      return;
+    }
+
+    this.boundingRect = boundingRect;
+    this.canvas.width = this.boundingRect.width * window.devicePixelRatio;
+    this.canvas.height = this.boundingRect.height * window.devicePixelRatio;
+    this.canvas.style.width = this.boundingRect.width + "px";
+    this.canvas.style.height = this.boundingRect.height + "px";
+
+    this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
   }
 
   override setSceneVisibility(isVisible = false) {
@@ -168,13 +184,13 @@ export class CanvasSeparatorScene extends Scene {
       this.fillColorRatio > 0
         ? numColorBands * this.fillColorRatio + numBlackBands
         : numColorBands;
-    const unitHeight = this.canvas.height / totalUnit;
+    const unitHeight = this.boundingRect.height / totalUnit;
 
     // Draw quadrilaterals
-    let yOffset = this.invertColors ? this.canvas.height : 0;
+    let yOffset = this.invertColors ? this.boundingRect.height : 0;
     let bandIndex = this.invertColors ? numColorBands - 1 : 0;
 
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.clearRect(0, 0, this.boundingRect.width, this.boundingRect.height);
 
     for (let i = 0; i < numBands; i++) {
       const colorModulo = this.fillColorRatio > 0 ? 2 : 1;
@@ -225,7 +241,6 @@ export class CanvasSeparatorScene extends Scene {
   }
 
   override destroy() {
-    //gsap.ticker.remove(this._renderHandler);
     this.timeline?.kill();
     this.resizeObserver.disconnect();
   }

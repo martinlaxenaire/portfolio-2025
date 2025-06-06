@@ -41,11 +41,10 @@ export class CanvasHeroScene extends Scene {
 
     this.canvas = document.createElement("canvas");
     this.container.appendChild(this.canvas);
+    this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
     this.onResize();
     this.setBgColor();
-
-    this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
     this._renderHandler = this.onRender.bind(this);
 
@@ -87,8 +86,12 @@ export class CanvasHeroScene extends Scene {
     }
 
     this.boundingRect = boundingRect;
-    this.canvas.width = this.boundingRect.width;
-    this.canvas.height = this.boundingRect.height;
+    this.canvas.width = this.boundingRect.width * window.devicePixelRatio;
+    this.canvas.height = this.boundingRect.height * window.devicePixelRatio;
+    this.canvas.style.width = this.boundingRect.width + "px";
+    this.canvas.style.height = this.boundingRect.height + "px";
+
+    this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
     this.setClipPath();
 
@@ -169,10 +172,10 @@ export class CanvasHeroScene extends Scene {
 
     const numTriangles = 3; // Number of times to repeat the color set
 
-    const centerX = this.canvas.width * 0.5;
-    const centerY = this.canvas.height * 0.5;
+    const centerX = this.boundingRect.width * 0.5;
+    const centerY = this.boundingRect.height * 0.5;
 
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.clearRect(0, 0, this.boundingRect.width, this.boundingRect.height);
 
     const size =
       Math.hypot(

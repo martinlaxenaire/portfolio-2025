@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WebGPU404Scene } from "./scenes/404/WebGPU404Scene";
+import type { WebGPU404Scene } from "~/scenes/404/WebGPU404Scene";
 import type { NuxtError } from "#app";
 
 const props = defineProps({
@@ -16,8 +16,10 @@ const { theme } = useTheme();
 
 let scene: WebGPU404Scene | null = null;
 
-onMounted(() => {
+onMounted(async () => {
   if ($hasWebGPU && canvas.value) {
+    const { WebGPU404Scene } = await import("~/scenes/404/WebGPU404Scene");
+
     scene = new WebGPU404Scene({
       gpuCurtains: $gpuCurtains,
       container: canvas.value as HTMLElement,
@@ -57,6 +59,17 @@ onBeforeUnmount(() => {
             <VAnimatedTextByLetters :label="error?.statusCode.toString()" />
           </h1>
         </div>
+        <div
+          v-if="error?.statusCode !== 404"
+          :class="$style.error"
+          class="container"
+        >
+          <h2 v-if="error?.message">
+            {{ error.message }}
+          </h2>
+          <div v-if="error?.stack" v-html="error.stack" />
+        </div>
+
         <NuxtLink to="/" :class="$style.link">Go back home</NuxtLink>
       </div>
     </div>
@@ -91,6 +104,10 @@ onBeforeUnmount(() => {
   @include main-title;
   grid-column: 1 / -1;
   margin-bottom: 3rem;
+}
+
+.error {
+  text-align: left;
 }
 
 .link {

@@ -8,6 +8,8 @@ const {
   currentFeaturePoints,
 } = useLevelExperience();
 
+const { $piwikPRO } = useNuxtApp();
+
 const skipGame = () => {
   currentLevelPoints.value = Math.max(
     levels.value[levels.value.length - 1].pointsNeeded,
@@ -17,6 +19,13 @@ const skipGame = () => {
   currentFeaturePoints.value = Math.max(
     features.value[features.value.length - 1].pointsNeeded,
     currentFeaturePoints.value
+  );
+
+  $piwikPRO.CustomEvent.trackEvent(
+    "Game",
+    "Interaction",
+    "Unlocked everything",
+    1
   );
 
   isGameActive.value = false;

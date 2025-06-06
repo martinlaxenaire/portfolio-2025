@@ -60,6 +60,8 @@ const onTitleClick = (navigate: () => void) => {
   text-decoration: none;
   pointer-events: auto;
   -webkit-text-stroke: 1px var(--background-color);
+  backface-visibility: hidden;
+  will-change: transform;
 
   display: inline-block;
   transition: transform 0.35s ease(out-expo);
@@ -71,6 +73,10 @@ const onTitleClick = (navigate: () => void) => {
   &:hover,
   &:focus-visible {
     transform: skew(-15deg, 0deg);
+  }
+
+  @media screen and (max-width: 400px) {
+    font-size: 0.9rem;
   }
 }
 </style>

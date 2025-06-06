@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { HomeQueryResult } from "~/types/sanity.types";
-import { WebGPUHeroScene } from "~/scenes/hero/WebGPUHeroScene";
+import type { WebGPUHeroScene } from "~/scenes/hero/WebGPUHeroScene";
 import { CanvasHeroScene } from "~/scenes/hero/CanvasHeroScene";
 
 const props = defineProps<{
@@ -17,7 +17,6 @@ const { isGameActive, currentLevel, addLevelPoints } = useLevelExperience();
 const sliderProgress = ref(currentLevel.value >= 1 ? 1 : 0);
 
 onMounted(async () => {
-  // At this point, data has loaded
   const { $gpuCurtains, $hasWebGPU, $isReducedMotion, $debugPane } =
     useNuxtApp();
 
@@ -26,6 +25,8 @@ onMounted(async () => {
   }
 
   if ($hasWebGPU && canvas.value) {
+    const { WebGPUHeroScene } = await import("~/scenes/hero/WebGPUHeroScene");
+
     scene = new WebGPUHeroScene({
       gpuCurtains: $gpuCurtains,
       container: canvas.value,

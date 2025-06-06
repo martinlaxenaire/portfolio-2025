@@ -2,7 +2,7 @@
 import type { HomeQueryResult } from "~/types/sanity.types";
 import type { GithubContribution } from "~/server/api/github";
 import { CanvasOpenSourceScene } from "~/scenes/open-source/CanvasOpenSourceScene";
-import { WebGPUOpenSourceScene } from "~/scenes/open-source/WebGPUOpenSourceScene";
+import type { WebGPUOpenSourceScene } from "~/scenes/open-source/WebGPUOpenSourceScene";
 import { useTimeoutFn } from "@vueuse/core";
 
 const props = defineProps<{
@@ -82,6 +82,10 @@ onMounted(async () => {
 
   // At this point, data has loaded
   if ($hasWebGPU && canvas.value) {
+    const { WebGPUOpenSourceScene } = await import(
+      "~/scenes/open-source/WebGPUOpenSourceScene"
+    );
+
     scene = new WebGPUOpenSourceScene({
       gpuCurtains: $gpuCurtains,
       container: canvas.value,
@@ -314,7 +318,7 @@ const toggleInstance = (index = 0) => {
   }
 
   &-list {
-    padding: var(--gutter-size) calc(var(--gutter-size) * 2 + 1.5rem) 0 0;
+    padding: var(--gutter-size) calc(var(--gutter-size) * 2) 0 0;
     list-style: none;
     margin: 0;
     display: flex;

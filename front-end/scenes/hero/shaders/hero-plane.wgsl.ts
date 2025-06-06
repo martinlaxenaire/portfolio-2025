@@ -24,6 +24,33 @@ fn noise(p: vec2<f32>) -> f32 {
   
   return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
 }
+
+fn roundedRectSDF(uv: vec2f, resolution: vec2f, radiusPx: f32) -> f32 {
+    let aspect = resolution.x / resolution.y;
+
+    // Convert pixel values to normalized UV space
+    let marginUV = vec2f(radiusPx) / resolution;
+    let radiusUV = vec2f(radiusPx) / resolution;
+
+    // Adjust radius X for aspect ratio
+    let radius = vec2f(radiusUV.x * aspect, radiusUV.y);
+
+    // Center UV around (0,0) and apply scale (progress)
+    var p = uv * 2.0 - 1.0;       // [0,1] → [-1,1]
+    p.x *= aspect;                // fix aspect
+    p /= max(0.0001, params.showProgress); // apply scaling
+    p = abs(p);
+
+    // Half size of the rounded rect
+    let halfSize = vec2f(1.0) - marginUV * 2.0 - radiusUV * 2.0;
+    let halfSizeScaled = vec2f(halfSize.x * aspect, halfSize.y);
+
+    let d = p - halfSizeScaled;
+    let outside = max(d, vec2f(0.0));
+    let dist = length(outside) + min(max(d.x, d.y), 0.0) - radius.x * 2.0;
+
+    return dist;
+}
   
 @fragment fn main(fsInput: VSOutput) -> @location(0) vec4f {
   let uv: vec2f = fsInput.uv;
@@ -86,42 +113,24 @@ fn noise(p: vec2<f32>) -> f32 {
   let isEmpty = (i32(triIndex) % i32(params.fillColorRatio)) == i32(params.fillColorRatio - 1.0);
   let colorIndex = i32(triIndex / params.fillColorRatio) % params.nbColors; // Use half as many color indices
 
-  let color = select(vec4(params.colors[colorIndex], 1.0), vec4f(0.0), isEmpty);
-  //let color = mix(vec4(params.colors[colorIndex], 1.0), vec4f(0.0), fadeAmount);
+  let color = select(vec4(params.colors[colorIndex], smoothstep(0.0, 0.75, params.showProgress)), vec4f(0.0), isEmpty);
 
-  // **🔹 Compute distance to the closest screen edge**
-  var adjustedUV = uv;
-  adjustedUV = adjustedUV * 2.0 - 1.0;
-  adjustedUV /= (0.8 + params.showProgress * 0.2);
-  adjustedUV = adjustedUV * 0.5 + 0.5;
-  adjustedUV.x *= aspect; // Scale X to match aspect
+  // rounded corners
+  var roundedUv = uv * 2.0 - 1.0;
+  // apply noise
+  roundedUv *= (1.0 + computedNoise * 0.015) + (1.0 - params.showProgress) * computedNoise * 0.225;
+  roundedUv = roundedUv * 0.5 + 0.5;
 
-  // **🔹 Compute distance to the closest screen edge (with aspect)**
-  var edgeDist = min(min(adjustedUV.x, aspect - adjustedUV.x), min(adjustedUV.y, 1.0 - adjustedUV.y));
-  edgeDist /= aspect; // Normalize back
-  edgeDist *= params.showProgress;
-
-  // **🔹 Generate Noise Mask for Edge Fade**
-  let edgeNoise = computedNoise * 0.5 * (0.5 + params.showProgress * 0.5); // Noise in range [-1,1]
-
-  // **🔹 Apply Step for Hard Noisy Edge Mask**
-  //let edgeThreshold = smoothstep(1.0, 0.9, radialDist); // Define the edge region
-  //let edgeNoisePosition = (1.0 - params.showProgress) * 0.25;
-  let edgeThreshold = smoothstep(0.0, 0.05, edgeDist); // Define the edge region
-
-  let edgeThresholdMin = 0.025; // Start of fade
-  let edgeThresholdMax = 0.05; // End of fade
-  let noiseMask = smoothstep(edgeThresholdMin, edgeThresholdMax, (edgeThreshold - edgeNoise)); 
-
-  //let noiseMask = step(edgeNoise, edgeThreshold);       // Apply noise to mask
+  let sdf = roundedRectSDF(roundedUv, params.resolution, params.borderRadius);
+  let roundedRectMask = smoothstep(0.0, 0.005, -sdf); // fade near edge
 
   //let centerFade = smoothstep(0.25, 0.375, radialDist); // Darkens toward center
   let centerFade = smoothstep(0.1 * params.showProgress, 0.05 + 0.45 * params.showProgress, radialDist); // Darkens toward center
 
   // **🔹 Apply Noise to Edge Fade**
-  let radialShade = noiseMask * centerFade;
+  let radialShade = centerFade * roundedRectMask;
 
-  //return vec4(vec3(concentricCircles), 1.0);
+  //return vec4(vec3(roundedRectMask), 1.0);
   return color * radialShade;
 }
 `;

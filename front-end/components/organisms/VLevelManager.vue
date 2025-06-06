@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { useTimeoutFn } from "@vueuse/core";
 
+const { $piwikPRO } = useNuxtApp();
+
 const {
   levels,
   features,
@@ -79,6 +81,15 @@ const activeLevelLegend = ref([] as number[]);
 watch(currentLevel, () => {
   if (!isGameActive.value) return;
 
+  if (import.meta.client) {
+    $piwikPRO.CustomEvent.trackEvent(
+      "Game",
+      "Interaction",
+      `Unlocked level ${currentLevel.value}`,
+      1
+    );
+  }
+
   if (
     currentLevel.value === levels.value.length &&
     currentFeature.value === features.value.length
@@ -115,6 +126,15 @@ const activeFeatureLegend = ref([] as number[]);
 
 watch(currentFeature, () => {
   if (!isGameActive.value) return;
+
+  if (import.meta.client) {
+    $piwikPRO.CustomEvent.trackEvent(
+      "Game",
+      "Interaction",
+      `Unlocked feature ${currentFeature.value}`,
+      1
+    );
+  }
 
   if (
     currentLevel.value === levels.value.length &&

@@ -81,6 +81,12 @@ onBeforeUnmount(() => {
   height: calc(var(--gutter-size) * 2 - 1px);
   padding: 0;
   box-sizing: border-box;
+
+  @media screen and (orientation: portrait) {
+    width: calc(var(--gutter-size) * 3 - 1px);
+    height: calc(var(--gutter-size) * 3 - 1px);
+    border-radius: calc(var(--gutter-size) * 1.5);
+  }
 }
 
 .wrapper {
@@ -127,6 +133,11 @@ onBeforeUnmount(() => {
 
   @media (prefers-reduced-motion: reduce) {
     transition: none !important;
+  }
+
+  @media screen and (orientation: portrait) {
+    padding: calc(var(--gutter-size) * 1.5 - 2px);
+    border-radius: calc(var(--gutter-size) * 1.5);
   }
 
   .root--is-visible & {

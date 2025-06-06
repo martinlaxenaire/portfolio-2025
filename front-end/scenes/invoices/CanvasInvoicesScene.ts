@@ -25,7 +25,7 @@ export class CanvasInvoicesScene extends Scene {
   onStarted: () => void;
   onAttractionComplete: () => void;
 
-  bgColor: string;
+  bgColor!: string;
 
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
@@ -75,11 +75,10 @@ export class CanvasInvoicesScene extends Scene {
 
     this.canvas = document.createElement("canvas");
     this.container.appendChild(this.canvas);
-
-    this.onResize();
-    this.setBgColor();
-
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+
+    this.setBgColor();
+    this.onResize();
 
     this._renderHandler = this.onRender.bind(this);
 
@@ -147,8 +146,12 @@ export class CanvasInvoicesScene extends Scene {
     }
 
     this.boundingRect = boundingRect;
-    this.canvas.width = this.boundingRect.width;
-    this.canvas.height = this.boundingRect.height;
+    this.canvas.width = this.boundingRect.width * window.devicePixelRatio;
+    this.canvas.height = this.boundingRect.height * window.devicePixelRatio;
+    this.canvas.style.width = this.boundingRect.width + "px";
+    this.canvas.style.height = this.boundingRect.height + "px";
+
+    this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
     const fillRatio = 0.7;
 
