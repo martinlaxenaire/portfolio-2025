@@ -6,3 +6,14 @@
   @warn "Unkown '#{$key}' in $ease-curves.";
   @return null;
 }
+
+@function get-col-span-width($nb-cols: 1, $nb-gutters: 0) {
+  $gutter-width: var(--gutter-size);
+  $window-width: calc(100vw - var(--scrollbar-width));
+  $total-cols: var(--grid-columns);
+
+  $col-width: calc(
+    (#{$window-width} - #{$gutter-width} * (#{$total-cols} + 1)) / #{$total-cols}
+  );
+  @return calc(#{$nb-cols} * #{$col-width} + #{$nb-gutters} * #{$gutter-width});
+}

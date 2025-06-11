@@ -7,7 +7,7 @@ const props = defineProps<{
 <template>
   <div :class="[$style.root, isVisible && $style['root--is-visible']]">
     <div :class="$style.grid" class="container grid">
-      <div v-for="i in 12" :key="i" :class="$style.col"></div>
+      <div v-for="i in 24" :key="i" :class="$style.col"></div>
     </div>
   </div>
 </template>
@@ -41,6 +41,12 @@ const props = defineProps<{
 
   body:global(.is-light) & {
     background: color-mix(in srgb, var(--color-palette-4) 25%, transparent);
+  }
+
+  &:nth-child(2n) {
+    @media screen and (max-aspect-ratio: 12 / 8) {
+      display: none;
+    }
   }
 }
 </style>

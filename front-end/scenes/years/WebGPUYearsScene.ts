@@ -9,6 +9,7 @@ import {
   Texture,
   ComputePass,
   ShaderPass,
+  Vec2,
 } from "gpu-curtains";
 import type { PerspectiveCamera } from "gpu-curtains";
 import { mediaPlanesShaderPassFs } from "./shaders/years-planes.wgsl";
@@ -19,15 +20,18 @@ import { computeYearsBackground } from "./shaders/compute-years-background.wgsl"
 
 export interface WebGPUYearsParams extends WebGPUSceneParams {
   items: HTMLElement[];
+  wrapper: HTMLElement;
 }
 
 export class WebGPUYearsScene extends WebGPUScene {
   renderer: GPUCurtainsRenderer;
 
   items: HTMLElement[];
+  wrapper: HTMLElement;
   geometry: PlaneGeometry;
 
   visibleSize: PerspectiveCamera["visibleSize"];
+  widthRatio!: number;
 
   anisotropicSampler: Sampler;
 
@@ -39,16 +43,15 @@ export class WebGPUYearsScene extends WebGPUScene {
     lerped: Vec3;
   };
 
+  scroll: {
+    current: Vec2;
+    lerped: Vec2;
+  };
+
   titleBoundingRects: DOMRect[] = [];
   titleMaxWidth = 0;
 
-  mediaPivot: Object3D;
   mediaPlanes: MediaPlane[];
-
-  translation: {
-    current: Vec3;
-    lerped: Vec3;
-  };
 
   renderTarget!: RenderTarget;
 
@@ -63,6 +66,7 @@ export class WebGPUYearsScene extends WebGPUScene {
   constructor({
     gpuCurtains,
     container,
+    wrapper,
     progress = 0,
     colors = [],
     debugPane = null,
@@ -72,6 +76,7 @@ export class WebGPUYearsScene extends WebGPUScene {
 
     this.isVisible = false;
 
+    this.wrapper = wrapper;
     this.items = items;
     this.titlePlanes = [];
     this.mediaPlanes = [];
@@ -101,22 +106,21 @@ export class WebGPUYearsScene extends WebGPUScene {
       lerped: this.titlePivot.rotation.clone(),
     };
 
-    this.translation = {
-      current: new Vec3(),
-      lerped: new Vec3(),
+    this.scroll = {
+      current: new Vec2(),
+      lerped: new Vec2(),
     };
-
-    this.mediaPivot = new Object3D();
-    this.mediaPivot.parent = this.renderer.scene;
 
     this.renderer.camera.position.z = 25;
     this.visibleSize = this.renderer.camera.getVisibleSizeAtDepth();
+    this.setWidthRatio();
 
     this.renderer
       .onBeforeRender(() => this.onRender())
       .onResize(() => {
         this.visibleSize = this.renderer.camera.getVisibleSizeAtDepth();
 
+        this.setWidthRatio();
         this.setTitleBoundingRects();
 
         this.forceProgressUpdate(this.progress);
@@ -129,6 +133,9 @@ export class WebGPUYearsScene extends WebGPUScene {
 
     this.createTitles();
     this.createMediaPlanes();
+
+    this.scroll.lerped.onChange(() => this.setScroll());
+
     this.addDebug();
   }
 
@@ -138,8 +145,7 @@ export class WebGPUYearsScene extends WebGPUScene {
     this.rotation.lerped.lerp(this.rotation.current, 0.2);
     this.titlePivot.rotation.copy(this.rotation.lerped);
 
-    this.translation.lerped.lerp(this.translation.current, 0.2);
-    this.mediaPivot.position.copy(this.translation.lerped);
+    this.scroll.lerped.lerp(this.scroll.current, 0.2);
 
     const progress = this.progress * (this.items.length - 1);
     this.lerpedProgress += (progress - this.lerpedProgress) * 0.2;
@@ -158,13 +164,6 @@ export class WebGPUYearsScene extends WebGPUScene {
       this.rotation.current.y =
         Math.PI *
         2 *
-        ((this.progress * (this.items.length - 1)) / this.items.length);
-
-      //
-
-      this.translation.current.x =
-        -this.visibleSize.width *
-        this.items.length *
         ((this.progress * (this.items.length - 1)) / this.items.length);
     }
   }
@@ -186,6 +185,37 @@ export class WebGPUYearsScene extends WebGPUScene {
     }
 
     this.#lerpedProgress = value;
+  }
+
+  setWidthRatio() {
+    const wrapperBoundingRect = this.wrapper.getBoundingClientRect();
+    this.widthRatio =
+      (wrapperBoundingRect.width - this.renderer.boundingRect.width) /
+      this.renderer.boundingRect.width;
+  }
+
+  setCurrentScroll(xScroll: number) {
+    this.scroll.current.x = xScroll;
+  }
+
+  setScroll() {
+    this.gpuCurtains.updateScrollValues({ x: this.scroll.lerped.x, y: 0 });
+    this.mediaPlanes.forEach((mediaPlane, i) => {
+      mediaPlane.plane.updateScrollPosition({
+        x: this.gpuCurtains.scrollDelta.x,
+        y: 0,
+      });
+      mediaPlane.plane.shouldUpdateComputedSizes();
+    });
+  }
+
+  resetScroll(xScroll: number) {
+    this.gpuCurtains.updateScrollValues({
+      x: xScroll,
+      y: 0,
+    });
+    this.gpuCurtains.scrollManager.delta.x = 0;
+    this.scroll.lerped.x = this.scroll.current.x;
   }
 
   override setSceneVisibility(isVisible = false) {
@@ -357,12 +387,10 @@ export class WebGPUYearsScene extends WebGPUScene {
 
     this.compilteMaterialOnIdle(this.shaderPass.material);
 
+    const geometry = new PlaneGeometry();
+
     this.items.forEach((item, i) => {
       const planeElements = item.querySelectorAll(".media-plane");
-
-      const pivot = new Object3D();
-      pivot.parent = this.mediaPivot;
-      const geometry = new PlaneGeometry();
 
       planeElements.forEach((planeElement, j) => {
         const mediaPlane = new MediaPlane({
@@ -370,7 +398,6 @@ export class WebGPUYearsScene extends WebGPUScene {
           planeElement: planeElement as HTMLElement,
           geometry,
           renderTarget: this.renderTarget,
-          pivot,
           label: `${item.querySelector("h3")?.innerText} media plane`,
           yearIndex: i,
           index: j,

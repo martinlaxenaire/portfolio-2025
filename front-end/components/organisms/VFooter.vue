@@ -97,7 +97,11 @@ const toggleGridHelper = () => {
 
 .title {
   @include section-title;
-  grid-column: 4 / 10;
+  grid-column: 7 / 19;
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    grid-column: 4 / 10;
+  }
 
   @media screen and (orientation: portrait) {
     grid-column: 2 / 12;
@@ -109,7 +113,7 @@ const toggleGridHelper = () => {
 }
 
 .description {
-  grid-column: 2 / 6;
+  grid-column: 3 / 10;
   padding: 3rem 0 0 0;
   font-size: 1.5rem;
 
@@ -124,7 +128,7 @@ const toggleGridHelper = () => {
 }
 
 .socials {
-  grid-column: 8 / 12;
+  grid-column: 15 / 23;
   padding: 0;
   padding-top: 3rem;
   margin: 3rem 0;

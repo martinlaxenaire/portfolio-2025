@@ -67,7 +67,11 @@ watch(isVisible, () => {
 
 .title {
   @include section-title;
-  grid-column: 4 / 10;
+  grid-column: 7 / 19;
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    grid-column: 4 / 10;
+  }
 
   @media screen and (orientation: portrait) {
     grid-column: 2 / 12;
@@ -93,7 +97,11 @@ watch(isVisible, () => {
   padding: 0;
   position: sticky;
   margin: 0;
-  grid-column: 3 / 11;
+  grid-column: 5 / 21;
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    grid-column: 3 / 11;
+  }
 
   @media screen and (orientation: portrait) {
     grid-column: 1 / -1;

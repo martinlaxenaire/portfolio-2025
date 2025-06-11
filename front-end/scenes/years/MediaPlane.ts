@@ -18,7 +18,6 @@ export class MediaPlane {
   planeElement: HTMLElement;
   geometry: PlaneGeometry;
   renderTarget: RenderTarget | null;
-  pivot: Object3D;
   label: string;
   yearIndex: number;
   index: number;
@@ -30,7 +29,6 @@ export class MediaPlane {
     planeElement,
     geometry,
     renderTarget = null,
-    pivot,
     label = "",
     yearIndex = 0,
     index = 0,
@@ -40,7 +38,6 @@ export class MediaPlane {
     planeElement: HTMLElement;
     geometry: PlaneGeometry;
     renderTarget?: RenderTarget | null;
-    pivot: Object3D;
     label?: string;
     yearIndex?: number;
     index?: number;
@@ -51,7 +48,6 @@ export class MediaPlane {
     this.planeElement = planeElement;
     this.geometry = geometry;
     this.renderTarget = renderTarget;
-    this.pivot = pivot;
     this.label = label;
     this.yearIndex = yearIndex;
     this.index = index;
@@ -108,17 +104,7 @@ export class MediaPlane {
           }
         });
       });
-
-    this.plane.parent = this.pivot;
-
-    // this.setPlanePosition();
-
-    // this.plane.onAfterResize(() => this.setPlanePosition());
   }
-
-  // setPlanePosition() {
-  //   this.pivot.position.x = -this.yearIndex * this.yearsScene.visibleSize.width;
-  // }
 
   togglePlayback(shouldPlay = false) {
     if (!shouldPlay) {

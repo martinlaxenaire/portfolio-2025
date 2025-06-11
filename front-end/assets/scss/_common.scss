@@ -40,9 +40,15 @@
   --small-font-size: 0.85rem;
   --tiny-font-size: 0.775rem;
 
+  --grid-columns: 24;
+
   @media (prefers-color-scheme: dark) {
     --background-color: var(--dark-color);
     --foreground-color: var(--light-color);
+  }
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    --grid-columns: 12;
   }
 
   @media screen and (orientation: portrait) {

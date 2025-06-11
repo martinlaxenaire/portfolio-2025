@@ -101,7 +101,7 @@ onMounted(async () => {
 
   let progress = 0;
 
-  if ($hasWebGPU && canvas.value && yearsItems.value) {
+  if ($hasWebGPU && canvas.value && yearsItems.value && yearsContainer.value) {
     const { WebGPUYearsScene } = await import(
       "~/scenes/years/WebGPUYearsScene"
     );
@@ -109,6 +109,7 @@ onMounted(async () => {
     scene = new WebGPUYearsScene({
       gpuCurtains: $gpuCurtains,
       container: canvas.value,
+      wrapper: yearsContainer.value,
       items: yearsItems.value,
       debugPane: $debugPane,
       progress,
@@ -118,6 +119,8 @@ onMounted(async () => {
     scene.setSceneVisibility(isVisible.value);
   }
 
+  let isScrollTriggerResizing = false;
+
   if (yearsWrapper.value && yearsContainer.value && !$isReducedMotion) {
     // scroll trigger
     scrollTrigger = ScrollTrigger.create({
@@ -125,8 +128,8 @@ onMounted(async () => {
       scroller: yearsWrapper.value,
       horizontal: true,
       start: "left left",
-      end: () => `right ${window.innerWidth}px`,
-      //markers: true,
+      end: "right right",
+      // markers: true,
       onUpdate: (self) => {
         progress = self.progress;
 
@@ -135,15 +138,27 @@ onMounted(async () => {
           addLevelPoints(5);
         }
 
-        if (!sceneComplete.value && progress > 0.985) {
+        if (!sceneComplete.value && progress > 0.9) {
           sceneComplete.value = true;
           addLevelPoints(10);
         }
 
         if (scene) {
           scene.progress = progress;
+
+          const currentScroll = scrollTrigger.scroll();
+          scene.setCurrentScroll(currentScroll);
+          if (isScrollTriggerResizing) {
+            scene.resetScroll(currentScroll);
+          }
         }
+
+        isScrollTriggerResizing = false;
       },
+    });
+
+    ScrollTrigger.addEventListener("refreshInit", () => {
+      isScrollTriggerResizing = true;
     });
 
     let startScroll = yearsWrapper.value.scrollLeft;
@@ -265,7 +280,11 @@ onBeforeUnmount(() => {
       <ClientOnly>
         <Transition appear name="instant-in-fade-out">
           <div v-if="!hasStarted" :class="$style.guideline">
-            <VAnimatedTextByLetters label="Drag left" />
+            <div :class="$style['guideline-arrow']">
+              <VAnimatedArrow :class="$style['guideline-arrow-svg']" />
+            </div>
+
+            <VAnimatedTextByLetters label="Drag left" :animate-colors="false" />
           </div>
         </Transition>
       </ClientOnly>
@@ -294,7 +313,11 @@ onBeforeUnmount(() => {
   position: relative;
   z-index: 1;
   @include section-title;
-  grid-column: 4 / 10;
+  grid-column: 7 / 19;
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    grid-column: 4 / 10;
+  }
 
   @media screen and (orientation: portrait) {
     grid-column: 2 / 12;
@@ -336,14 +359,28 @@ onBeforeUnmount(() => {
 }
 
 .list {
+  --window-width: calc(100vw - var(--scrollbar-width));
+  --list-item-margin: #{get-col-span-width(3, 4)};
+
   list-style: none;
   padding: 0;
   margin: 0;
   height: 100lvh;
   display: flex;
   flex-wrap: nowrap;
-  width: calc(100% * var(--nb-items));
+  width: calc(
+    var(--window-width) * var(--nb-items) -
+      (var(--list-item-margin) * (var(--nb-items) - 1))
+  );
   max-width: none;
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    --list-item-margin: #{get-col-span-width(1, 2)};
+  }
+
+  @media screen and (max-aspect-ratio: 10 / 8) {
+    --list-item-margin: #{get-col-span-width(0, 1)};
+  }
 
   opacity: 0;
 
@@ -353,15 +390,23 @@ onBeforeUnmount(() => {
 
   @media (prefers-reduced-motion) {
     height: auto;
-    width: 100%;
+    width: 100% !important;
     display: block;
   }
 
   li {
     position: relative;
     height: 100lvh;
-    width: 100%;
+    width: var(--window-width);
     pointer-events: none;
+
+    &:not(:first-child) {
+      margin-left: calc(-1 * var(--list-item-margin));
+
+      @media (prefers-reduced-motion) {
+        margin-left: 0;
+      }
+    }
 
     @media (prefers-reduced-motion) {
       width: auto;
@@ -372,7 +417,37 @@ onBeforeUnmount(() => {
 
 .guideline {
   @include interaction-title;
+
+  //-webkit-text-stroke: 0.025em var(--color-palette-0);
+
+  // top: 0;
+  // transform: translate3d(-50%, calc(var(--gutter-size) * 2), 0)
+  //   skew(-20deg, 0deg);
+
   top: 100%;
-  transform: translate3d(-50%, calc(-100% - var(--gutter-size) * 2), 0);
+  // transform: translate3d(-50%, calc(-100% - var(--gutter-size) * 2), 0)
+  //   skew(-20deg, 0deg);
+
+  left: auto;
+  transform: translate3d(0, calc(-100% - var(--gutter-size) * 2), 0)
+    skew(-20deg, 0deg);
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    justify-content: center;
+  }
+
+  &-arrow {
+    margin-right: 0.5em;
+    transform: rotate3d(0, 0, 1, 90deg);
+
+    &-svg {
+      width: 0.5em;
+      height: auto;
+    }
+  }
 }
 </style>

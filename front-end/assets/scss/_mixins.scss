@@ -2,7 +2,7 @@
 
 @mixin grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(var(--grid-columns), 1fr);
   grid-gap: var(--gutter-size);
 }
 
@@ -21,7 +21,7 @@
 
 @mixin left-column-text {
   @include column-text;
-  grid-column: 2 / 6;
+  grid-column: 3 / 10;
 
   @media screen and (max-aspect-ratio: 12 / 8) {
     grid-column: 2 / 8;
@@ -34,7 +34,7 @@
 
 @mixin right-column-text {
   @include column-text;
-  grid-column: 8 / 12;
+  grid-column: 15 / 23;
 
   @media screen and (max-aspect-ratio: 12 / 8) {
     grid-column: 6 / 12;

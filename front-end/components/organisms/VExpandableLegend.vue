@@ -95,7 +95,7 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: flex-end;
 
-  grid-column: 9 / 13;
+  grid-column: 17 / 25;
 
   @media screen and (max-aspect-ratio: 12 / 8) {
     grid-column: 7 / 13;

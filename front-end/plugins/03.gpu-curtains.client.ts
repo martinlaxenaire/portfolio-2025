@@ -7,7 +7,7 @@ export default defineNuxtPlugin({
   dependsOn: ["init"],
   async setup(nuxtApp) {
     const gpuCurtains = new GPUCurtains({
-      //watchScroll: false
+      watchScroll: false,
       production: process.env.NODE_ENV === "production",
       autoRender: false, // do not create a request animation frame loop
       pixelRatio: Math.min(1.5, window.devicePixelRatio),

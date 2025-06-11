@@ -73,7 +73,7 @@ defineExpose({
   justify-content: flex-end;
   pointer-events: auto;
 
-  grid-column: 9 / 13;
+  grid-column: 17 / 25;
 
   @media screen and (max-aspect-ratio: 12 / 8) {
     grid-column: 7 / 13;

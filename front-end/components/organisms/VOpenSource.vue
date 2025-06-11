@@ -256,10 +256,13 @@ const toggleInstance = (index = 0) => {
 
 .title {
   @include section-title;
-  //grid-column: 3 / 11;
-  grid-column: 4 / 10;
+  grid-column: 7 / 19;
 
   @media screen and (max-aspect-ratio: 14 / 8) {
+    grid-column: 5 / 21;
+  }
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
     grid-column: 2 / 12;
   }
 

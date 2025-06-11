@@ -113,7 +113,7 @@ onMounted(() => {
     background: var(--color-palette-0);
   }
 
-  grid-column: 2 / 7;
+  grid-column: 3 / 13;
 
   @media screen and (max-aspect-ratio: 12 / 8) {
     grid-column: 1 / 7;
@@ -154,8 +154,12 @@ onMounted(() => {
     background: var(--color-palette-1);
   }
 
-  grid-column: 8 / 12;
+  grid-column: 15 / 23;
   //margin-top: 10%;
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    grid-column: 8 / 12;
+  }
 
   .root--has-2-medias &,
   .root--has-3-medias & {
@@ -201,7 +205,7 @@ onMounted(() => {
     background: var(--color-palette-2);
   }
 
-  grid-column: 7 / 10;
+  grid-column: 13 / 19;
   order: 3;
   //margin-top: -25%;
 
@@ -219,7 +223,11 @@ onMounted(() => {
   }
 
   .root--has-5-medias & {
-    grid-column: 6 / 9;
+    grid-column: 11 / 17;
+
+    @media screen and (max-aspect-ratio: 12 / 8) {
+      grid-column: 6 / 9;
+    }
   }
 
   .root--has-4-medias &,
@@ -236,7 +244,7 @@ onMounted(() => {
     background: var(--color-palette-3);
   }
 
-  grid-column: 2 / 5;
+  grid-column: 3 / 9;
   order: 3;
   margin-top: -50%;
 
@@ -256,7 +264,7 @@ onMounted(() => {
     background: var(--color-palette-4);
   }
 
-  grid-column: 10 / 12;
+  grid-column: 19 / 23;
   order: 5;
   margin-top: -112.5%;
 

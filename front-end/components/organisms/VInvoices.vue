@@ -230,8 +230,12 @@ const parsedDescription = computed(() => {
 .title {
   position: relative;
   z-index: 1;
-  grid-column: 4 / 10;
+  grid-column: 7 / 19;
   @include section-title;
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    grid-column: 4 / 10;
+  }
 
   @media screen and (orientation: portrait) {
     grid-column: 2 / 12;

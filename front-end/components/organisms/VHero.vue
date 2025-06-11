@@ -154,9 +154,11 @@ $header-padding: 3.2rem;
 .canvas {
   position: absolute;
   inset: 0;
+  top: calc(-1 * var(--gutter-size));
   z-index: -1;
 
   body:global(.no-webgpu) & {
+    top: 0;
     margin: 0 var(--gutter-size) var(--gutter-size) var(--gutter-size);
     border-radius: var(--gutter-size);
     overflow: hidden;
@@ -183,10 +185,14 @@ $header-padding: 3.2rem;
 
 .baseline {
   @include main-title;
-  grid-column: 3 / 11;
+  grid-column: 5 / 21;
   text-align: center;
   //padding-bottom: calc(var(--gutter-size) * 2 + 2.8rem);
   padding-bottom: $header-padding;
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    grid-column: 3 / 11;
+  }
 
   @media screen and (orientation: portrait) {
     grid-column: 2 / 12;
