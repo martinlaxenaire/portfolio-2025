@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-const progress = defineModel();
+import type { ModelRef } from "vue";
+
+const progress: ModelRef<number | undefined> = defineModel();
 
 const { currentLevel } = useLevelExperience();
 
@@ -14,7 +16,7 @@ const isActive = computed(() => isVisible.value && currentLevel.value < 1);
     :class="[$style.root, isActive && $style['root--is-active']]"
     ref="slider"
   >
-    <label for="hero-range" :class="$style.label">Slide to unlock</label>
+    <label for="hero-range" :class="$style.label">Slide to begin</label>
     <span :class="$style.wrapper" :style="{ '--progress': progress }">
       <input
         type="range"
@@ -47,7 +49,7 @@ const isActive = computed(() => isVisible.value && currentLevel.value < 1);
 
   &--is-active {
     opacity: 1;
-    transition: opacity 0.5s 2s ease(in-out-quad);
+    transition: opacity 0.5s 2.5s ease(in-out-quad);
     pointer-events: auto;
   }
 }

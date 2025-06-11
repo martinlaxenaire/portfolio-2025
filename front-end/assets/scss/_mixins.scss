@@ -6,6 +6,45 @@
   grid-gap: var(--gutter-size);
 }
 
+@mixin column-text {
+  padding: 3rem 0;
+  font-size: 1.5rem;
+
+  @media screen and (max-aspect-ratio: 10 / 8) {
+    font-size: 1.25rem;
+  }
+
+  p:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+@mixin left-column-text {
+  @include column-text;
+  grid-column: 2 / 6;
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    grid-column: 2 / 8;
+  }
+
+  @media screen and (max-aspect-ratio: 10 / 8) {
+    grid-column: 2 / 12;
+  }
+}
+
+@mixin right-column-text {
+  @include column-text;
+  grid-column: 8 / 12;
+
+  @media screen and (max-aspect-ratio: 12 / 8) {
+    grid-column: 6 / 12;
+  }
+
+  @media screen and (max-aspect-ratio: 10 / 8) {
+    grid-column: 2 / 12;
+  }
+}
+
 // TYPO
 
 @mixin title {
@@ -17,10 +56,6 @@
   margin: 0;
   transform: skew(-5deg, -5deg);
   -webkit-text-stroke: 0.025em var(--background-color);
-  // text-shadow: -0.025em -0.025em 0 var(--background-color),
-  //   0.025em -0.025em 0 var(--background-color),
-  //   -0.025em 0.025em 0 var(--background-color),
-  //   0.025em 0.025em 0 var(--background-color);
 }
 
 @mixin main-title {
@@ -60,9 +95,11 @@
   top: 50%;
   left: 50%;
   width: calc(100% - var(--gutter-size) * 2);
-  transform: translate3d(-50%, -50%, 0) skew(-5deg, -5deg);
+  // transform: translate3d(-50%, -50%, 0) skew(-5deg, -5deg);
+  transform: translate3d(-50%, -50%, 0) skew(-20deg, 0deg);
   z-index: 1;
   pointer-events: none;
+  -webkit-text-stroke: 0;
 
   @media (prefers-reduced-motion) {
     display: none;
@@ -77,33 +114,116 @@
   }
 }
 
-@mixin left-column-text {
-  grid-column: 2 / 6;
-  padding: 3rem 0;
-  font-size: 1.5rem;
+// COLORS
 
-  @media screen and (max-aspect-ratio: 12 / 8) {
-    grid-column: 2 / 8;
-  }
+@mixin retro-colored-letters {
+  color: transparent;
+  -webkit-text-stroke: 0.02em var(--color-palette-4);
+  background: linear-gradient(
+    180deg,
+    var(--color-palette-1) 0%,
+    var(--color-palette-1) 25%,
+    var(--foreground-color) 45%,
+    var(--foreground-color) 50%,
+    var(--background-color) 50%,
+    var(--background-color) 55%,
+    var(--color-palette-3) 75%,
+    var(--color-palette-3) 100%
+  );
 
-  @media screen and (max-aspect-ratio: 10 / 8) {
-    font-size: 1.25rem;
-    grid-column: 2 / 12;
+  background-clip: text;
+
+  body:global(.is-light) & {
+    -webkit-text-stroke: 0.02em var(--color-palette-0);
+    background: linear-gradient(
+      180deg,
+      var(--color-palette-4) 0%,
+      var(--color-palette-4) 25%,
+      var(--foreground-color) 45%,
+      var(--foreground-color) 50%,
+      var(--background-color) 50%,
+      var(--background-color) 55%,
+      var(--color-palette-1) 75%,
+      var(--color-palette-1) 100%
+    );
+
+    background-clip: text;
   }
 }
 
-@mixin right-column-text {
-  grid-column: 8 / 12;
-  padding: 3rem 0;
-  font-size: 1.5rem;
+@mixin gradient-colored-letters {
+  color: transparent;
+  -webkit-text-stroke: 0.02em var(--background-color);
+  background: linear-gradient(
+    180deg,
+    var(--foreground-color) 0%,
+    var(--foreground-color) 33.3%,
+    var(--color-palette-4) 66.6%,
+    var(--color-palette-3) 83.3%,
+    var(--color-palette-3) 100%
+  );
 
-  @media screen and (max-aspect-ratio: 12 / 8) {
-    grid-column: 6 / 12;
+  background-clip: text;
+
+  body:global(.is-light) & {
+    background: linear-gradient(
+      180deg,
+      var(--foreground-color) 0%,
+      var(--foreground-color) 33.3%,
+      var(--color-palette-0) 66.6%,
+      var(--color-palette-1) 83.3%,
+      var(--color-palette-1) 100%
+    );
+
+    background-clip: text;
   }
+}
 
-  @media screen and (max-aspect-ratio: 10 / 8) {
-    font-size: 1.25rem;
-    grid-column: 2 / 12;
+@mixin banded-gradient-colored-letters {
+  color: transparent;
+  -webkit-text-stroke: 0;
+  filter: drop-shadow(0.03em 0.03em var(--background-color));
+
+  background: linear-gradient(
+    180deg,
+    var(--foreground-color) 0%,
+    var(--foreground-color) 60%,
+    rgba(0, 0, 0, 0) 60%,
+    rgba(0, 0, 0, 0) calc(60% + 0.02em),
+    var(--color-palette-4) calc(60% + 0.02em),
+    var(--color-palette-4) 75%,
+    rgba(0, 0, 0, 0) 75%,
+    rgba(0, 0, 0, 0) calc(75% + 0.0275em),
+    var(--color-palette-3) calc(75% + 0.0275em),
+    var(--color-palette-3) 85%,
+    rgba(0, 0, 0, 0) 85%,
+    rgba(0, 0, 0, 0) calc(85% + 0.035em),
+    var(--color-palette-2) calc(85% + 0.035em),
+    var(--color-palette-2) 100%
+  );
+
+  background-clip: text;
+
+  body:global(.is-light) & {
+    background: linear-gradient(
+      180deg,
+      var(--foreground-color) 0%,
+      var(--foreground-color) 60%,
+      rgba(0, 0, 0, 0) 60%,
+      rgba(0, 0, 0, 0) calc(60% + 0.02em),
+      var(--color-palette-0) calc(60% + 0.02em),
+      var(--color-palette-0) 75%,
+      rgba(0, 0, 0, 0) 75%,
+      rgba(0, 0, 0, 0) calc(75% + 0.0275em),
+      var(--color-palette-1) calc(75% + 0.0275em),
+      var(--color-palette-1) 86.25%,
+      rgba(0, 0, 0, 0) 86.25%,
+      rgba(0, 0, 0, 0) calc(86.25% + 0.035em),
+      var(--color-palette-2) calc(86.25% + 0.035em),
+      var(--color-palette-2) 100%
+    );
+
+    background-clip: text;
   }
 }
 

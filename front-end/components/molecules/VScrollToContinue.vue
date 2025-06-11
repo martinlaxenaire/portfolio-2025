@@ -81,13 +81,7 @@ onBeforeUnmount(() => {
   >
     <button :class="$style.root" v-if="isActive" @click="onClick">
       <span :class="$style.label">Scroll to continue</span>
-      <svg viewBox="0 0 40 20" :class="$style.svg">
-        <path
-          d="M 0 0 L 20 20 L 40 0"
-          fill="transparent"
-          :class="$style.path"
-        />
-      </svg>
+      <VAnimatedArrow :class="$style.arrow" />
     </button>
   </Transition>
 </template>
@@ -140,37 +134,8 @@ onBeforeUnmount(() => {
   -webkit-text-stroke: 1px var(--background-color);
 }
 
-@keyframes scroll-animation {
-  0% {
-    transform: translate3d(0, -25%, 0);
-    opacity: 0;
-  }
-
-  50% {
-    transform: translate3d(0, 0, 0);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate3d(0, 25%, 0);
-    opacity: 0;
-  }
-}
-
-.svg {
-  display: block;
+.arrow {
   width: 1.5rem;
   height: auto;
-
-  animation: scroll-animation 1.5s ease(in-out-quad) infinite;
-
-  @media (prefers-reduced-motion) {
-    animation: none;
-  }
-}
-
-.path {
-  stroke: var(--foreground-color);
-  stroke-width: 2px;
 }
 </style>

@@ -113,7 +113,8 @@ fn roundedRectSDF(uv: vec2f, resolution: vec2f, radiusPx: f32) -> f32 {
   let isEmpty = (i32(triIndex) % i32(params.fillColorRatio)) == i32(params.fillColorRatio - 1.0);
   let colorIndex = i32(triIndex / params.fillColorRatio) % params.nbColors; // Use half as many color indices
 
-  let color = select(vec4(params.colors[colorIndex], smoothstep(0.0, 0.75, params.showProgress)), vec4f(0.0), isEmpty);
+  let alpha: f32 = smoothstep(0.25, 0.75, params.showProgress);
+  let color = select(vec4(params.colors[colorIndex], alpha), vec4f(0.0), isEmpty);
 
   // rounded corners
   var roundedUv = uv * 2.0 - 1.0;
@@ -125,7 +126,7 @@ fn roundedRectSDF(uv: vec2f, resolution: vec2f, radiusPx: f32) -> f32 {
   let roundedRectMask = smoothstep(0.0, 0.005, -sdf); // fade near edge
 
   //let centerFade = smoothstep(0.25, 0.375, radialDist); // Darkens toward center
-  let centerFade = smoothstep(0.1 * params.showProgress, 0.05 + 0.45 * params.showProgress, radialDist); // Darkens toward center
+  let centerFade = smoothstep(0.1 * params.showProgress, 0.1 + 0.4 * params.showProgress, radialDist); // Darkens toward center
 
   // **🔹 Apply Noise to Edge Fade**
   let radialShade = centerFade * roundedRectMask;

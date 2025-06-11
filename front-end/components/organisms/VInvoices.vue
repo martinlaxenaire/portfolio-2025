@@ -182,13 +182,19 @@ const parsedDescription = computed(() => {
 
         <Transition appear name="instant-in-fade-out">
           <div v-if="!hasStarted" :class="$style.guideline">
-            <VAnimatedTextByLetters label="Click & hold" />
+            <VAnimatedTextByLetters
+              label="Click & hold"
+              :animate-colors="false"
+            />
           </div>
         </Transition>
 
         <Transition appear name="instant-in-fade-out">
           <div v-if="showCongratulations" :class="$style.congratulations">
-            <VAnimatedTextByLetters label="Well done!!" />
+            <VAnimatedTextByLetters
+              label="Well done!!"
+              :animate-colors="false"
+            />
           </div>
         </Transition>
 
@@ -209,14 +215,12 @@ const parsedDescription = computed(() => {
 .root {
   position: relative;
   padding-top: calc(var(--height-space) + 3rem);
-  //padding-top: 3rem;
 }
 
 .top-separator {
   @include bottom-separator;
   bottom: auto;
   top: 0;
-  //z-index: 1;
 }
 
 .process {
@@ -235,7 +239,7 @@ const parsedDescription = computed(() => {
 }
 
 .invoices-xp {
-  height: 250lvh;
+  height: 200lvh;
   position: relative;
 }
 

@@ -164,29 +164,12 @@ const projectComponentAttrs = computed(() => {
     z-index: 2;
     transform: translate3d(-80%, 0, 0) skew(25deg, 0deg);
     transition: transform 0.15s ease(in-out-quad);
-    //-webkit-text-stroke: 0.02em var(--background-color);
-    -webkit-text-stroke: 0.02em var(--color-palette-4);
 
     @media (prefers-reduced-motion) {
       transition: none !important;
     }
 
-    background: linear-gradient(
-      180deg,
-      var(--color-palette-1) 0%,
-      var(--color-palette-1) 25%,
-      var(--foreground-color) 45%,
-      var(--foreground-color) 50%,
-      var(--background-color) 50%,
-      var(--background-color) 55%,
-      var(--color-palette-3) 75%,
-      var(--color-palette-3) 100%
-    );
-
     text-transform: uppercase;
-    color: transparent;
-    background-clip: text;
-    //font-size: 6rem;
     font-size: calc(var(--gutter-size) * 4 + 1rem);
     letter-spacing: 0.05em;
     display: flex;
@@ -194,23 +177,7 @@ const projectComponentAttrs = computed(() => {
     justify-content: center;
     font-family: var(--display-font);
 
-    body:global(.is-light) & {
-      -webkit-text-stroke: 0.02em var(--color-palette-0);
-
-      background: linear-gradient(
-        180deg,
-        var(--color-palette-4) 0%,
-        var(--color-palette-4) 25%,
-        var(--foreground-color) 45%,
-        var(--foreground-color) 50%,
-        var(--background-color) 50%,
-        var(--background-color) 55%,
-        var(--color-palette-1) 75%,
-        var(--color-palette-1) 100%
-      );
-
-      background-clip: text;
-    }
+    @include retro-colored-letters;
 
     @media screen and (max-aspect-ratio: 12 / 8) {
       transform: translate3d(-90%, 0, 0) skew(25deg, 0deg);

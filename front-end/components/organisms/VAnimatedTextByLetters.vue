@@ -9,6 +9,7 @@ const {
   stagger = 0.0375,
   ease = "power2.out",
   nbCharsDelay = 2,
+  animateColors = true,
   onComplete = () => {},
 } = defineProps<{
   label?: string;
@@ -18,6 +19,7 @@ const {
   stagger?: number;
   ease?: string;
   nbCharsDelay?: number;
+  animateColors?: boolean;
   onComplete?: () => void;
 }>();
 
@@ -85,7 +87,11 @@ onMounted(() => {
     timeline.kill();
 
     timeline
-      .set(chars.value, { autoAlpha: 0, color: hexColors[0], scale: 0.9 })
+      .set(chars.value, {
+        autoAlpha: 0,
+        scale: 0.9,
+        ...(animateColors && { color: hexColors[0] }),
+      })
       .to(chars.value, {
         autoAlpha: 1,
         duration: tweenDuration,
@@ -93,17 +99,19 @@ onMounted(() => {
         ease: "power3.out",
       });
 
-    for (let i = 1; i < hexColors.length; i++) {
-      timeline.to(
-        chars.value,
-        {
-          color: hexColors[i],
-          duration: tweenDuration,
-          stagger: tweenStagger,
-          ease,
-        },
-        i * tweenStagger * nbCharsDelay + tweenDuration * 0.15
-      );
+    if (animateColors) {
+      for (let i = 1; i < hexColors.length; i++) {
+        timeline.to(
+          chars.value,
+          {
+            color: hexColors[i],
+            duration: tweenDuration,
+            stagger: tweenStagger,
+            ease,
+          },
+          i * tweenStagger * nbCharsDelay + tweenDuration * 0.15
+        );
+      }
     }
 
     const popinDuration = tweenDuration * 0.5;
@@ -160,6 +168,7 @@ onBeforeUnmount(() => {
       $style.root,
       $style['root--is-' + align],
       isComplete && $style['root--is-complete'],
+      !animateColors && $style['root--no-colors-animation'],
     ]"
     ref="container"
   >
@@ -207,6 +216,10 @@ onBeforeUnmount(() => {
   [data-char="a"] + [data-char="w"],
   [data-char="c"] + [data-char="a"] {
     margin-left: -0.125em;
+  }
+
+  [data-char="a"] + [data-char="g"] {
+    margin-left: -0.1em;
   }
 
   [data-char="o"] + [data-char="w"],
@@ -275,6 +288,10 @@ onBeforeUnmount(() => {
 
     .root--is-complete & {
       opacity: 1;
+    }
+
+    .root--no-colors-animation & {
+      @include banded-gradient-colored-letters;
     }
   }
 }

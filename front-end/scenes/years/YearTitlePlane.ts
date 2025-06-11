@@ -71,7 +71,21 @@ export class YearTitlePlane {
       label: this.title.innerText + " plane",
       geometry: this.geometry,
       cullMode: "none",
-      transparent: true,
+      // avoid premultiplied alpha issues
+      targets: [
+        {
+          blend: {
+            color: {
+              srcFactor: "one",
+              dstFactor: "one-minus-src-alpha",
+            },
+            alpha: {
+              srcFactor: "one",
+              dstFactor: "one-minus-src-alpha",
+            },
+          },
+        },
+      ],
       frustumCulling: false,
       ...(this.renderBundle && { renderBundle: this.renderBundle }),
       shaders: {

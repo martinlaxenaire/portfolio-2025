@@ -39,6 +39,7 @@ const { isVisible } = useIsVisible(skipGame);
 
 .skip-game {
   font-size: 1rem;
+  margin-top: 3rem;
 
   opacity: 0;
   transition: opacity 0.5s 0.5s ease(in-quad);

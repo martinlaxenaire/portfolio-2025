@@ -60,10 +60,9 @@ watch(isVisible, () => {
 
 <style module lang="scss">
 .root {
-  //padding: 0 0 3rem 0;
   background: var(--bg-color);
   position: relative;
-  margin: calc(var(--height-space) * 0.5) 0 3rem 0;
+  margin: calc(var(--height-space) * 0.5) 0 0 0;
 }
 
 .title {

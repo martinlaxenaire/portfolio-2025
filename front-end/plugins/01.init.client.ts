@@ -33,6 +33,16 @@ export default defineNuxtPlugin({
       "(prefers-reduced-motion: reduce)"
     )?.matches;
 
+    const onResize = () => {
+      document.documentElement.style.setProperty(
+        "--scrollbar-width",
+        window.innerWidth - document.documentElement.clientWidth + "px"
+      );
+    };
+
+    onResize();
+    window.addEventListener("resize", onResize);
+
     return {
       provide: { isReducedMotion },
     };

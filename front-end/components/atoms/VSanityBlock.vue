@@ -33,5 +33,17 @@ const serializers = {
 </script>
 
 <template>
-  <SanityContent :blocks="content" :serializers="serializers" />
+  <SanityContent
+    :blocks="content"
+    :serializers="serializers"
+    :class="$style.root"
+  />
 </template>
+
+<style lang="scss" module>
+.root {
+  p:last-of-type {
+    background: red;
+  }
+}
+</style>

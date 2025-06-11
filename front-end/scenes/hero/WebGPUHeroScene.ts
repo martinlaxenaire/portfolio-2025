@@ -36,7 +36,21 @@ export class WebGPUHeroScene extends WebGPUScene {
 
     this.plane = new FullscreenPlane(this.renderer, {
       label: "Hero fullscreen plane",
-      transparent: true,
+      // avoid premultiplied alpha issues
+      targets: [
+        {
+          blend: {
+            color: {
+              srcFactor: "one",
+              dstFactor: "one-minus-src-alpha",
+            },
+            alpha: {
+              srcFactor: "one",
+              dstFactor: "one-minus-src-alpha",
+            },
+          },
+        },
+      ],
       shaders: {
         fragment: {
           code: heroPlaneFs,

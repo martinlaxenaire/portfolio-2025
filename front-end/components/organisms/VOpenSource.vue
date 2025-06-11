@@ -184,13 +184,19 @@ const toggleInstance = (index = 0) => {
       <div :class="$style.wrapper">
         <Transition appear name="instant-in-fade-out">
           <div v-if="!hasStarted" :class="$style.guideline">
-            <VAnimatedTextByLetters label="Draw a line" />
+            <VAnimatedTextByLetters
+              label="Draw a line"
+              :animate-colors="false"
+            />
           </div>
         </Transition>
 
         <Transition appear name="instant-in-fade-out">
           <div v-if="showCongratulations" :class="$style.congratulations">
-            <VAnimatedTextByLetters label="Excellent!!" />
+            <VAnimatedTextByLetters
+              label="Excellent!!"
+              :animate-colors="false"
+            />
           </div>
         </Transition>
 
@@ -274,7 +280,7 @@ const toggleInstance = (index = 0) => {
 
 .experiment {
   position: relative;
-  height: 250lvh;
+  height: 200lvh;
 }
 
 .wrapper {
