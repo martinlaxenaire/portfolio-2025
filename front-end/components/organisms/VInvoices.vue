@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import type { HomeQueryResult } from "~/types/sanity.types";
+import type { WebGPUInvoicesScene } from "~/scenes/invoices/WebGPUInvoicesScene";
 import { useTimeoutFn } from "@vueuse/core";
 import { CanvasInvoicesScene } from "~/scenes/invoices/CanvasInvoicesScene";
-import type { WebGPUInvoicesScene } from "~/scenes/invoices/WebGPUInvoicesScene";
+import { UIElements } from "~/assets/static-data/ui-elements";
 
 const props = defineProps<{
   process?: NonNullable<HomeQueryResult>["processDescription"];
@@ -75,7 +76,7 @@ onMounted(async () => {
     scene = new WebGPUInvoicesScene({
       gpuCurtains: $gpuCurtains,
       container: canvas.value,
-      invoices: data.value?.values,
+      invoices: data.value,
       colors: colors.value,
       theme: theme.value,
       debugPane: $debugPane,
@@ -102,16 +103,9 @@ onBeforeUnmount(() => {
   }
 });
 
-let seen = false;
-
 watch(isVisible, (newValue) => {
   if (scene) {
     scene.setSceneVisibility(newValue);
-  }
-
-  if (newValue && !seen) {
-    seen = true;
-    //addLevelPoints(1);
   }
 });
 
@@ -128,20 +122,8 @@ watch(theme, (newValue) => {
 });
 
 const invoices = computed(() => {
-  return data.value?.values?.flat() || [];
+  return data.value?.flat() || [];
 });
-
-// const invoicesTotal = computed(() => {
-//   const total = invoices.value.reduce(
-//     (acc: number, v: string) => acc + parseInt(v),
-//     0
-//   );
-//   return new Intl.NumberFormat("en-US", {
-//     style: "currency",
-//     currency: "EUR",
-//     maximumSignificantDigits: 3,
-//   }).format(total);
-// });
 
 // TODO dirty
 const parsedDescription = computed(() => {
@@ -164,6 +146,7 @@ const parsedDescription = computed(() => {
 
     <div class="container grid" v-if="process">
       <div :class="$style.process">
+        <!-- @vue-ignore -->
         <VSanityBlock :content="process" />
       </div>
     </div>
@@ -183,7 +166,7 @@ const parsedDescription = computed(() => {
         <Transition appear name="instant-in-fade-out">
           <div v-if="!hasStarted" :class="$style.guideline">
             <VAnimatedTextByLetters
-              label="Click & hold"
+              :label="UIElements.invoices.guideline"
               :animate-colors="false"
             />
           </div>
@@ -192,7 +175,7 @@ const parsedDescription = computed(() => {
         <Transition appear name="instant-in-fade-out">
           <div v-if="showCongratulations" :class="$style.congratulations">
             <VAnimatedTextByLetters
-              label="Well done!!"
+              :label="UIElements.invoices.completed"
               :animate-colors="false"
             />
           </div>

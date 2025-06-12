@@ -1,13 +1,10 @@
 :root {
   --light-color: #ffffff;
-  /*--main-text-color: #0505af;*/
   --dark-color: #121212;
 
   --background-color: var(--light-color);
   --foreground-color: var(--dark-color);
 
-  //--base-font-size: clamp(16px, 1vw, 22px);
-  //--base-font-size: max(16px, 1vw);
   --base-font-size: max(2vh, 1vw);
 
   --value: 16;

@@ -114,7 +114,7 @@ fn roundedRectSDF(uv: vec2f, resolution: vec2f, radiusPx: f32) -> f32 {
   let colorIndex = i32(triIndex / params.fillColorRatio) % params.nbColors; // Use half as many color indices
 
   let alpha: f32 = smoothstep(0.25, 0.75, params.showProgress);
-  let color = select(vec4(params.colors[colorIndex], alpha), vec4f(0.0), isEmpty);
+  let color = select(vec4(params.colors[colorIndex] * alpha, alpha), vec4f(0.0), isEmpty);
 
   // rounded corners
   var roundedUv = uv * 2.0 - 1.0;

@@ -101,17 +101,17 @@ watch(isGameActive, () => {
 
 <template>
   <section
-    :class="[$style.root, $style['root--is-visible']]"
+    :class="$style.root"
     :style="{ '--slider-progress': sliderProgress }"
   >
-    <div :class="$style.wrapper" class="grid">
+    <div :class="$style.wrapper" class="container grid">
       <div :class="$style.canvas" ref="canvas"></div>
 
       <h2 v-if="baseline" :class="$style.baseline">
         <VAnimatedTextByLetters
           :label="baseline"
           :align="'center'"
-          :timeline-delay="1.25"
+          :timeline-delay="1"
         />
       </h2>
     </div>
@@ -125,10 +125,6 @@ $header-padding: 3.2rem;
 
 .root {
   height: 100svh;
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: space-between;
-  // align-items: center;
   box-sizing: border-box;
   padding: $header-padding 0 0 0;
   position: relative;
@@ -143,12 +139,6 @@ $header-padding: 3.2rem;
   left: 0;
   justify-content: center;
   align-items: center;
-
-  opacity: 0;
-
-  .root--is-visible & {
-    opacity: 1;
-  }
 }
 
 .canvas {

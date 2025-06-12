@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import type { HomeQueryResult } from "~/types/sanity.types";
 import { homeQueryString } from "../../studio/src/queries-strings";
-import { usePiwikPro } from "@piwikpro/nuxt-piwik-pro/composables";
+// import { usePiwikPro } from "@piwikpro/nuxt-piwik-pro/composables";
+import { UIElements } from "~/assets/static-data/ui-elements";
 
 const { currentLevel } = useLevelExperience();
 
 // DATA
 const homeQuery = groq`${homeQueryString}`;
-const { data } = await useLazySanityQuery<HomeQueryResult>(homeQuery);
+const { data, error } = await useLazySanityQuery<HomeQueryResult>(homeQuery);
 
 // SEO
 const config = useRuntimeConfig();
@@ -122,43 +123,15 @@ onMounted(() => {
     <VScrollToContinue />
     <VGainedExperience />
   </div>
+  <div v-else :class="$style.fallback">
+    <h2>{{ UIElements.common.noData }}</h2>
+  </div>
 </template>
 
 <style module lang="scss">
 .root {
   a {
     color: inherit;
-  }
-}
-
-.debug {
-  position: absolute;
-
-  //height: 10vh;
-  width: 50%;
-  top: calc(100vh + 2rem);
-  margin: 0 0 0 calc(50% - var(--gutter-size));
-
-  &-main-palette {
-    height: 5rem;
-    display: flex;
-
-    div {
-      flex-grow: 1;
-    }
-  }
-
-  &-all-palettes {
-    margin-top: 1rem;
-
-    &-palette {
-      display: flex;
-      height: 2.5rem;
-
-      div {
-        flex-grow: 1;
-      }
-    }
   }
 }
 
@@ -174,6 +147,21 @@ onMounted(() => {
   @media (prefers-reduced-motion) {
     height: auto;
     overflow: visible;
+  }
+}
+
+.fallback {
+  position: absolute;
+  inset: 0;
+  padding-top: 3.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  h2 {
+    font-family: var(--light-display-font);
+    font-weight: normal;
+    text-transform: uppercase;
   }
 }
 </style>

@@ -23,9 +23,16 @@ watch(isCreditsVisible, () => {
 });
 
 const isGridHelperVisible = ref(false);
+let hasGridBeenVisible = false;
 
 const toggleGridHelper = () => {
   isGridHelperVisible.value = !isGridHelperVisible.value;
+
+  if (!hasGridBeenVisible) {
+    addFeaturePoints(3);
+  }
+
+  hasGridBeenVisible = true;
 };
 </script>
 
@@ -43,6 +50,7 @@ const toggleGridHelper = () => {
 
     <div :class="$style.content" class="container grid">
       <div :class="$style.description" v-if="description">
+        <!-- @vue-ignore -->
         <VSanityBlock :content="description" />
       </div>
 

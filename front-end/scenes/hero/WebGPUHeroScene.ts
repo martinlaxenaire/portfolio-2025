@@ -36,7 +36,7 @@ export class WebGPUHeroScene extends WebGPUScene {
 
     this.plane = new FullscreenPlane(this.renderer, {
       label: "Hero fullscreen plane",
-      // avoid premultiplied alpha issues
+      // avoid premultiplied alpha grey border issues
       targets: [
         {
           blend: {
@@ -152,7 +152,7 @@ export class WebGPUHeroScene extends WebGPUScene {
       })
       .to(this, {
         showProgress: 1,
-        duration: 2,
+        duration: 1.5,
         ease: "power2.inOut",
         onUpdate: () => {
           this.plane.uniforms.params.showProgress.value =

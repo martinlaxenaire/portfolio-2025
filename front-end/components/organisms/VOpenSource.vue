@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import type { HomeQueryResult } from "~/types/sanity.types";
 import type { GithubContribution } from "~/server/api/github";
-import { CanvasOpenSourceScene } from "~/scenes/open-source/CanvasOpenSourceScene";
 import type { WebGPUOpenSourceScene } from "~/scenes/open-source/WebGPUOpenSourceScene";
+import { CanvasOpenSourceScene } from "~/scenes/open-source/CanvasOpenSourceScene";
 import { useTimeoutFn } from "@vueuse/core";
+import { UIElements } from "~/assets/static-data/ui-elements";
 
 const props = defineProps<{
   title?: NonNullable<HomeQueryResult>["openSourceTitle"];
@@ -115,16 +116,9 @@ onBeforeUnmount(() => {
   }
 });
 
-let seen = false;
-
 watch(isVisible, () => {
   if (scene) {
     scene.setSceneVisibility(isVisible.value);
-  }
-
-  if (isVisible.value && !seen) {
-    seen = true;
-    //addLevelPoints(1);
   }
 });
 
@@ -168,6 +162,7 @@ const toggleInstance = (index = 0) => {
 
     <div :class="$style.content" class="container grid">
       <div :class="$style.description" v-if="description">
+        <!-- @vue-ignore -->
         <VSanityBlock :content="description" />
       </div>
 
@@ -185,7 +180,7 @@ const toggleInstance = (index = 0) => {
         <Transition appear name="instant-in-fade-out">
           <div v-if="!hasStarted" :class="$style.guideline">
             <VAnimatedTextByLetters
-              label="Draw a line"
+              :label="UIElements.openSource.guideline"
               :animate-colors="false"
             />
           </div>
@@ -194,7 +189,7 @@ const toggleInstance = (index = 0) => {
         <Transition appear name="instant-in-fade-out">
           <div v-if="showCongratulations" :class="$style.congratulations">
             <VAnimatedTextByLetters
-              label="Excellent!!"
+              :label="UIElements.openSource.completed"
               :animate-colors="false"
             />
           </div>
@@ -204,6 +199,7 @@ const toggleInstance = (index = 0) => {
 
         <VExpandableLegend :class="$style.legend">
           <div :class="$style['legend-description']" v-if="legend">
+            <!-- @vue-ignore -->
             <SanityContent :blocks="legend" />
           </div>
 

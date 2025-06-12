@@ -43,10 +43,27 @@ export const usePaletteGenerator = () => {
       );
     }
 
+    // very rare grayscale palette
+    const useGrayscalePalette = Math.random() > 0.975;
+
+    console.log(useGrayscalePalette);
+
     palette = initPalette.map((color, i) => {
+      const newColor = new ColorModel();
       const indexRatio = i / (paletteLength - 1);
 
-      const newColor = new ColorModel();
+      if (useGrayscalePalette) {
+        const grayscaleValue = Math.round(237 - indexRatio * 197.5);
+
+        newColor.rgb = {
+          r: grayscaleValue,
+          g: grayscaleValue,
+          b: grayscaleValue,
+        };
+
+        return newColor;
+      }
+
       const hue = newColor.addToHue(0, color.hsl.h);
 
       const endValue = theme.value === "light" ? 90 : 100;

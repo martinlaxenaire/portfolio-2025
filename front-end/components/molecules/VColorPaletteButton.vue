@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { UIElements } from "~/assets/static-data/ui-elements";
+
 const { theme } = useTheme();
 const { generatePalette } = usePaletteGenerator();
 const { addFeaturePoints } = useLevelExperience();
@@ -22,7 +24,7 @@ watch(theme, () => {
 <template>
   <button @click="onPaletteClick" :class="$style.root">
     <span :class="$style.label">
-      <span>New color palette</span>
+      <span>{{ UIElements.header.colorPaletteButton }}</span>
     </span>
   </button>
 </template>

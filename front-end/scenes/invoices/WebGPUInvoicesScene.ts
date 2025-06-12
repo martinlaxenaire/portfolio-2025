@@ -544,7 +544,7 @@ export class WebGPUInvoicesScene extends WebGPUScene {
     //const diagonalRef = Math.hypot(1600, 900);
     const diagonalRef = Math.hypot(1920, 1080);
 
-    this.scaleRef = (diagonal / diagonalRef) ** 0.25;
+    this.scaleRef = (diagonal / diagonalRef) ** 0.5;
 
     this.visibleSizeAtOrigin = this.renderer.camera.getVisibleSizeAtDepth();
     this.visibleSize = this.renderer.camera.getVisibleSizeAtDepth(

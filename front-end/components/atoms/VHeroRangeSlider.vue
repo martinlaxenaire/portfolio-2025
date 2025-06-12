@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { ModelRef } from "vue";
+import { UIElements } from "~/assets/static-data/ui-elements";
 
 const progress: ModelRef<number | undefined> = defineModel();
 
@@ -16,7 +17,9 @@ const isActive = computed(() => isVisible.value && currentLevel.value < 1);
     :class="[$style.root, isActive && $style['root--is-active']]"
     ref="slider"
   >
-    <label for="hero-range" :class="$style.label">Slide to begin</label>
+    <label for="hero-range" :class="$style.label">
+      {{ UIElements.hero.guideline }}
+    </label>
     <span :class="$style.wrapper" :style="{ '--progress': progress }">
       <input
         type="range"
@@ -33,7 +36,6 @@ const isActive = computed(() => isVisible.value && currentLevel.value < 1);
 
 <style lang="scss" module>
 .root {
-  //   grid-column: 1 / -1;
   position: absolute;
   bottom: calc(var(--gutter-size) * 2);
   left: 50%;
@@ -43,13 +45,9 @@ const isActive = computed(() => isVisible.value && currentLevel.value < 1);
   align-items: center;
   gap: 0.5em 0;
 
-  opacity: 0;
-  transition: opacity 0.5s 0.25s ease(in-out-quad);
   pointer-events: none;
 
   &--is-active {
-    opacity: 1;
-    transition: opacity 0.5s 2.5s ease(in-out-quad);
     pointer-events: auto;
   }
 }
@@ -60,6 +58,18 @@ const isActive = computed(() => isVisible.value && currentLevel.value < 1);
   text-transform: uppercase;
   -webkit-text-stroke: 1px var(--background-color);
   font-size: var(--small-font-size);
+
+  opacity: 0;
+  transition: opacity 0.35s 0.25s ease(in-out-quad);
+
+  .root--is-active & {
+    opacity: 1;
+    transition: opacity 0.35s 2s ease(in-out-quad);
+  }
+
+  @media (prefers-reduced-motion) {
+    transition: none;
+  }
 }
 
 $thumb-size: 0.75em;
@@ -73,6 +83,22 @@ $thumb-size: 0.75em;
   border: 2px solid var(--foreground-color);
   background: var(--background-color);
   box-sizing: border-box;
+  align-self: flex-start;
+
+  opacity: 0;
+  width: calc(#{$thumb-size} + 0.5em + 4px);
+  transition: opacity 0.35s 0.25s ease(in-out-quad), width 0s 1s;
+
+  .root--is-active & {
+    opacity: 1;
+    width: 100%;
+    transition: opacity 0.35s 2.25s ease(in-out-quad),
+      width 0.75s 2.25s ease(out-expo);
+  }
+
+  @media (prefers-reduced-motion) {
+    transition: none;
+  }
 
   &:after {
     content: "";
@@ -87,6 +113,18 @@ $thumb-size: 0.75em;
     );
     height: $thumb-size;
     background: var(--foreground-color);
+
+    opacity: 0;
+    transition: opacity 0.35s 0.25s ease(in-out-quad);
+
+    .root--is-active & {
+      opacity: 1;
+      transition: opacity 0.35s 2.5s ease(in-out-quad);
+    }
+
+    @media (prefers-reduced-motion) {
+      transition: none;
+    }
   }
 }
 
@@ -102,6 +140,18 @@ $thumb-size: 0.75em;
   background: transparent;
   accent-color: var(--foreground-color);
   cursor: grab;
+
+  opacity: 0;
+  transition: opacity 0.35s 0.25s ease(in-out-quad);
+
+  .root--is-active & {
+    opacity: 1;
+    transition: opacity 0.35s 2.5s ease(in-out-quad);
+  }
+
+  @media (prefers-reduced-motion) {
+    transition: none;
+  }
 }
 
 input[type="range"]::-webkit-slider-thumb {

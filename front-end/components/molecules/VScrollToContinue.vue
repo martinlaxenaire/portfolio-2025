@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { gsap } from "gsap";
+import { UIElements } from "~/assets/static-data/ui-elements";
 
 const { isGameActive, currentLevel, addFeaturePoints } = useLevelExperience();
 const isActive = ref(false);
@@ -80,7 +81,9 @@ onBeforeUnmount(() => {
     :leave-to-class="$style['scroll-leave-to']"
   >
     <button :class="$style.root" v-if="isActive" @click="onClick">
-      <span :class="$style.label">Scroll to continue</span>
+      <span :class="$style.label">
+        {{ UIElements.game.scrollToContinue }}
+      </span>
       <VAnimatedArrow :class="$style.arrow" />
     </button>
   </Transition>

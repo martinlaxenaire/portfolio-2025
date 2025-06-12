@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { UIElements } from "~/assets/static-data/ui-elements";
 import { useTimeoutFn } from "@vueuse/core";
 
 const { $piwikPRO } = useNuxtApp();
@@ -185,31 +186,30 @@ const percentComplete = computed(() => {
         :is-visible="isLegendVisible"
         ref="mainLegend"
       >
-        <h3>{{ percentComplete }}% complete</h3>
+        <h3>{{ UIElements.game.complete(percentComplete) }}</h3>
         <p>
-          Interact with the site to gain experience points and unlock new
-          contents and features!
+          {{ UIElements.game.guideline }}
         </p>
         <div :class="$style['legend-section']">
-          <h3>Contents</h3>
+          <h3>{{ UIElements.game.contents.title }}</h3>
           <ul>
-            <li>Unlocked: {{ currentLevel }}/{{ levels.length }}</li>
-            <li>Current experience points: {{ currentLevelPoints }}</li>
+            <li>{{ UIElements.game.unlocked(currentLevel, levels.length) }}</li>
+            <li>{{ UIElements.game.currentXPPoints(currentLevelPoints) }}</li>
             <li>
-              Next level in {{ nextLevelExperienceNeeded }}
-              {{ nextLevelExperienceNeeded > 1 ? "points" : "point" }}
+              {{ UIElements.game.nextLevel(nextLevelExperienceNeeded) }}
             </li>
           </ul>
         </div>
 
         <div :class="$style['legend-section']">
-          <h3>Features</h3>
+          <h3>{{ UIElements.game.features.title }}</h3>
           <ul>
-            <li>Unlocked: {{ currentFeature }}/{{ features.length }}</li>
-            <li>Current experience points: {{ currentFeaturePoints }}</li>
             <li>
-              Next level in {{ nextFeatureExperienceNeeded }}
-              {{ nextFeatureExperienceNeeded > 1 ? "points" : "point" }}
+              {{ UIElements.game.unlocked(currentFeature, features.length) }}
+            </li>
+            <li>{{ UIElements.game.currentXPPoints(currentFeaturePoints) }}</li>
+            <li>
+              {{ UIElements.game.nextLevel(nextFeatureExperienceNeeded) }}
             </li>
           </ul>
         </div>
@@ -225,7 +225,7 @@ const percentComplete = computed(() => {
         :class="$style.legend"
         :is-visible="activeLevelLegend.includes(i)"
       >
-        <h3>New content unlocked!</h3>
+        <h3>{{ UIElements.game.contents.completed }}</h3>
         <h4 v-if="level.contentUnlocked">{{ level.contentUnlocked }}</h4>
         <p v-if="level.tip">{{ level.tip }}</p>
       </VLevelExpandableLegend>
@@ -236,7 +236,7 @@ const percentComplete = computed(() => {
         :class="$style.legend"
         :is-visible="activeFeatureLegend.includes(j)"
       >
-        <h3>New feature unlocked!</h3>
+        <h3>{{ UIElements.game.features.completed }}</h3>
         <h4 v-if="feature.contentUnlocked">{{ feature.contentUnlocked }}</h4>
         <p v-if="feature.tip">{{ feature.tip }}</p>
       </VLevelExpandableLegend>

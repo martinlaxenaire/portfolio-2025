@@ -535,7 +535,7 @@ export class WebGPUYearsScene extends WebGPUScene {
         if (strengthBinding) {
           strengthBinding.on("change", (ev) => {
             this.shaderPass.uniforms.deformation.maxStrength.value =
-              (ev.value * this.renderer.boundingRect.width) /
+              ((ev.value as number) * this.renderer.boundingRect.width) /
               this.renderer.boundingRect.height;
           });
         }

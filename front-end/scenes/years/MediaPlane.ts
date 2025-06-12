@@ -4,7 +4,6 @@ import type {
   GPUCurtainsRenderer,
   RenderTarget,
   PlaneGeometry,
-  Object3D,
 } from "gpu-curtains";
 import {
   mediaExternalPlaneFs,

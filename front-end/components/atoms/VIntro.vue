@@ -12,6 +12,7 @@ const { isVisible } = useIsVisible(skipGame);
 <template>
   <div :class="$style.root" class="container grid">
     <div :class="$style.intro" v-if="intro">
+      <!-- @vue-ignore -->
       <VSanityBlock :content="intro" />
 
       <div

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { HomeQueryResult } from "~/types/sanity.types";
+import { UIElements } from "~/assets/static-data/ui-elements";
 
 const props = defineProps<{
   project?: NonNullable<NonNullable<HomeQueryResult>["projects"]>[number];
@@ -45,7 +46,10 @@ const projectComponentAttrs = computed(() => {
     v-if="project"
     ref="projectThumb"
   >
-    <div :class="$style.content">
+    <div
+      :class="$style.content"
+      :data-hover-title="UIElements.projects.hoverTitle"
+    >
       <h3 v-if="project.title" :class="$style.title">
         {{ project.title }}
       </h3>
@@ -158,7 +162,7 @@ const projectComponentAttrs = computed(() => {
   }
 
   &:after {
-    content: "Click!";
+    content: attr(data-hover-title);
     position: absolute;
     inset: 0;
     z-index: 2;

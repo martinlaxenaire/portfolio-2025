@@ -114,7 +114,7 @@ export class CanvasHeroScene extends Scene {
       })
       .to(this, {
         showProgress: 1,
-        duration: 2,
+        duration: 1.5,
         ease: "expo.inOut",
         onUpdate: this.setClipPath.bind(this),
       });

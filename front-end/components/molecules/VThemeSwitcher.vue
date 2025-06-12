@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { CanvasThemeButtonScene } from "~/scenes/theme-button/CanvasThemeButtonScene";
+import { UIElements } from "~/assets/static-data/ui-elements";
 
 let firstThemeClick = false;
 
@@ -63,7 +64,9 @@ onBeforeUnmount(() => {
   <button
     @click="onThemeClick"
     :class="$style.root"
-    :title="`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`"
+    :title="
+      UIElements.header.themeSwitcher(theme === 'light' ? 'dark' : 'light')
+    "
   >
     <span ref="canvas-button" />
   </button>

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { UIElements } from "~/assets/static-data/ui-elements";
+
 const emit = defineEmits(["onSkipGame"]);
 const {
   levels,
@@ -36,9 +38,11 @@ const skipGame = () => {
 
 <template>
   <div :class="[$style.root, !isGameActive && $style['root--is-inactive']]">
-    <p :class="$style.text">Don't want to play the game? Too bad!</p>
+    <p :class="$style.text">
+      {{ UIElements.game.skip.disclaimer }}
+    </p>
     <button @click="skipGame" :disabled="!isGameActive" :class="$style.button">
-      Unlock everything
+      {{ UIElements.game.skip.button }}
     </button>
   </div>
 </template>

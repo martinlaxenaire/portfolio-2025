@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { UIElements } from "~/assets/static-data/ui-elements";
+
 let firstLinkClick = false;
 
 const { addFeaturePoints } = useLevelExperience();
@@ -17,6 +19,7 @@ const onLinkClick = () => {
     target="_blank"
     rel="noopener"
     :class="$style.root"
+    :aria-label="UIElements.header.sourceCode"
     @click="onLinkClick"
   >
     &lt;/&gt;

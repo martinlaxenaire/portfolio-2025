@@ -1,8 +1,7 @@
 import { hoistUseStatements } from "./utils/hoist-use-statements";
+import { siteConfig } from "../studio/site-config";
 
 const runtimeConfig = {
-  sanityProjectId: process.env.NUXT_SANITY_PROJECT_ID,
-  googleClientId: process.env.NUXT_GOOGLE_CLIENT_ID,
   googleAPIKey: process.env.NUXT_GOOGLE_API_KEY,
   invoiceSheetId: process.env.NUXT_INVOICE_SHEET_ID,
   githubAccessToken: process.env.NUXT_GITHUB_GRAPHQL_TOKEN,
@@ -27,15 +26,6 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
   runtimeConfig,
-
-  // proxying sanity images
-  // from https://github.com/sanity-io/sanity/issues/3210#issuecomment-1381626655
-  // nitro: {
-  //     routeRules: {
-  //         "/images/**": { proxy: "https://cdn.sanity.io/images/**" },
-  //     },
-  // },
-
   modules: [
     "@nuxtjs/sanity",
     "lenis/nuxt",
@@ -48,7 +38,7 @@ export default defineNuxtConfig({
     ],
   ],
   sanity: {
-    projectId: runtimeConfig.sanityProjectId,
+    projectId: siteConfig.projectId,
   },
   css: ["~/assets/scss/main.scss"],
   vite: {
