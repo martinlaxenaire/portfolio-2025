@@ -64,6 +64,17 @@ export default defineNuxtConfig({
         },
       },
     },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes("gpu-curtains")) {
+              return "gpu-curtains";
+            }
+          },
+        },
+      },
+    },
   },
   components: [
     "~/components/atoms",

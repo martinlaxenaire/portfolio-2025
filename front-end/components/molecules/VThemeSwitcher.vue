@@ -2,6 +2,8 @@
 import { CanvasThemeButtonScene } from "~/scenes/theme-button/CanvasThemeButtonScene";
 import { UIElements } from "~/assets/static-data/ui-elements";
 
+const { $isReducedMotion, $piwikPRO } = useNuxtApp();
+
 let firstThemeClick = false;
 
 const { theme, toggleTheme } = useTheme();
@@ -9,6 +11,10 @@ const { addFeaturePoints } = useLevelExperience();
 
 const onThemeClick = () => {
   toggleTheme();
+
+  if (import.meta.client) {
+    $piwikPRO.CustomEvent.trackEvent("UX", "Click", "Switched theme", 1);
+  }
 
   if (!firstThemeClick) {
     firstThemeClick = true;
@@ -20,8 +26,6 @@ const canvasButton = useTemplateRef("canvas-button");
 let scene: CanvasThemeButtonScene | null = null;
 
 onMounted(() => {
-  const { $isReducedMotion } = useNuxtApp();
-
   const createScene = () => {
     scene = new CanvasThemeButtonScene({
       container: canvasButton.value as HTMLElement,

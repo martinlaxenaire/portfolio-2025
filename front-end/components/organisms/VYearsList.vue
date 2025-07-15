@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/all";
 import { yearsVideos } from "~/assets/static-data/years-videos";
 import { UIElements } from "~/assets/static-data/ui-elements";
 
-const props = defineProps<{
+defineProps<{
   title?: NonNullable<HomeQueryResult>["yearsTitle"];
 }>();
 
@@ -206,6 +206,7 @@ onBeforeUnmount(() => {
 
     <div :class="$style.content">
       <div :class="$style.canvas" ref="canvas"></div>
+
       <div :class="$style.years" ref="years-wrapper">
         <ul
           :class="$style.list"

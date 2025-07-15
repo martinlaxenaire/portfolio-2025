@@ -1,5 +1,5 @@
 import type { WebGPUYearsScene } from "./WebGPUYearsScene";
-import { Plane } from "gpu-curtains";
+import { DOMTexture, Plane } from "gpu-curtains";
 import type {
   GPUCurtainsRenderer,
   RenderTarget,
@@ -21,7 +21,10 @@ export class MediaPlane {
   yearIndex: number;
   index: number;
   useExternalTextures: boolean;
-  plane: Plane;
+  video: HTMLVideoElement | null;
+  plane!: Plane;
+  videoTexture: DOMTexture;
+  private _videoProgressHandler?: (() => void) | null;
 
   constructor({
     yearsScene,
@@ -52,12 +55,24 @@ export class MediaPlane {
     this.index = index;
     this.useExternalTextures = useExternalTextures;
 
-    const video = this.planeElement.querySelector("video");
+    this.video = this.planeElement.querySelector("video");
 
     const placeholderColor =
       this.yearsScene.colors[
         Math.floor(Math.random() * this.yearsScene.colors.length)
       ];
+
+    this.videoTexture = new DOMTexture(this.renderer, {
+      label: `${this.label} ${this.index} texture`,
+      name: "planeTexture",
+      useExternalTextures: this.useExternalTextures,
+      placeholderColor: [
+        placeholderColor.rgb.r,
+        placeholderColor.rgb.g,
+        placeholderColor.rgb.b,
+        255,
+      ],
+    });
 
     this.plane = new Plane(this.renderer, this.planeElement, {
       label: `${this.label} ${this.index}`,
@@ -71,21 +86,16 @@ export class MediaPlane {
         },
         fragment: {
           code:
-            this.useExternalTextures && !!video
+            this.useExternalTextures && !!this.video
               ? mediaExternalPlaneFs
               : mediaPlaneFs,
         },
       },
-      texturesOptions: {
-        useExternalTextures,
-        placeholderColor: [
-          placeholderColor.rgb.r,
-          placeholderColor.rgb.g,
-          placeholderColor.rgb.b,
-          255,
-        ],
-      },
+      autoloadSources: false,
+      domTextures: [this.videoTexture],
     });
+
+    this.yearsScene.compilteMaterialOnIdle(this.plane.material);
 
     // TODO handle play promises?
     this.plane
@@ -103,6 +113,30 @@ export class MediaPlane {
           }
         });
       });
+  }
+
+  loadVideo(callback = () => {}) {
+    if (!!this.video) {
+      this._videoProgressHandler = this.onVideoProgress.bind(this, callback);
+
+      this.video.addEventListener("progress", this._videoProgressHandler);
+
+      this.videoTexture.loadVideo(this.video);
+    }
+  }
+
+  onVideoProgress(callback = () => {}) {
+    let isVideoLoaded = false;
+    let loadedThreshold = 0.75;
+
+    const loadedPercentage = this.video.buffered.end(0) / this.video.duration;
+
+    if (loadedPercentage >= loadedThreshold && !isVideoLoaded) {
+      isVideoLoaded = true;
+      this.video.removeEventListener("progress", this._videoProgressHandler);
+      this._videoProgressHandler = null;
+      callback();
+    }
   }
 
   togglePlayback(shouldPlay = false) {
@@ -124,6 +158,10 @@ export class MediaPlane {
   destroy() {
     this.togglePlayback(false);
 
-    this.plane.remove();
+    if (this.video && this._videoProgressHandler) {
+      this.video.removeEventListener("progress", this._videoProgressHandler);
+    }
+
+    this.plane?.remove();
   }
 }

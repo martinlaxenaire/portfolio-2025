@@ -24,7 +24,6 @@ export default defineNuxtPlugin({
         await gpuCurtains.setDevice();
         // use gsap ticker
         gsap.ticker.add(() => gpuCurtains.render());
-        gsap.ticker.fps(60);
         hasWebGPU = true;
       } catch (e) {
         console.log(e);

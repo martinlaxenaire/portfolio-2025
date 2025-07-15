@@ -160,7 +160,7 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
       .onBeforeRender(() => this.onRender());
 
     this.ambientLight = new AmbientLight(this.renderer, {
-      intensity: 0.1,
+      intensity: 0.2,
     });
 
     this.shadowIntensity = 1;
@@ -219,7 +219,7 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
 
     if (this.floor) {
       this.floor.uniforms.params.reflectionStrength.value =
-        this.floorColor.rgb.r > 155 ? 0.75 : 0.25;
+        this.floorColor.rgb.r > 155 ? 0.75 : 0.1;
 
       this.floor.uniforms.material.color.value = sRGBToLinear(
         new Vec3(
@@ -816,7 +816,7 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
           struct: {
             reflectionStrength: {
               type: "f32",
-              value: this.floorColor.rgb.r > 155 ? 0.75 : 0.25,
+              value: this.floorColor.rgb.r > 155 ? 0.75 : 0.1,
             },
             reflectionQuality: {
               type: "f32",

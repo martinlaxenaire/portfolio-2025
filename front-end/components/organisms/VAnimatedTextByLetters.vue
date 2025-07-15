@@ -10,7 +10,6 @@ const {
   ease = "power2.out",
   nbCharsDelay = 2,
   animateColors = true,
-  onComplete = () => {},
 } = defineProps<{
   label?: string;
   align?: "center" | "left" | "right";
@@ -20,8 +19,9 @@ const {
   ease?: string;
   nbCharsDelay?: number;
   animateColors?: boolean;
-  onComplete?: () => void;
 }>();
+
+const emit = defineEmits(["onBeforeComplete", "onComplete"]);
 
 const words = computed(() => {
   return label.split(" ");
@@ -48,7 +48,8 @@ const timeline = gsap.timeline({
   paused: true,
   onComplete: () => {
     timeline.clear();
-    onComplete();
+    isComplete.value = true;
+    emit("onComplete");
   },
 });
 
@@ -70,7 +71,6 @@ onMounted(() => {
 
   const initTimeline = () => {
     timeline.delay(tlDelay);
-    //timeline.timeScale(0.1);
 
     const endColor = window
       .getComputedStyle(document.body)
@@ -140,13 +140,17 @@ onMounted(() => {
         popinDuration + 0.05
       );
 
-    timeline
-      .call(() => {
-        isComplete.value = true;
-      })
-      .set(chars.value, {
-        clearProps: "all",
-      });
+    timeline.call(
+      () => {
+        emit("onBeforeComplete");
+      },
+      [],
+      `-=${tweenDuration}`
+    );
+
+    timeline.set(chars.value, {
+      clearProps: "all",
+    });
   };
 
   watch(playTimeline, () => {
@@ -267,18 +271,9 @@ onBeforeUnmount(() => {
 
   &-word {
     white-space: pre;
-    //padding: 0 0.37em 0 0;
     display: inline-block;
     font-kerning: none;
     white-space-collapse: preserve;
-
-    // .root--is-center & {
-    //   padding: 0 0.185em;
-    // }
-
-    // .root--is-right & {
-    //   padding: 0 0 0 0.37em;
-    // }
   }
 
   &-char {

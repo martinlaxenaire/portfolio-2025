@@ -1,3 +1,4 @@
+import { taskScheduler } from "~/utils/task-scheduler";
 import {
   GPUCurtainsRenderer,
   Object3D,
@@ -131,6 +132,9 @@ export class WebGPUYearsScene extends WebGPUScene {
       heightSegments: 2,
     });
 
+    this.createBackgroundComputePass();
+    this.createPostProPass();
+
     this.createTitles();
     this.createMediaPlanes();
 
@@ -242,14 +246,7 @@ export class WebGPUYearsScene extends WebGPUScene {
     });
   }
 
-  createMediaPlanes() {
-    //const angleStep = (Math.PI * 2) / this.items.length; // 360° / 5
-
-    this.renderTarget = new RenderTarget(this.renderer, {
-      label: "Media planes render target",
-      useDepth: false,
-    });
-
+  createBackgroundComputePass() {
     const nbRectangles = 40 * this.items.length;
     const rectSizes = new Float32Array(nbRectangles * 2);
     const rectPositions = new Float32Array(nbRectangles * 2);
@@ -343,6 +340,13 @@ export class WebGPUYearsScene extends WebGPUScene {
     });
 
     this.compilteMaterialOnIdle(this.backgroundComputePass.material);
+  }
+
+  createPostProPass() {
+    this.renderTarget = new RenderTarget(this.renderer, {
+      label: "Media planes render target",
+      useDepth: false,
+    });
 
     this.deformationStrength = 0.2;
 
@@ -386,7 +390,9 @@ export class WebGPUYearsScene extends WebGPUScene {
     });
 
     this.compilteMaterialOnIdle(this.shaderPass.material);
+  }
 
+  createMediaPlanes() {
     const geometry = new PlaneGeometry();
 
     this.items.forEach((item, i) => {
@@ -398,16 +404,33 @@ export class WebGPUYearsScene extends WebGPUScene {
           planeElement: planeElement as HTMLElement,
           geometry,
           renderTarget: this.renderTarget,
-          label: `${item.querySelector("h3")?.innerText} media plane`,
+          label: `${item.querySelector("h3")?.innerText} video plane`,
           yearIndex: i,
           index: j,
-          useExternalTextures: true, // TODO?!
+          useExternalTextures: true,
         });
-
-        this.compilteMaterialOnIdle(mediaPlane.plane.material);
 
         this.mediaPlanes.push(mediaPlane);
       });
+    });
+
+    // avoid loading all videos all at once
+    // instead, wait for each videos to be loaded enough
+    // before loading the next one
+    // saves some initial bandwith, load time and CPU load
+    taskScheduler(() => {
+      const mediaPlanesLength = this.mediaPlanes.length;
+      if (mediaPlanesLength) {
+        const loadMediaPlaneVideo = (index = 0) => {
+          this.mediaPlanes[index].loadVideo(() => {
+            if (index < mediaPlanesLength - 1) {
+              loadMediaPlaneVideo(index + 1);
+            }
+          });
+        };
+
+        loadMediaPlaneVideo(0);
+      }
     });
   }
 
@@ -470,19 +493,21 @@ export class WebGPUYearsScene extends WebGPUScene {
       const title = item.querySelector("h3");
 
       if (title) {
-        const yearTitlePlane = new YearTitlePlane({
-          yearsScene: this,
-          title,
-          titleRadius,
-          index: i,
-          geometry: this.geometry,
-          renderBundle: this.titleRenderBundle,
-          sampler: this.anisotropicSampler,
+        taskScheduler(() => {
+          const yearTitlePlane = new YearTitlePlane({
+            yearsScene: this,
+            title,
+            titleRadius,
+            index: i,
+            geometry: this.geometry,
+            renderBundle: this.titleRenderBundle,
+            sampler: this.anisotropicSampler,
+          });
+
+          this.compilteMaterialOnIdle(yearTitlePlane.plane.material);
+
+          this.titlePlanes.push(yearTitlePlane);
         });
-
-        this.compilteMaterialOnIdle(yearTitlePlane.plane.material);
-
-        this.titlePlanes.push(yearTitlePlane);
       }
     });
   }

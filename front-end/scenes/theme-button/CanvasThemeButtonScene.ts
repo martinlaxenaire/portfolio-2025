@@ -1,4 +1,3 @@
-import { chromeuxreport_v1 } from "googleapis";
 import { Scene, type SceneParams } from "../Scene";
 import { gsap } from "gsap";
 import { ColorModel } from "@martinlaxenaire/color-palette-generator";

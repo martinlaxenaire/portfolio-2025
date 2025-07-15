@@ -80,7 +80,7 @@ export class CanvasFaviconScene extends Scene {
   }
 
   async updateFavicon() {
-    let faviconLink: HTMLLinkElement;
+    let faviconLink: HTMLLinkElement | null;
 
     faviconLink = document.querySelector('link[rel="shortcut icon"]');
 

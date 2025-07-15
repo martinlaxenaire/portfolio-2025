@@ -2,21 +2,19 @@
 import type { ModelRef } from "vue";
 import { UIElements } from "~/assets/static-data/ui-elements";
 
+const props = defineProps<{
+  isVisible: boolean;
+}>();
+
 const progress: ModelRef<number | undefined> = defineModel();
 
 const { currentLevel } = useLevelExperience();
 
-const slider = useTemplateRef("slider");
-const { isVisible } = useIsVisible(slider);
-
-const isActive = computed(() => isVisible.value && currentLevel.value < 1);
+const isActive = computed(() => props.isVisible && currentLevel.value < 1);
 </script>
 
 <template>
-  <div
-    :class="[$style.root, isActive && $style['root--is-active']]"
-    ref="slider"
-  >
+  <div :class="[$style.root, isActive && $style['root--is-active']]">
     <label for="hero-range" :class="$style.label">
       {{ UIElements.hero.guideline }}
     </label>
@@ -64,7 +62,7 @@ const isActive = computed(() => isVisible.value && currentLevel.value < 1);
 
   .root--is-active & {
     opacity: 1;
-    transition: opacity 0.35s 2s ease(in-out-quad);
+    transition: opacity 0.35s 0s ease(in-out-quad);
   }
 
   @media (prefers-reduced-motion) {
@@ -92,8 +90,8 @@ $thumb-size: 0.75em;
   .root--is-active & {
     opacity: 1;
     width: 100%;
-    transition: opacity 0.35s 2.25s ease(in-out-quad),
-      width 0.75s 2.25s ease(out-expo);
+    transition: opacity 0.35s 0.25s ease(in-out-quad),
+      width 0.75s 0.25s ease(out-expo);
   }
 
   @media (prefers-reduced-motion) {
@@ -119,7 +117,7 @@ $thumb-size: 0.75em;
 
     .root--is-active & {
       opacity: 1;
-      transition: opacity 0.35s 2.5s ease(in-out-quad);
+      transition: opacity 0.35s 0.5s ease(in-out-quad);
     }
 
     @media (prefers-reduced-motion) {

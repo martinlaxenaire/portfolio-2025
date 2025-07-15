@@ -13,6 +13,8 @@ export default defineNuxtPlugin({
     gsap.registerPlugin(InertiaPlugin);
     gsap.registerPlugin(Draggable);
 
+    gsap.ticker.fps(60);
+
     // theme
     const theme = useState<"light" | "dark">("theme");
 

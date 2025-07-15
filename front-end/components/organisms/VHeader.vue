@@ -68,9 +68,11 @@ const { isVisible } = useIsVisible(header);
             </div>
           </Transition>
 
-          <div :class="$style.level">
-            <VLevelManager />
-          </div>
+          <ClientOnly>
+            <div :class="$style.level">
+              <VLevelManager />
+            </div>
+          </ClientOnly>
         </div>
       </div>
     </div>

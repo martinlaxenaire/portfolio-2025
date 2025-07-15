@@ -117,6 +117,7 @@ defineExpose({
     width: 100%;
     border-width: 2px;
     grid-template-rows: 1fr;
+
     transition: grid-template-rows 0.25s ease(in-out-quad),
       width 0.25s ease(out-cubic), opacity 0.05s 0s, border-width 0.05s 0s,
       padding 0.05s 0s;

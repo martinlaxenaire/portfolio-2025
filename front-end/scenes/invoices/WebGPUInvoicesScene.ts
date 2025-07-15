@@ -1,4 +1,5 @@
 import { WebGPUScene, type WebGPUSceneParams } from "../WebGPUScene";
+import type { InvoicesData } from "~/server/api/google-sheets";
 import {
   AmbientLight,
   BindGroup,
@@ -38,10 +39,9 @@ import {
 } from "./shaders/chunks/wrapping-box-fragment-constributions.wgsl";
 import { ColorModel } from "@martinlaxenaire/color-palette-generator";
 import { instancesAdditionalVertexHead } from "./shaders/chunks/instances-additional-vertex-head";
-import type { initAsyncCompiler } from "sass";
 
 export interface WebGPUInvoicesSceneParams extends WebGPUSceneParams {
-  invoices?: string[];
+  invoices?: InvoicesData;
   theme?: Theme;
   onStarted?: () => void;
   onAttractionComplete?: () => void;
@@ -80,7 +80,6 @@ export class WebGPUInvoicesScene extends WebGPUScene {
   scaleRef!: number;
   minDistance: number;
 
-  containerParent: HTMLElement | null;
   currentAttraction: number;
   maxAttraction: number;
   attractionSpeed: number;
@@ -249,25 +248,12 @@ export class WebGPUInvoicesScene extends WebGPUScene {
     window.addEventListener("mousemove", this._pointerMoveHandler);
     window.addEventListener("touchmove", this._pointerMoveHandler);
 
-    //this.containerParent = this.container.parentNode as HTMLElement;
-    this.containerParent = document.querySelector("#invoices") as HTMLElement;
-
-    if (this.containerParent) {
-      this.containerParent.addEventListener(
-        "pointerdown",
-        this._pointerDownHandler
-      );
-      this.containerParent.addEventListener(
-        "touchstart",
-        this._pointerDownHandler,
-        { passive: true }
-      );
-      this.containerParent.addEventListener(
-        "pointerup",
-        this._pointerUpHandler
-      );
-      this.containerParent.addEventListener("touchend", this._pointerUpHandler);
-    }
+    this.container.addEventListener("pointerdown", this._pointerDownHandler);
+    this.container.addEventListener("touchstart", this._pointerDownHandler, {
+      passive: true,
+    });
+    this.container.addEventListener("pointerup", this._pointerUpHandler);
+    this.container.addEventListener("touchend", this._pointerUpHandler);
 
     this.createFullscreenPlane();
     this.createInstancedMesh();
@@ -1886,25 +1872,12 @@ export class WebGPUInvoicesScene extends WebGPUScene {
     window.removeEventListener("mousemove", this._pointerMoveHandler);
     window.removeEventListener("touchmove", this._pointerMoveHandler);
 
-    if (this.containerParent) {
-      this.containerParent.removeEventListener(
-        "pointerdown",
-        this._pointerDownHandler
-      );
-      this.containerParent.removeEventListener(
-        "touchstart",
-        this._pointerDownHandler,
-        { passive: true } as unknown as EventListenerOptions
-      );
-      this.containerParent.removeEventListener(
-        "pointerup",
-        this._pointerUpHandler
-      );
-      this.containerParent.removeEventListener(
-        "touchend",
-        this._pointerUpHandler
-      );
-    }
+    this.container.removeEventListener("pointerdown", this._pointerDownHandler);
+    this.container.removeEventListener("touchstart", this._pointerDownHandler, {
+      passive: true,
+    } as unknown as EventListenerOptions);
+    this.container.removeEventListener("pointerup", this._pointerUpHandler);
+    this.container.removeEventListener("touchend", this._pointerUpHandler);
 
     this.plane?.remove();
     this.wrappingBox?.remove();

@@ -50,11 +50,6 @@ if (import.meta.server) {
 }
 
 const { $piwikPRO } = useNuxtApp();
-// $piwikPRO won't be available on server-side code!
-// if (import.meta.client) {
-//   $piwikPRO.PageViews.trackPageView(data.value?.title);
-//   //$piwikPRO.GoalConversions.trackGoal(1, 100);
-// }
 
 onMounted(() => {
   $piwikPRO.PageViews.trackPageView("Homepage");
@@ -75,16 +70,17 @@ onMounted(() => {
       :class="[$style.level, currentLevel >= 1 && $style['level--is-active']]"
       id="level-1"
     >
-      <VIntro :intro="data.intro" />
+      <LazyVIntro hydrate-on-idle :intro="data.intro" />
 
-      <VProjectsList
+      <LazyVProjectsList
+        hydrate-on-idle
         :title="data.projectsTitle"
         :description="data.projectsDescription"
         :projects="data.projects"
         :recognition="data.recognition"
       />
 
-      <VYearsList :title="data.yearsTitle" />
+      <LazyVYearsList hydrate-on-idle :title="data.yearsTitle" />
     </section>
 
     <section
@@ -120,8 +116,8 @@ onMounted(() => {
       />
     </section>
 
-    <VScrollToContinue />
-    <VGainedExperience />
+    <LazyVScrollToContinue hydrate-on-idle />
+    <LazyVGainedExperience hydrate-on-idle />
   </div>
   <div v-else :class="$style.fallback">
     <h2>{{ UIElements.common.noData }}</h2>

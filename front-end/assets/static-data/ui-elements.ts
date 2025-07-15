@@ -2,6 +2,7 @@ import type { GithubContribution } from "~/server/api/github";
 
 export const UIElements = {
   common: {
+    loading: "Loading",
     noData: "No data available",
   },
   header: {

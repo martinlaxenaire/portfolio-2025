@@ -1,9 +1,10 @@
 import { Scene, type SceneParams } from "../Scene";
+import type { InvoicesData } from "~/server/api/google-sheets";
 import { gsap } from "gsap";
 
 export interface CanvasInvoicesSceneParams extends SceneParams {
   isReducedMotion?: boolean;
-  invoices?: string[];
+  invoices?: InvoicesData;
   onStarted?: () => void;
   onAttractionComplete?: () => void;
 }
@@ -37,7 +38,6 @@ export class CanvasInvoicesScene extends Scene {
   attractionComplete: boolean;
   currentAttraction: number;
 
-  containerParent: HTMLElement | null;
   private _pointerDownHandler: (e: PointerEvent | TouchEvent) => void;
   private _pointerUpHandler: (e: PointerEvent | TouchEvent) => void;
 
@@ -97,23 +97,10 @@ export class CanvasInvoicesScene extends Scene {
     this._pointerDownHandler = this.onPointerDown.bind(this);
     this._pointerUpHandler = this.onPointerUp.bind(this);
 
-    this.containerParent = document.querySelector("#invoices") as HTMLElement;
-
-    if (this.containerParent) {
-      this.containerParent.addEventListener(
-        "pointerdown",
-        this._pointerDownHandler
-      );
-      this.containerParent.addEventListener(
-        "touchstart",
-        this._pointerDownHandler
-      );
-      this.containerParent.addEventListener(
-        "pointerup",
-        this._pointerUpHandler
-      );
-      this.containerParent.addEventListener("touchend", this._pointerUpHandler);
-    }
+    this.container.addEventListener("pointerdown", this._pointerDownHandler);
+    this.container.addEventListener("touchstart", this._pointerDownHandler);
+    this.container.addEventListener("pointerup", this._pointerUpHandler);
+    this.container.addEventListener("touchend", this._pointerUpHandler);
 
     //this.draw();
   }
@@ -306,24 +293,10 @@ export class CanvasInvoicesScene extends Scene {
   override destroy(): void {
     super.destroy();
 
-    if (this.containerParent) {
-      this.containerParent.removeEventListener(
-        "pointerdown",
-        this._pointerDownHandler
-      );
-      this.containerParent.removeEventListener(
-        "touchstart",
-        this._pointerDownHandler
-      );
-      this.containerParent.removeEventListener(
-        "pointerup",
-        this._pointerUpHandler
-      );
-      this.containerParent.removeEventListener(
-        "touchend",
-        this._pointerUpHandler
-      );
-    }
+    this.container.removeEventListener("pointerdown", this._pointerDownHandler);
+    this.container.removeEventListener("touchstart", this._pointerDownHandler);
+    this.container.removeEventListener("pointerup", this._pointerUpHandler);
+    this.container.removeEventListener("touchend", this._pointerUpHandler);
 
     gsap.ticker.remove(this._renderHandler);
     this.resizeObserver.disconnect();

@@ -1,16 +1,18 @@
 import { defineEventHandler } from "h3";
 
-const generateFakeData = (): number[] => {
+export type InvoicesData = string[] | string[][];
+
+const generateFakeData = (): InvoicesData => {
   const data = [];
   const dataLength = 125 + Math.round(Math.random() * 50);
   for (let i = 0; i < dataLength; i++) {
-    data.push(Math.round(Math.random() * 4700) + 300);
+    data.push((Math.round(Math.random() * 4700) + 300).toString());
   }
 
   return data;
 };
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event): Promise<InvoicesData> => {
   const runtimeConfig = useRuntimeConfig();
   const range = "Total!A:B";
 

@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 
 export interface CanvasHeroSceneParams extends SceneParams {
   isReducedMotion?: boolean;
+  onStart?: () => void;
 }
 
 export class CanvasHeroScene extends Scene {
@@ -18,6 +19,7 @@ export class CanvasHeroScene extends Scene {
   hasBeenVisible: boolean;
   showProgress: number;
   showTl!: GSAPTimeline;
+  onStart: () => void;
 
   time: number;
 
@@ -29,11 +31,13 @@ export class CanvasHeroScene extends Scene {
     progress = 0,
     colors = [],
     isReducedMotion = false,
+    onStart = () => {},
   }: CanvasHeroSceneParams) {
     super({ container, progress, colors });
 
     this.hasBeenVisible = false;
     this.showProgress = 0;
+    this.onStart = onStart;
 
     this.isReducedMotion = isReducedMotion;
 
@@ -50,6 +54,7 @@ export class CanvasHeroScene extends Scene {
 
     if (this.isReducedMotion) {
       this.draw();
+      this.onStart();
     } else {
       gsap.ticker.add(this._renderHandler);
     }
@@ -111,11 +116,12 @@ export class CanvasHeroScene extends Scene {
       .timeline({
         paused: true,
         delay: 0.2,
+        onStart: () => this.onStart(),
       })
       .to(this, {
         showProgress: 1,
         duration: 1.5,
-        ease: "expo.inOut",
+        ease: "expo.out",
         onUpdate: this.setClipPath.bind(this),
       });
   }
@@ -187,7 +193,7 @@ export class CanvasHeroScene extends Scene {
 
     let angle = -Math.PI - this.time * speed; // Start from -PI like WGSL
 
-    const fillColorRatio = 6;
+    const fillColorRatio = 5;
     const nbColors = this.colors.length;
     const totalGroups = numTriangles * nbColors; // Number of color+white groups
     const segmentSize = (Math.PI * 2) / (totalGroups * fillColorRatio); // Base unit size

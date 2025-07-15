@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import type { HomeQueryResult } from "~/types/sanity.types";
-import type { WebGPUInvoicesScene } from "~/scenes/invoices/WebGPUInvoicesScene";
 import { useTimeoutFn } from "@vueuse/core";
-import { CanvasInvoicesScene } from "~/scenes/invoices/CanvasInvoicesScene";
 import { UIElements } from "~/assets/static-data/ui-elements";
 
 const props = defineProps<{
@@ -11,125 +9,42 @@ const props = defineProps<{
   description?: NonNullable<HomeQueryResult>["invoicesDescription"];
 }>();
 
-let scene: WebGPUInvoicesScene | CanvasInvoicesScene | null;
-const { theme } = useTheme();
-const canvas = useTemplateRef("canvas");
-
-const { data, status } = await useFetch("/api/google-sheets");
-
-const { isVisible } = useIsVisible(canvas, false);
+const { currentLevel } = useLevelExperience();
 
 const hasStarted = ref(true);
-const sceneComplete = ref(false);
-const showCongratulations = ref(false);
+const showCompleted = ref(false);
 
-const { colors } = usePaletteGenerator();
-const { addLevelPoints } = useLevelExperience();
-
-onMounted(async () => {
+// avoid hydration mismatch
+onMounted(() => {
   hasStarted.value = false;
-  const { $gpuCurtains, $hasWebGPU, $debugPane, $isReducedMotion } =
-    useNuxtApp();
-
-  const onStarted = () => {
-    if (!hasStarted.value) {
-      addLevelPoints(8);
-    }
-    hasStarted.value = true;
-  };
-
-  const onSceneComplete = () => {
-    if (!sceneComplete.value) {
-      addLevelPoints(15);
-
-      sceneComplete.value = true;
-      showCongratulations.value = true;
-
-      useTimeoutFn(() => {
-        showCongratulations.value = false;
-      }, 3500);
-    }
-  };
-
-  // If data is still loading when component mounts, wait for it
-  if (status.value === "pending") {
-    // Wait for pending to become false (data loaded)
-    await new Promise<void>((resolve) => {
-      // One-time watcher that automatically stops after pending becomes false
-      const stopWatcher = watch(
-        () => status.value === "pending",
-        (isPending) => {
-          if (!isPending) {
-            stopWatcher(); // Clean up the watcher
-            resolve();
-          }
-        }
-      );
-    });
-  }
-
-  if ($hasWebGPU && canvas.value) {
-    const { WebGPUInvoicesScene } = await import(
-      "~/scenes/invoices/WebGPUInvoicesScene"
-    );
-
-    scene = new WebGPUInvoicesScene({
-      gpuCurtains: $gpuCurtains,
-      container: canvas.value,
-      invoices: data.value,
-      colors: colors.value,
-      theme: theme.value,
-      debugPane: $debugPane,
-      onStarted: onStarted,
-      onAttractionComplete: onSceneComplete,
-    });
-
-    scene.setSceneVisibility(isVisible.value);
-  } else if (canvas.value) {
-    scene = new CanvasInvoicesScene({
-      container: canvas.value,
-      invoices: data.value?.values,
-      colors: colors.value,
-      isReducedMotion: $isReducedMotion,
-      onStarted: onStarted,
-      onAttractionComplete: onSceneComplete,
-    });
-  }
 });
 
-onBeforeUnmount(() => {
-  if (scene) {
-    scene.destroy();
-  }
-});
+const onStart = () => {
+  hasStarted.value = true;
+};
 
-watch(isVisible, (newValue) => {
-  if (scene) {
-    scene.setSceneVisibility(newValue);
-  }
-});
+const onComplete = () => {
+  showCompleted.value = true;
 
-watch(colors, () => {
-  if (scene) {
-    scene.setColors(colors.value);
-  }
-});
+  useTimeoutFn(() => {
+    showCompleted.value = false;
+  }, 3500);
+};
 
-watch(theme, (newValue) => {
-  if (scene) {
-    scene.updateTheme(newValue);
-  }
-});
+const { data } = await useFetch("/api/google-sheets");
 
-const invoices = computed(() => {
+const invoices: ComputedRef<string[]> = computed(() => {
   return data.value?.flat() || [];
 });
 
-// TODO dirty
+// TODO that's a bit dirty
 const parsedDescription = computed(() => {
   return props.description?.map((block) => {
     block.children = block.children?.map((c) => {
-      c.text = c.text?.replace("#{nbInvoices}", invoices.value.length);
+      c.text = c.text?.replace(
+        "#{nbInvoices}",
+        invoices.value.length.toString()
+      );
       return c;
     });
 
@@ -173,7 +88,7 @@ const parsedDescription = computed(() => {
         </Transition>
 
         <Transition appear name="instant-in-fade-out">
-          <div v-if="showCongratulations" :class="$style.congratulations">
+          <div v-if="showCompleted" :class="$style.congratulations">
             <VAnimatedTextByLetters
               :label="UIElements.invoices.completed"
               :animate-colors="false"
@@ -188,7 +103,12 @@ const parsedDescription = computed(() => {
           </div>
         </VExpandableLegend>
 
-        <div :class="$style.canvas" ref="canvas"></div>
+        <LazyVInvoicesScene
+          v-if="currentLevel >= 2"
+          :invoices-data="data"
+          @on-start="onStart"
+          @on-complete="onComplete"
+        />
       </div>
     </div>
   </div>
@@ -240,7 +160,6 @@ const parsedDescription = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: grab;
 }
 
 .middle-separator {
@@ -255,16 +174,8 @@ const parsedDescription = computed(() => {
   @include interaction-title;
 }
 
-.canvas {
-  position: absolute;
-  inset: 0;
-  //touch-action: none;
-}
-
 .legend {
   z-index: 1;
-  //pointer-events: none;
-
   position: absolute;
   right: 0;
   bottom: var(--gutter-size);

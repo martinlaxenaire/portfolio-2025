@@ -1,8 +1,5 @@
 <script lang="ts" setup>
 import type { HomeQueryResult } from "~/types/sanity.types";
-import type { GithubContribution } from "~/server/api/github";
-import type { WebGPUOpenSourceScene } from "~/scenes/open-source/WebGPUOpenSourceScene";
-import { CanvasOpenSourceScene } from "~/scenes/open-source/CanvasOpenSourceScene";
 import { useTimeoutFn } from "@vueuse/core";
 import { UIElements } from "~/assets/static-data/ui-elements";
 
@@ -12,15 +9,29 @@ const props = defineProps<{
   legend?: NonNullable<HomeQueryResult>["openSourceLegend"];
 }>();
 
-const { addFeaturePoints } = useLevelExperience();
+const { currentLevel, addFeaturePoints } = useLevelExperience();
 
-const canvas = useTemplateRef("canvas");
-const { isVisible } = useIsVisible(canvas, false);
+const hasStarted = ref(true);
+const showCompleted = ref(false);
 
-const { data, status } = await useFetch("/api/github");
-//console.log(data);
+// avoid hydration mismatch
+onMounted(() => {
+  hasStarted.value = false;
+});
 
-let scene: WebGPUOpenSourceScene | CanvasOpenSourceScene | null;
+const onStart = () => {
+  hasStarted.value = true;
+};
+
+const onComplete = () => {
+  showCompleted.value = true;
+
+  useTimeoutFn(() => {
+    showCompleted.value = false;
+  }, 3500);
+};
+
+const { data } = await useFetch("/api/github");
 
 const contributions = ref(
   data.value
@@ -32,108 +43,7 @@ const contributions = ref(
     : []
 );
 
-const { colors } = usePaletteGenerator();
-const { theme } = useTheme();
-const { addLevelPoints } = useLevelExperience();
-
-const hasStarted = ref(true);
-const sceneComplete = ref(false);
-const showCongratulations = ref(false);
-
-onMounted(async () => {
-  hasStarted.value = false;
-  const { $gpuCurtains, $hasWebGPU, $debugPane } = useNuxtApp();
-
-  const onStarted = () => {
-    if (!hasStarted.value) {
-      addLevelPoints(10);
-    }
-    hasStarted.value = true;
-  };
-
-  const onSceneComplete = () => {
-    if (!sceneComplete.value) {
-      addLevelPoints(20);
-
-      sceneComplete.value = true;
-      showCongratulations.value = true;
-
-      useTimeoutFn(() => {
-        showCongratulations.value = false;
-      }, 3500);
-    }
-  };
-
-  // If data is still loading when component mounts, wait for it
-  if (status.value === "pending") {
-    // Wait for pending to become false (data loaded)
-    await new Promise<void>((resolve) => {
-      // One-time watcher that automatically stops after pending becomes false
-      const stopWatcher = watch(
-        () => status.value === "pending",
-        (isPending) => {
-          if (!isPending) {
-            stopWatcher(); // Clean up the watcher
-            resolve();
-          }
-        }
-      );
-    });
-  }
-
-  // At this point, data has loaded
-  if ($hasWebGPU && canvas.value) {
-    const { WebGPUOpenSourceScene } = await import(
-      "~/scenes/open-source/WebGPUOpenSourceScene"
-    );
-
-    scene = new WebGPUOpenSourceScene({
-      gpuCurtains: $gpuCurtains,
-      container: canvas.value,
-      progress: 1,
-      contributions: data.value as GithubContribution[],
-      colors: colors.value,
-      debugPane: $debugPane,
-      onStarted: onStarted,
-      onSceneComplete: onSceneComplete,
-    });
-
-    scene.setSceneVisibility(isVisible.value);
-  } else if (canvas.value) {
-    scene = new CanvasOpenSourceScene({
-      container: canvas.value,
-      contributions: data.value as GithubContribution[],
-      colors: colors.value,
-      onStarted: onStarted,
-      onSceneComplete: onSceneComplete,
-    });
-  }
-});
-
-onBeforeUnmount(() => {
-  if (scene) {
-    scene.destroy();
-  }
-});
-
-watch(isVisible, () => {
-  if (scene) {
-    scene.setSceneVisibility(isVisible.value);
-  }
-});
-
-watch(colors, () => {
-  if (scene) {
-    scene.setColors(colors.value);
-  }
-});
-
-watch(theme, () => {
-  if (scene) {
-    scene.setTheme();
-  }
-});
-
+const openSourceScene = useTemplateRef("openSourceScene");
 let hasToggled = false;
 
 const toggleInstance = (index = 0) => {
@@ -144,12 +54,14 @@ const toggleInstance = (index = 0) => {
 
   if (!hasToggled) {
     addFeaturePoints(5);
-    hasToggled = true;
   }
 
+  hasToggled = true;
+
   contributions.value[index].isActive = !contributions.value[index].isActive;
-  if (scene) {
-    scene.toggleParticleInstance(index);
+
+  if (openSourceScene.value) {
+    openSourceScene.value.toggleInstance(index);
   }
 };
 </script>
@@ -187,7 +99,7 @@ const toggleInstance = (index = 0) => {
         </Transition>
 
         <Transition appear name="instant-in-fade-out">
-          <div v-if="showCongratulations" :class="$style.congratulations">
+          <div v-if="showCompleted" :class="$style.congratulations">
             <VAnimatedTextByLetters
               :label="UIElements.openSource.completed"
               :animate-colors="false"
@@ -195,7 +107,13 @@ const toggleInstance = (index = 0) => {
           </div>
         </Transition>
 
-        <div :class="$style.canvas" ref="canvas"></div>
+        <LazyVOpenSourceScene
+          ref="openSourceScene"
+          v-if="currentLevel >= 3"
+          :contributions="data"
+          @on-start="onStart"
+          @on-complete="onComplete"
+        />
 
         <VExpandableLegend :class="$style.legend">
           <div :class="$style['legend-description']" v-if="legend">
@@ -245,7 +163,6 @@ const toggleInstance = (index = 0) => {
 .content {
   position: relative;
   z-index: 1;
-  // padding-top: calc(var(--height-space) * 0.5);
   padding-top: calc(var(--height-space) + 3rem);
   margin-bottom: calc(var(--height-space) * 0.5);
 }
@@ -288,7 +205,6 @@ const toggleInstance = (index = 0) => {
   left: 0;
   width: 100%;
   height: 100lvh;
-  //margin-top: -50vh;
 }
 
 .guideline {
@@ -297,16 +213,6 @@ const toggleInstance = (index = 0) => {
 
 .congratulations {
   @include interaction-title;
-}
-
-.canvas {
-  position: absolute;
-  inset: 0;
-
-  canvas {
-    position: absolute;
-    inset: 0;
-  }
 }
 
 .legend {

@@ -21,14 +21,29 @@ let initPalette: ColorPalette | null = null;
 let palette: ColorPalette | null = null;
 // TODO plug to github contributions length?
 const paletteLength = 5;
+let useGrayscalePalette = false;
 
 export const usePaletteGenerator = () => {
   const colors = useState<ColorModelBase[]>("colors", () => []);
   const { theme } = useTheme();
 
+  const { $piwikPRO } = useNuxtApp();
+
   const generatePalette = (regenerate = true) => {
     if (regenerate || !generator || !initPalette) {
+      if (generator && initPalette && import.meta.client) {
+        $piwikPRO.CustomEvent.trackEvent(
+          "UX",
+          "Click",
+          "Generated new palette",
+          1
+        );
+      }
+
       const precision = 3;
+
+      // very rare grayscale palette
+      useGrayscalePalette = Math.random() > 0.975;
 
       generator = new ColorPaletteGenerator({
         precision,
@@ -42,11 +57,6 @@ export const usePaletteGenerator = () => {
         (c, i) => i >= startIndex && i <= endIndex
       );
     }
-
-    // very rare grayscale palette
-    const useGrayscalePalette = Math.random() > 0.975;
-
-    console.log(useGrayscalePalette);
 
     palette = initPalette.map((color, i) => {
       const newColor = new ColorModel();

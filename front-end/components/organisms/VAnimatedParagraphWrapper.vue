@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { gsap } from "gsap";
 import { SplitText } from "gsap/all";
+import { taskScheduler } from "~/utils/task-scheduler";
 
 const props = defineProps<{
   index: number;
@@ -27,31 +28,33 @@ onMounted(() => {
   document.fonts.ready.then(() => {
     gsap.set(content.value, { opacity: 1 });
 
-    SplitText.create(content.value, {
-      //aria: "hidden",
-      type: "words,lines",
-      linesClass: "line",
-      autoSplit: true,
-      smartWrap: true,
-      mask: "lines",
-      tag: "span",
-      onSplit: (self) => {
-        split.value = gsap
-          .timeline({
-            paused: true,
-            delay: 0.2 + 0.4 * props.index,
-          })
-          .from(self.lines, {
-            duration: 0.6,
-            yPercent: 100,
-            opacity: 0,
-            stagger: 0.125,
-            ease: "expo.out",
-            onComplete: () => self.revert(), // revert the element to its original (unsplit) state
-          });
+    taskScheduler(() => {
+      SplitText.create(content.value, {
+        //aria: "hidden",
+        type: "words,lines",
+        linesClass: "line",
+        autoSplit: true,
+        smartWrap: true,
+        mask: "lines",
+        tag: "span",
+        onSplit: (self) => {
+          split.value = gsap
+            .timeline({
+              paused: true,
+              delay: 0.2 + 0.4 * props.index,
+            })
+            .from(self.lines, {
+              duration: 0.6,
+              yPercent: 100,
+              opacity: 0,
+              stagger: 0.125,
+              ease: "expo.out",
+              onComplete: () => self.revert(), // revert the element to its original (unsplit) state
+            });
 
-        return split.value;
-      },
+          return split.value;
+        },
+      });
     });
   });
 });

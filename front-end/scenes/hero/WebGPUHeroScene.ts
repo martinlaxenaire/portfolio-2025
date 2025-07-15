@@ -3,6 +3,10 @@ import { GPURenderer, FullscreenPlane, Vec2 } from "gpu-curtains";
 import { gsap } from "gsap";
 import { heroPlaneFs } from "./shaders/hero-plane.wgsl";
 
+export interface WebGPUHeroSceneParams extends WebGPUSceneParams {
+  onStart?: () => void;
+}
+
 export class WebGPUHeroScene extends WebGPUScene {
   renderer: GPURenderer;
   plane: FullscreenPlane;
@@ -11,17 +15,21 @@ export class WebGPUHeroScene extends WebGPUScene {
   showTl!: GSAPTimeline;
   showProgress: number;
 
+  onStart: () => void;
+
   constructor({
     gpuCurtains,
     container,
     progress = 0,
     colors = [],
+    onStart = () => {},
     debugPane = null,
-  }: WebGPUSceneParams) {
+  }: WebGPUHeroSceneParams) {
     super({ gpuCurtains, container, progress, colors, debugPane });
 
     this.hasBeenVisible = false;
     this.showProgress = 0;
+    this.onStart = onStart;
 
     this.renderer = new GPURenderer({
       label: "Hero scene renderer",
@@ -97,7 +105,7 @@ export class WebGPUHeroScene extends WebGPUScene {
             },
             fillColorRatio: {
               type: "f32",
-              value: 6, // how much the colored triangles scale compared to empty areas
+              value: 5, // how much the colored triangles scale compared to empty areas
             },
             showProgress: {
               type: "f32",
@@ -149,6 +157,7 @@ export class WebGPUHeroScene extends WebGPUScene {
       .timeline({
         paused: true,
         delay: 0.1,
+        onStart: () => this.onStart(),
       })
       .to(this, {
         showProgress: 1,
@@ -169,7 +178,17 @@ export class WebGPUHeroScene extends WebGPUScene {
   override setSceneVisibility(isVisible = false) {
     if (!this.hasBeenVisible && isVisible) {
       this.hasBeenVisible = true;
-      this.showTl.restart(true);
+
+      if (this.plane.ready) {
+        this.showTl.restart(true);
+      } else {
+        const taskId = this.renderer.onBeforeRenderScene.add(() => {
+          if (this.plane.ready) {
+            this.showTl.restart(true);
+            this.renderer.onBeforeRenderScene.remove(taskId);
+          }
+        });
+      }
     }
 
     super.setSceneVisibility(isVisible);

@@ -199,9 +199,14 @@ export class CanvasLineDrawerScene extends Scene {
   }
 
   onPointerUp(e: PointerEvent | TouchEvent) {
+    const wasDrawing = this.isDrawing;
+
     this.isDrawing = false;
     this.hasStarted = false;
-    this.onStopDrawing();
+
+    if (wasDrawing) {
+      this.onStopDrawing();
+    }
   }
 
   onStopDrawing() {
@@ -225,7 +230,9 @@ export class CanvasLineDrawerScene extends Scene {
       opacity += 0.5;
     }
 
-    this.ctx.strokeStyle = `rgba(${this.color.rgb.r}, ${this.color.rgb.g}, ${this.color.rgb.b}, ${opacity})`;
+    this.ctx.strokeStyle = `rgba(${Math.round(this.color.rgb.r)}, ${Math.round(
+      this.color.rgb.g
+    )}, ${Math.round(this.color.rgb.b)}, ${opacity.toFixed(2)})`;
     this.ctx.lineCap = "round";
     this.ctx.lineWidth =
       Math.max(this.boundingRect.width, this.boundingRect.height) * 0.005;
