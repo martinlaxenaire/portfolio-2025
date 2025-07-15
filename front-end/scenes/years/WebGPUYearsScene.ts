@@ -395,6 +395,8 @@ export class WebGPUYearsScene extends WebGPUScene {
   createMediaPlanes() {
     const geometry = new PlaneGeometry();
 
+    const useExternalTextures = true;
+
     this.items.forEach((item, i) => {
       const planeElements = item.querySelectorAll(".media-plane");
 
@@ -407,7 +409,7 @@ export class WebGPUYearsScene extends WebGPUScene {
           label: `${item.querySelector("h3")?.innerText} video plane`,
           yearIndex: i,
           index: j,
-          useExternalTextures: true,
+          useExternalTextures,
         });
 
         this.mediaPlanes.push(mediaPlane);
@@ -428,6 +430,13 @@ export class WebGPUYearsScene extends WebGPUScene {
             }
           });
         };
+
+        // force render of first plane to compile new external texture pipeline
+        if (useExternalTextures && this.mediaPlanes[0].video) {
+          this.mediaPlanes[0].videoTexture.onAllSourcesLoaded(() => {
+            this.renderer.renderOnce([this.mediaPlanes[0].plane]);
+          });
+        }
 
         loadMediaPlaneVideo(0);
       }
