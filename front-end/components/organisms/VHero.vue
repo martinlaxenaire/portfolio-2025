@@ -132,6 +132,8 @@ const onTitleComplete = () => {
     </div>
 
     <VHeroRangeSlider v-model="sliderProgress" :is-visible="showSlider" />
+
+    <LazyVScrollToContinue hydrate-on-idle :level="1" />
   </section>
 </template>
 

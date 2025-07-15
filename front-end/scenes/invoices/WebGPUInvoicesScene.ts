@@ -213,14 +213,14 @@ export class WebGPUInvoicesScene extends WebGPUScene {
     this.directionalLights.push(
       new DirectionalLight(this.renderer, {
         position: new Vec3(200, 50, 100),
-        intensity: 2,
+        intensity: 1.5,
       })
     );
 
     this.directionalLights.push(
       new DirectionalLight(this.renderer, {
         position: new Vec3(-200, -50, 100),
-        intensity: 2,
+        intensity: 1.5,
       })
     );
 
@@ -286,7 +286,7 @@ export class WebGPUInvoicesScene extends WebGPUScene {
 
     const isLight = this.theme === "light";
 
-    const mainColorIndex = isLight ? 1 : paletteLength - 1;
+    const mainColorIndex = isLight ? 0 : paletteLength - 1;
     const gridColorIndex = isLight ? 2 : paletteLength - 2;
 
     const secondaryColorIndex = isLight ? paletteLength - 2 : 2;
@@ -1012,7 +1012,6 @@ export class WebGPUInvoicesScene extends WebGPUScene {
             let rotationMatrix = quatToMat4(normalize(attributes.instanceRotation));
             // instanceData.x holds uniform scale
             position = (rotationMatrix * vec4(position * attributes.instanceData.x, 1.0)).xyz + attributes.instancePosition.xyz;
-            //position = position * attributes.instanceData.x + attributes.instancePosition.xyz;
             normal = normalize((rotationMatrix * vec4(normal , 1.0)).xyz);
           `,
           additionalContribution: /* wgsl */ `
@@ -1024,33 +1023,8 @@ export class WebGPUInvoicesScene extends WebGPUScene {
           preliminaryContribution: /* wgsl */ `
             outputColor = mix(outputColor, vec4(vec3(params.collisionColor), outputColor.a), velocity.w);
           `,
-          // additionalContribution: /* wgsl */ `
-          //   let thicknessColor: vec3f = material.specularColor;
-          //   let thicknessDistortion: f32 = 0.3;
-          //   let thicknessAmbient: f32 = 0.0;
-          //   let thicknessAttenuation: f32 = 0.05;
-          //   let thicknessPower: f32 = 2.0;
-          //   let thicknessScale: f32 = 0.75;
-
-          //   let pointLight = pointLights.elements[0];
-          //   var lightDirection: vec3f = pointLight.position - worldPosition;
-          //   lightDirection = normalize(lightDirection);
-
-          //   let scatteringHalf: vec3f = normalize(lightDirection + (geometryNormal * thicknessDistortion));
-          //   let scatteringDot: f32 = pow(saturate(dot(viewDirection, -scatteringHalf)), thicknessPower) * thicknessScale;
-          //   let scatteringIllu: vec3f = (scatteringDot + thicknessAmbient) * thicknessColor;
-          //   reflectedLight.directDiffuse += scatteringIllu * thicknessAttenuation;
-
-          //   totalDiffuse = reflectedLight.indirectDiffuse + reflectedLight.directDiffuse;
-
-          //   outgoingLight = totalDiffuse + totalSpecular;
-
-          //   outputColor = vec4(outgoingLight + emissive, outputColor.a);
-          // `,
         },
         color: this.secondaryColor,
-        //alphaCutoff: 0.75,
-        //opacity: 0.85,
         specularColor: this.mainColor,
         metallic: 0.9,
         roughness: 0.6,

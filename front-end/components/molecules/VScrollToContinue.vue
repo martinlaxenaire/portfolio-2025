@@ -2,11 +2,15 @@
 import { gsap } from "gsap";
 import { UIElements } from "~/assets/static-data/ui-elements";
 
+const props = defineProps<{
+  level: number;
+}>();
+
 const { isGameActive, currentLevel, addFeaturePoints } = useLevelExperience();
 const isActive = ref(false);
 
 watch(currentLevel, () => {
-  if (isGameActive.value && currentLevel.value > 0) {
+  if (isGameActive.value && currentLevel.value === props.level) {
     isActive.value = true;
   }
 });

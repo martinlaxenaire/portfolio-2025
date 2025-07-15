@@ -145,6 +145,8 @@ const toggleInstance = (index = 0) => {
             </li>
           </ul>
         </VExpandableLegend>
+
+        <LazyVScrollToContinue hydrate-on-idle :level="4" />
       </div>
     </div>
   </div>

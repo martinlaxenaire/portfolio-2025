@@ -22,6 +22,10 @@ export const wrappingBoxPreliminaryContribution = /* wgsl */ `
     var lineWidth = grid.lineWidth;
     lineWidth.x *= grid.resolution.y / grid.resolution.x;
     let pristineGrid = pristineGrid(fsInput.uv * grid.scale, lineWidth);
+
+    // fade when close to far plane
+    let alpha = 1.0 - smoothstep(0.9825, 1.0, abs(fsInput.position.z));
+    outputColor.a = alpha;
     
     // lerp between 0 and color
     outputColor = mix(vec4(outputColor.rgb, 0.0), outputColor, pristineGrid);

@@ -81,6 +81,8 @@ onMounted(() => {
       />
 
       <LazyVYearsList hydrate-on-idle :title="data.yearsTitle" />
+
+      <LazyVScrollToContinue hydrate-on-idle :level="2" />
     </section>
 
     <section
@@ -116,7 +118,6 @@ onMounted(() => {
       />
     </section>
 
-    <LazyVScrollToContinue hydrate-on-idle />
     <LazyVGainedExperience hydrate-on-idle />
   </div>
   <div v-else :class="$style.fallback">

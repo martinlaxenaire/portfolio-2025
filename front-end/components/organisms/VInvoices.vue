@@ -109,6 +109,8 @@ const parsedDescription = computed(() => {
           @on-start="onStart"
           @on-complete="onComplete"
         />
+
+        <LazyVScrollToContinue hydrate-on-idle :level="3" />
       </div>
     </div>
   </div>
@@ -175,12 +177,6 @@ const parsedDescription = computed(() => {
 }
 
 .legend {
-  z-index: 1;
-  position: absolute;
-  right: 0;
-  bottom: var(--gutter-size);
-  left: 0;
-
   h3 {
     font-family: var(--light-display-font);
     line-height: 0.85;
