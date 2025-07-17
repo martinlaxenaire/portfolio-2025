@@ -11,6 +11,7 @@ const { isVisible } = useIsVisible(skipGame);
 
 <template>
   <div :class="$style.root" class="container grid">
+    <VSectionCounter :section="1" :class="$style['section-counter']" />
     <div :class="$style.intro" v-if="intro">
       <!-- @vue-ignore -->
       <VSanityBlock :content="intro" />
@@ -52,5 +53,9 @@ const { isVisible } = useIsVisible(skipGame);
   @media (prefers-reduced-motion) {
     transition: none;
   }
+}
+
+.section-counter {
+  inset: 3rem var(--gutter-size);
 }
 </style>

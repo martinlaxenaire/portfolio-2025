@@ -21,7 +21,7 @@
 
 @mixin left-column-text {
   @include column-text;
-  grid-column: 3 / 10;
+  grid-column: 3 / 11;
 
   @media screen and (max-aspect-ratio: 12 / 8) {
     grid-column: 2 / 8;

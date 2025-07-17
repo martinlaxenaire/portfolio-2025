@@ -59,7 +59,8 @@ const parsedDescription = computed(() => {
       <VCanvasSeparator :invert-colors="true" />
     </div>
 
-    <div class="container grid" v-if="process">
+    <div :class="$style.intro" class="container grid" v-if="process">
+      <VSectionCounter :section="2" :class="$style['section-counter']" />
       <div :class="$style.process">
         <!-- @vue-ignore -->
         <VSanityBlock :content="process" />
@@ -126,6 +127,15 @@ const parsedDescription = computed(() => {
   @include bottom-separator;
   bottom: auto;
   top: 0;
+}
+
+.intro {
+  position: relative;
+  margin-bottom: 3rem;
+}
+
+.section-counter {
+  inset: 3rem var(--gutter-size);
 }
 
 .process {

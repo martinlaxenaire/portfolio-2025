@@ -49,12 +49,15 @@ struct VSOutput {
     // Apply deformation to radial distance
     radialDist *= 1.0 - arcDeformation;
 
+    let intensity = smoothstep(0.0, 1.0, params.intensity);
+    radialDist /= max(intensity, 0.1);
+
     //let edgeThreshold = smoothstep(3.0, 2.0, radialDist); // Define the edge region
     //let centerThreshold = smoothstep(0.5, 2.5, radialDist); // Define the edge region
     let edgeThreshold = smoothstep(params.outerSize, params.outerSize - 0.025, radialDist); // Define the edge region
     let centerThreshold = smoothstep(params.centerSize, params.centerSize + 0.025, radialDist); // Define the edge region
 
-    let alpha = centerThreshold * edgeThreshold * smoothstep(0.0, 1.0, params.intensity);
+    let alpha = centerThreshold * edgeThreshold * intensity;
 
     if(alpha < 0.05) {
         discard;

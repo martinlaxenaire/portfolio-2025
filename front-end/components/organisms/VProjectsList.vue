@@ -70,7 +70,7 @@ watch(isVisible, () => {
   grid-column: 7 / 19;
 
   @media screen and (max-aspect-ratio: 12 / 8) {
-    grid-column: 4 / 10;
+    grid-column: 3 / 11;
   }
 
   @media screen and (orientation: portrait) {

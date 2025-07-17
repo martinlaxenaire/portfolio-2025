@@ -72,12 +72,19 @@ const toggleInstance = (index = 0) => {
       <VCanvasSeparator :invert-colors="true" />
     </div>
 
-    <div :class="$style.content" class="container grid">
+    <div :class="$style.intro" class="container grid">
+      <VSectionCounter
+        :section="3"
+        :class="$style['section-counter']"
+        :reversed="true"
+      />
       <div :class="$style.description" v-if="description">
         <!-- @vue-ignore -->
         <VSanityBlock :content="description" />
       </div>
+    </div>
 
+    <div :class="$style.content" class="container grid">
       <h2 :class="$style.title" v-if="title">
         <VAnimatedTextByLetters :align="'center'" :label="title" />
       </h2>
@@ -162,11 +169,23 @@ const toggleInstance = (index = 0) => {
   top: 0;
 }
 
-.content {
+.intro {
   position: relative;
   z-index: 1;
   padding-top: calc(var(--height-space) + 3rem);
+  padding-bottom: 3rem;
+  margin-bottom: 3rem;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
   margin-bottom: calc(var(--height-space) * 0.5);
+}
+
+.section-counter {
+  inset: calc(var(--height-space) + 6rem) var(--gutter-size) 6rem
+    var(--gutter-size);
 }
 
 .title {

@@ -63,65 +63,76 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="$style.root" v-if="data">
-    <VHero :baseline="data.baseline" />
+  <div>
+    <div :class="$style.root" v-if="data">
+      <VHero :baseline="data.baseline" />
 
-    <section
-      :class="[$style.level, currentLevel >= 1 && $style['level--is-active']]"
-      id="level-1"
+      <section
+        :class="[$style.level, currentLevel >= 1 && $style['level--is-active']]"
+        id="level-1"
+      >
+        <LazyVIntro hydrate-on-idle :intro="data.intro" />
+
+        <LazyVProjectsList
+          hydrate-on-idle
+          :title="data.projectsTitle"
+          :description="data.projectsDescription"
+          :projects="data.projects"
+          :recognition="data.recognition"
+        />
+
+        <LazyVYearsList hydrate-on-idle :title="data.yearsTitle" />
+
+        <LazyVScrollToContinue hydrate-on-idle :level="2" />
+      </section>
+
+      <section
+        :class="[$style.level, currentLevel >= 2 && $style['level--is-active']]"
+        id="level-2"
+      >
+        <VInvoices
+          :process="data.processDescription"
+          :title="data.invoicesTitle"
+          :description="data.invoicesDescription"
+        />
+      </section>
+
+      <section
+        :class="[$style.level, currentLevel >= 3 && $style['level--is-active']]"
+        id="level-3"
+      >
+        <VOpenSource
+          :title="data.openSourceTitle"
+          :description="data.openSourceDescription"
+          :legend="data.openSourceLegend"
+        />
+      </section>
+      <section
+        :class="[$style.level, currentLevel >= 4 && $style['level--is-active']]"
+        id="level-4"
+      >
+        <VFooter
+          :title="data.footerTitle"
+          :site-title="data.title"
+          :description="data.footerDescription"
+          :socials="data.socials"
+        />
+      </section>
+
+      <LazyVGainedExperience hydrate-on-idle />
+    </div>
+
+    <Transition
+      appear
+      :enter-active-class="$style['fade-enter-active']"
+      :leave-active-class="$style['fade-leave-active']"
+      :enter-from-class="$style['fade-enter-from']"
+      :leave-to-class="$style['fade-leave-to']"
     >
-      <LazyVIntro hydrate-on-idle :intro="data.intro" />
-
-      <LazyVProjectsList
-        hydrate-on-idle
-        :title="data.projectsTitle"
-        :description="data.projectsDescription"
-        :projects="data.projects"
-        :recognition="data.recognition"
-      />
-
-      <LazyVYearsList hydrate-on-idle :title="data.yearsTitle" />
-
-      <LazyVScrollToContinue hydrate-on-idle :level="2" />
-    </section>
-
-    <section
-      :class="[$style.level, currentLevel >= 2 && $style['level--is-active']]"
-      id="level-2"
-    >
-      <VInvoices
-        :process="data.processDescription"
-        :title="data.invoicesTitle"
-        :description="data.invoicesDescription"
-      />
-    </section>
-
-    <section
-      :class="[$style.level, currentLevel >= 3 && $style['level--is-active']]"
-      id="level-3"
-    >
-      <VOpenSource
-        :title="data.openSourceTitle"
-        :description="data.openSourceDescription"
-        :legend="data.openSourceLegend"
-      />
-    </section>
-    <section
-      :class="[$style.level, currentLevel >= 4 && $style['level--is-active']]"
-      id="level-4"
-    >
-      <VFooter
-        :title="data.footerTitle"
-        :site-title="data.title"
-        :description="data.footerDescription"
-        :socials="data.socials"
-      />
-    </section>
-
-    <LazyVGainedExperience hydrate-on-idle />
-  </div>
-  <div v-else :class="$style.fallback">
-    <h2>{{ UIElements.common.noData }}</h2>
+      <div v-if="!data" :class="$style.fallback">
+        <h2>{{ UIElements.common.noData }}</h2>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -160,5 +171,22 @@ onMounted(() => {
     font-weight: normal;
     text-transform: uppercase;
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  opacity: 1;
+
+  transition: opacity 0.5s 0.65s ease(in-quad);
+
+  @media (prefers-reduced-motion) {
+    transition: none !important;
+  }
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transition: opacity 0.5s 0s ease(in-quad);
 }
 </style>
