@@ -7,7 +7,7 @@ const { addFeaturePoints } = useLevelExperience();
 
 const video = useTemplateRef("video");
 
-const { $isReducedMotion, $hasWebGPU } = useNuxtApp();
+const { $isReducedMotion, $hasWebGPUVideo } = useNuxtApp();
 
 let lastTs = 0;
 
@@ -30,7 +30,7 @@ onMounted(() => {
       video.value.addEventListener("timeupdate", onTimeUpdate);
     }
 
-    if (!$hasWebGPU) {
+    if (!$hasWebGPUVideo) {
       useIntersectionObserver(video, ([entry]) => {
         const isVideoVisible = entry?.isIntersecting || false;
         if (isVideoVisible) {

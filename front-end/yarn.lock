@@ -2212,9 +2212,9 @@
     vue "^3.5.13"
 
 "@webgpu/types@^0.1.54":
-  version "0.1.61"
-  resolved "https://registry.yarnpkg.com/@webgpu/types/-/types-0.1.61.tgz#60ac1756bbeeae778b5357a94d4e6e160592d6f1"
-  integrity sha512-w2HbBvH+qO19SB5pJOJFKs533CdZqxl3fcGonqL321VHkW7W/iBo6H8bjDy6pr/+pbMwIu5dnuaAxH7NxBqUrQ==
+  version "0.1.64"
+  resolved "https://registry.yarnpkg.com/@webgpu/types/-/types-0.1.64.tgz#62c5f9d345d4d270fcf3ecbb111c3b98dcc1aca3"
+  integrity sha512-84kRIAGV46LJTlJZWxShiOrNL30A+9KokD7RB3dRCIqODFjodS5tCD5yyiZ8kIReGVZSDfA3XkkwyyOIF6K62A==
 
 "@whatwg-node/disposablestack@^0.0.6":
   version "0.0.6"
@@ -3846,9 +3846,9 @@ gopd@^1.2.0:
   integrity sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==
 
 gpu-curtains@^0.12.4:
-  version "0.12.12"
-  resolved "https://registry.yarnpkg.com/gpu-curtains/-/gpu-curtains-0.12.12.tgz#7ba6db9ecb95b7924f24da277f274ae974e03b80"
-  integrity sha512-OOee9oTkP5QRfP5fjr+GSzsyKFDM9dHUIeLX3mLZk2/ZbYzNywUnpMqC0iypFJ+FHfjA7Es9DBNDE+nbifyh3Q==
+  version "0.12.14"
+  resolved "https://registry.yarnpkg.com/gpu-curtains/-/gpu-curtains-0.12.14.tgz#58f2bbcb9a4ac3987d2f75b194a1274bb4e5aa52"
+  integrity sha512-144GkO4cUXXEY70R0q74wtIaw1af54qVcWzkAcM66htvHDeV0ZBn0lzioCJNppoVLq1GflEUzrsLZ5vzo5AKtA==
   dependencies:
     "@webgpu/types" "^0.1.54"
 

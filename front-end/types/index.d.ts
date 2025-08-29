@@ -10,6 +10,7 @@ declare module "#app" {
     $isReducedMotion: boolean;
     $gpuCurtains: GPUCurtains;
     $hasWebGPU: boolean;
+    $hasWebGPUVideo: boolean;
     $debugPane: DebugPane;
     $paletteGenerator: ColorPaletteGenerator;
     $palette: ColorPalette;

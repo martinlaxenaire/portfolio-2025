@@ -38,12 +38,17 @@ const hasStarted = ref(currentLevel.value >= 2);
 const sceneComplete = ref(false);
 
 onMounted(async () => {
-  const { $gpuCurtains, $hasWebGPU, $debugPane, $isReducedMotion } =
+  const { $gpuCurtains, $hasWebGPUVideo, $debugPane, $isReducedMotion } =
     useNuxtApp();
 
   let progress = 0;
 
-  if ($hasWebGPU && canvas.value && yearsItems.value && yearsContainer.value) {
+  if (
+    $hasWebGPUVideo &&
+    canvas.value &&
+    yearsItems.value &&
+    yearsContainer.value
+  ) {
     const { WebGPUYearsScene } = await import(
       "~/scenes/years/WebGPUYearsScene"
     );
@@ -330,7 +335,8 @@ onBeforeUnmount(() => {
 
   opacity: 0;
 
-  body:global(.no-webgpu) & {
+  body:global(.no-webgpu) &,
+  body:global(.no-webgpu-video) & {
     opacity: 1;
   }
 
