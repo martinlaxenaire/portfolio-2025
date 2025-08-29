@@ -2,7 +2,7 @@
 import { CanvasThemeButtonScene } from "~/scenes/theme-button/CanvasThemeButtonScene";
 import { UIElements } from "~/assets/static-data/ui-elements";
 
-const { $isReducedMotion, $piwikPRO } = useNuxtApp();
+const { $isReducedMotion } = useNuxtApp();
 
 let firstThemeClick = false;
 
@@ -13,7 +13,9 @@ const onThemeClick = () => {
   toggleTheme();
 
   if (import.meta.client) {
-    $piwikPRO.CustomEvent.trackEvent("UX", "Click", "Switched theme", 1);
+    umTrackEvent("UX", {
+      name: "Switched theme",
+    });
   }
 
   if (!firstThemeClick) {

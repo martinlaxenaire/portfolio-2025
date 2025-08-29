@@ -32,24 +32,26 @@ if (data.value) {
 
   // debug levels
   if (levels.value.length && router.currentRoute.value.query?.level) {
-    const startLevel = parseInt(
-      router.currentRoute.value.query.level as string
+    const startLevel = Math.min(
+      parseInt(router.currentRoute.value.query.level as string),
+      levels.value.length
     );
 
     currentLevelPoints.value =
-      levels.value.length && levels.value.length >= startLevel - 1
+      levels.value.length >= startLevel - 1
         ? (levels.value[startLevel - 1].pointsNeeded as number)
         : currentLevelPoints.value;
   }
 
   // debug features
   if (features.value.length && router.currentRoute.value.query?.feature) {
-    const startFeature = parseInt(
-      router.currentRoute.value.query.feature as string
+    const startFeature = Math.min(
+      parseInt(router.currentRoute.value.query.feature as string),
+      features.value.length
     );
 
     currentLevelPoints.value =
-      features.value.length && features.value.length >= startFeature - 1
+      features.value.length >= startFeature - 1
         ? (features.value[startFeature - 1].pointsNeeded as number)
         : currentFeaturePoints.value;
   }

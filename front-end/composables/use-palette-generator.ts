@@ -27,17 +27,12 @@ export const usePaletteGenerator = () => {
   const colors = useState<ColorModelBase[]>("colors", () => []);
   const { theme } = useTheme();
 
-  const { $piwikPRO } = useNuxtApp();
-
   const generatePalette = (regenerate = true) => {
     if (regenerate || !generator || !initPalette) {
       if (generator && initPalette && import.meta.client) {
-        $piwikPRO.CustomEvent.trackEvent(
-          "UX",
-          "Click",
-          "Generated new palette",
-          1
-        );
+        umTrackEvent("UX", {
+          name: "Generated new palette",
+        });
       }
 
       const precision = 3;

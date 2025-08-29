@@ -5,8 +5,8 @@ const runtimeConfig = {
   googleAPIKey: process.env.NUXT_GOOGLE_API_KEY,
   invoiceSheetId: process.env.NUXT_INVOICE_SHEET_ID,
   githubAccessToken: process.env.NUXT_GITHUB_GRAPHQL_TOKEN,
-  piwikProId: process.env.NUXT_PIWIK_PRO_CONTAINER_ID,
-  piwikProUrl: process.env.NUXT_PIWIK_PRO_CONTAINER_URL,
+  umamiId: process.env.NUXT_UMAMI_ID,
+  umamiHost: process.env.NUXT_UMAMI_HOST,
   public: {
     siteBaseUrl: process.env.NUXT_SITE_BASE_URL,
   },
@@ -26,17 +26,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
   runtimeConfig,
-  modules: [
-    "@nuxtjs/sanity",
-    "lenis/nuxt",
-    [
-      "@piwikpro/nuxt-piwik-pro",
-      {
-        containerId: runtimeConfig.piwikProId,
-        containerUrl: runtimeConfig.piwikProUrl,
-      },
-    ],
-  ],
+  modules: ["@nuxtjs/sanity", "lenis/nuxt", "nuxt-umami"],
   sanity: {
     projectId: siteConfig.projectId,
   },
@@ -81,4 +71,10 @@ export default defineNuxtConfig({
     "~/components/molecules",
     "~/components/organisms",
   ],
+  // https://umami.nuxt.dev/getting-started/installation
+  umami: {
+    id: runtimeConfig.umamiId,
+    host: runtimeConfig.umamiHost,
+    autoTrack: true,
+  },
 });

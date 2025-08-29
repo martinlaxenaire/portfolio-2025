@@ -2,8 +2,6 @@
 import { UIElements } from "~/assets/static-data/ui-elements";
 import { useTimeoutFn } from "@vueuse/core";
 
-const { $piwikPRO } = useNuxtApp();
-
 const {
   levels,
   features,
@@ -83,12 +81,9 @@ watch(currentLevel, () => {
   if (!isGameActive.value) return;
 
   if (import.meta.client) {
-    $piwikPRO.CustomEvent.trackEvent(
-      "Game",
-      "Interaction",
-      `Unlocked level ${currentLevel.value}`,
-      1
-    );
+    umTrackEvent("Game", {
+      name: `Unlocked level ${currentLevel.value}`,
+    });
   }
 
   if (
@@ -129,12 +124,9 @@ watch(currentFeature, () => {
   if (!isGameActive.value) return;
 
   if (import.meta.client) {
-    $piwikPRO.CustomEvent.trackEvent(
-      "Game",
-      "Interaction",
-      `Unlocked feature ${currentFeature.value}`,
-      1
-    );
+    umTrackEvent("Game", {
+      name: `Unlocked feature ${currentFeature.value}`,
+    });
   }
 
   if (

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { HomeQueryResult } from "~/types/sanity.types";
 import { homeQueryString } from "../../studio/src/queries-strings";
-// import { usePiwikPro } from "@piwikpro/nuxt-piwik-pro/composables";
 import { UIElements } from "~/assets/static-data/ui-elements";
 
 const { currentLevel } = useLevelExperience();
@@ -48,18 +47,6 @@ if (import.meta.server) {
     },
   });
 }
-
-const { $piwikPRO } = useNuxtApp();
-
-onMounted(() => {
-  $piwikPRO.PageViews.trackPageView("Homepage");
-});
-
-// const userId = usePiwikPro(({ PageViews, GoalConversions, UserManagement }) => {
-//   PageViews.trackPageView(data.value?.title);
-//   //GoalConversions.trackGoal(1, 100);
-//   return UserManagement.getUserId();
-// });
 </script>
 
 <template>
