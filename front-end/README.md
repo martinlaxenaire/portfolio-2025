@@ -76,6 +76,13 @@ bun run preview
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
+## Environment variables
+
+The website uses environment variable to fetch data from Google sheets and Github, as well as for Analytics tracking with Umami.
+There's a `env.example` provided ready to be used.
+
+If the data cannot be fetched from Google sheets or Github, fake data are used.
+
 ## Project structure
 
 ### Pages
