@@ -9,6 +9,7 @@ const runtimeConfig = {
   umamiHost: process.env.NUXT_UMAMI_HOST,
   public: {
     siteBaseUrl: process.env.NUXT_SITE_BASE_URL,
+    siteDomain: process.env.NUXT_SITE_DOMAIN,
   },
 };
 
@@ -76,5 +77,8 @@ export default defineNuxtConfig({
     id: runtimeConfig.umamiId,
     host: runtimeConfig.umamiHost,
     autoTrack: true,
+    ...(runtimeConfig.public.siteDomain && {
+      domains: [runtimeConfig.public.siteDomain],
+    }),
   },
 });
