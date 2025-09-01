@@ -215,7 +215,11 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
     const floorColor = window
       .getComputedStyle(document.body)
       .getPropertyValue("--background-color");
-    this.floorColor = new ColorModel(floorColor);
+
+    // TODO ColorModel is not working with three letters hex codes
+    this.floorColor = new ColorModel(
+      floorColor === "#fff" ? "#ffffff" : floorColor
+    );
 
     if (this.floor) {
       this.floor.uniforms.params.reflectionStrength.value =

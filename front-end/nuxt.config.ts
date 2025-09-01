@@ -16,7 +16,7 @@ const runtimeConfig = {
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   app: {
-    baseURL: "/test/portfolio-2025/",
+    baseURL: "/",
     head: {
       htmlAttrs: {
         lang: "en",
@@ -24,10 +24,14 @@ export default defineNuxtConfig({
     },
     pageTransition: { name: "page", mode: "out-in" },
   },
+  site: {
+    url: runtimeConfig.public.siteBaseUrl,
+    name: siteConfig.siteTitle,
+  },
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
   runtimeConfig,
-  modules: ["@nuxtjs/sanity", "lenis/nuxt", "nuxt-umami"],
+  modules: ["@nuxtjs/sanity", "lenis/nuxt", "nuxt-umami", "@nuxtjs/sitemap"],
   sanity: {
     projectId: siteConfig.projectId,
   },

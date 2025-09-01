@@ -55,10 +55,12 @@ export class CanvasThemeButtonScene extends Scene {
   }
 
   setColor() {
+    const bodyStyles = window.getComputedStyle(document.body);
+    const foregroundColor = bodyStyles.getPropertyValue("--foreground-color");
+
+    // TODO ColorModel is not working with three letters hex codes
     this.color = new ColorModel(
-      window
-        .getComputedStyle(document.body)
-        .getPropertyValue("--foreground-color")
+      foregroundColor === "#fff" ? "#ffffff" : foregroundColor
     );
 
     this.bgColor = window

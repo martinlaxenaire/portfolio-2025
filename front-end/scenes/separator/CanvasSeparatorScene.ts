@@ -111,7 +111,10 @@ export class CanvasSeparatorScene extends Scene {
   applyColors() {
     const bodyStyles = window.getComputedStyle(document.body);
     const foregroundColor = bodyStyles.getPropertyValue("--foreground-color");
-    const foregroundColorModel = new ColorModel(foregroundColor);
+    // TODO ColorModel is not working with three letters hex codes
+    const foregroundColorModel = new ColorModel(
+      foregroundColor === "#fff" ? "#ffffff" : foregroundColor
+    );
 
     const palette = [...this.colors];
     // const palette = [...this.colors].flatMap((i) => [i, i]);
