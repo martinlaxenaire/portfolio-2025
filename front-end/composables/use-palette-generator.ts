@@ -29,12 +29,6 @@ export const usePaletteGenerator = () => {
 
   const generatePalette = (regenerate = true) => {
     if (regenerate || !generator || !initPalette) {
-      if (generator && initPalette && import.meta.client) {
-        umTrackEvent("UX", {
-          name: "Generated new palette",
-        });
-      }
-
       const precision = 3;
 
       // very rare grayscale palette
