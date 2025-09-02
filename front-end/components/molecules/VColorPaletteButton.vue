@@ -14,6 +14,12 @@ const onPaletteClick = () => {
     firstPaletteClick = true;
     addFeaturePoints(3);
   }
+
+  if (import.meta.client) {
+    umTrackEvent("UX", {
+      name: "Generated new color palette",
+    });
+  }
 };
 
 watch(theme, () => {
