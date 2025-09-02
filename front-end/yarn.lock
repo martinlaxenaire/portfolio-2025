@@ -798,9 +798,9 @@
     tar "^7.4.0"
 
 "@martinlaxenaire/color-palette-generator@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@martinlaxenaire/color-palette-generator/-/color-palette-generator-2.0.0.tgz#022f6a2124d5f1b50c59fa8b6f2b387ec6cd93f6"
-  integrity sha512-7pnVQ5HhqWVIT0q9Swm0lqQAPOuvEhZf6Ktro32JLw+7oFYqOvy3Ek7P3vIRJFW3rT3aFCjK/MQwg2GdBFQ30w==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@martinlaxenaire/color-palette-generator/-/color-palette-generator-2.0.1.tgz#2051d260507eea5fd218f33b21b517218c266478"
+  integrity sha512-iuhcEk9vJ5uhzpX4aMaESeVIp7WC/mVqiB8QwDeRVBUk/rxQVVgi3uZUhkBZakfHZR0S0JiUnJy8x/GWYvnFUQ==
 
 "@napi-rs/wasm-runtime@^0.2.10":
   version "0.2.11"
