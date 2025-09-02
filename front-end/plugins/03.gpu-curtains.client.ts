@@ -39,9 +39,17 @@ export default defineNuxtPlugin({
         if (!hasWebGPUVideo) {
           document.body.classList.add("no-webgpu-video");
         }
+
+        umTrackEvent("Feature", {
+          name: "WebGPU enabled",
+        });
       } catch (e) {
         console.log(e);
         hasWebGPU = false;
+
+        umTrackEvent("Feature", {
+          name: "WebGPU disabled",
+        });
       }
     } else {
       document.body.classList.add("no-webgpu");
