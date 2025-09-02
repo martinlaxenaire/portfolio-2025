@@ -97,12 +97,9 @@ export class CanvasLineDrawerScene extends Scene {
   }
 
   setColor() {
-    const color = window
+    this.color.hex = window
       .getComputedStyle(document.body)
       .getPropertyValue("--foreground-color");
-
-    // TODO ColorModel is not working with three letters hex codes
-    this.color.hex = color === "#fff" ? "#ffffff" : color;
   }
 
   setTheme() {
