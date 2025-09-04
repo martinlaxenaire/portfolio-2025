@@ -24,7 +24,7 @@ export class MediaPlane {
   video: HTMLVideoElement | null;
   plane!: Plane;
   videoTexture: DOMTexture;
-  private _videoProgressHandler?: (() => void) | null;
+  private _videoLoadingTaskId?: number | null;
 
   constructor({
     yearsScene,
@@ -56,6 +56,8 @@ export class MediaPlane {
     this.useExternalTextures = useExternalTextures;
 
     this.video = this.planeElement.querySelector("video");
+
+    this._videoLoadingTaskId = null;
 
     const placeholderColor =
       this.yearsScene.colors[
@@ -117,26 +119,36 @@ export class MediaPlane {
 
   loadVideo(callback = () => {}) {
     if (!!this.video) {
-      this._videoProgressHandler = this.onVideoProgress.bind(this, callback);
+      let isVideoLoaded = false;
+      let loadedThreshold = 0.75;
 
-      this.video.addEventListener("progress", this._videoProgressHandler);
+      this._videoLoadingTaskId =
+        this.renderer.onBeforeCommandEncoderCreation.add(() => {
+          const loadedPercentage =
+            this.video.buffered.end(0) / this.video.duration;
+
+          if (loadedPercentage >= loadedThreshold && !isVideoLoaded) {
+            isVideoLoaded = true;
+
+            // remove from tasks queue
+            this.clearVideoLoadingTask();
+
+            callback();
+          }
+        });
 
       this.videoTexture.loadVideo(this.video);
     }
   }
 
-  onVideoProgress(callback = () => {}) {
-    let isVideoLoaded = false;
-    let loadedThreshold = 0.75;
-
-    const loadedPercentage = this.video.buffered.end(0) / this.video.duration;
-
-    if (loadedPercentage >= loadedThreshold && !isVideoLoaded) {
-      isVideoLoaded = true;
-      this.video.removeEventListener("progress", this._videoProgressHandler);
-      this._videoProgressHandler = null;
-      callback();
+  clearVideoLoadingTask() {
+    if (this._videoLoadingTaskId !== null) {
+      this.renderer.onBeforeCommandEncoderCreation.remove(
+        this._videoLoadingTaskId
+      );
     }
+
+    this._videoLoadingTaskId = null;
   }
 
   togglePlayback(shouldPlay = false) {
@@ -158,9 +170,7 @@ export class MediaPlane {
   destroy() {
     this.togglePlayback(false);
 
-    if (this.video && this._videoProgressHandler) {
-      this.video.removeEventListener("progress", this._videoProgressHandler);
-    }
+    this.clearVideoLoadingTask();
 
     this.plane?.remove();
   }

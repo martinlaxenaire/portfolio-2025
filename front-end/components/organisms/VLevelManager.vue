@@ -82,7 +82,9 @@ watch(currentLevel, () => {
 
   if (import.meta.client) {
     umTrackEvent("Game", {
-      name: `Unlocked level ${currentLevel.value}`,
+      name: `Unlocked level ${currentLevel.value} (${
+        levels.value[currentLevel.value - 1].contentUnlocked
+      })`,
     });
   }
 
@@ -125,7 +127,9 @@ watch(currentFeature, () => {
 
   if (import.meta.client) {
     umTrackEvent("Game", {
-      name: `Unlocked feature ${currentFeature.value}`,
+      name: `Unlocked feature ${currentFeature.value} (${
+        features.value[currentFeature.value - 1].contentUnlocked
+      })`,
     });
   }
 
