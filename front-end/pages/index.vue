@@ -57,6 +57,7 @@ if (import.meta.server) {
       <section
         :class="[$style.level, currentLevel >= 1 && $style['level--is-active']]"
         id="level-1"
+        :inert="currentLevel >= 1 ? false : true"
       >
         <LazyVIntro hydrate-on-idle :intro="data.intro" />
 
@@ -76,6 +77,7 @@ if (import.meta.server) {
       <section
         :class="[$style.level, currentLevel >= 2 && $style['level--is-active']]"
         id="level-2"
+        :inert="currentLevel >= 2 ? false : true"
       >
         <VInvoices
           :process="data.processDescription"
@@ -87,6 +89,7 @@ if (import.meta.server) {
       <section
         :class="[$style.level, currentLevel >= 3 && $style['level--is-active']]"
         id="level-3"
+        :inert="currentLevel >= 3 ? false : true"
       >
         <VOpenSource
           :title="data.openSourceTitle"
@@ -97,6 +100,7 @@ if (import.meta.server) {
       <section
         :class="[$style.level, currentLevel >= 4 && $style['level--is-active']]"
         id="level-4"
+        :inert="currentLevel >= 4 ? false : true"
       >
         <VFooter
           :title="data.footerTitle"
