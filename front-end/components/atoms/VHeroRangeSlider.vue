@@ -33,6 +33,8 @@ const isActive = computed(() => props.isVisible && currentLevel.value < 1);
 </template>
 
 <style lang="scss" module>
+$thumb-size: 0.75em;
+
 .root {
   position: absolute;
   bottom: calc(var(--gutter-size) * 2);
@@ -70,13 +72,11 @@ const isActive = computed(() => props.isVisible && currentLevel.value < 1);
   }
 }
 
-$thumb-size: 0.75em;
-
 .wrapper {
   position: relative;
   display: flex;
   align-items: center;
-  padding: 0.25em;
+  padding: 0 0.25em;
   border-radius: 1em;
   border: 2px solid var(--foreground-color);
   background: var(--background-color);
@@ -130,7 +130,8 @@ $thumb-size: 0.75em;
   display: block;
   width: 7.5rem;
   appearance: none;
-  height: $thumb-size;
+  height: calc(#{$thumb-size} + 0.25em * 2);
+
   font: inherit;
   margin: 0;
   padding: 0;
