@@ -91,11 +91,11 @@ The whole site consists of a single landing page, so there's only an `index.vue`
 
 ### Components
 
-The `components` folder is using the (https://atomicdesign.bradfrost.com/chapter-2/)[Atomic design system].
+The `components` folder is using the [Atomic design system](https://atomicdesign.bradfrost.com/chapter-2/).
 
 Each component file name starts with the capitalized letter `V` (for `Vue`) in order to avoid confusion with existing HTML tags (`Header.vue` becomes `VHeader.vue` so we avoid writing `<header>` in our components templates).
 
-The whole process is inspired by (https://github.com/rezozero/nuxt-starter)[Rezo Zero's Nuxt starter].
+The whole process is inspired by [Rezo Zero's Nuxt starter](https://github.com/rezozero/nuxt-starter).
 
 ### WebGPU (gpu-curtains) and fallback scenes
 
