@@ -23,6 +23,10 @@ const toggleLegend = () => {
   if (!hasInteracted && isLegendVisible.value) {
     hasInteracted = true;
     addFeaturePoints(1);
+
+    umTrackEvent("UI", {
+      name: "Opened level manager legend",
+    });
   }
 };
 
@@ -53,6 +57,10 @@ onMounted(() => {
       levels.value[levels.value.length - 1].pointsNeeded;
     currentFeaturePoints.value =
       features.value[features.value.length - 1].pointsNeeded;
+
+    umTrackEvent("Feature", {
+      name: "Reduced motion",
+    });
   }
 });
 

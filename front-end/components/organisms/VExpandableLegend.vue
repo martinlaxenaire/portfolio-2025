@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+const props = defineProps<{
+  label?: string;
+}>();
+
 const { addFeaturePoints } = useLevelExperience();
 
 const legend = useTemplateRef("legend");
@@ -10,7 +14,13 @@ const toggleLegend = () => {
   if (!hasInteracted && isLegendVisible.value) {
     hasInteracted = true;
     addFeaturePoints(2);
+
+    umTrackEvent("UI", {
+      name: `Opened ${props.label} legend`,
+    });
   }
+
+  console.log(props.label);
 };
 
 const onDocumentClick = (e: MouseEvent) => {

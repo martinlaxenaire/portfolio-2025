@@ -97,7 +97,7 @@ const parsedDescription = computed(() => {
           </div>
         </Transition>
 
-        <VExpandableLegend :class="$style.legend">
+        <VExpandableLegend :class="$style.legend" label="invoices scene">
           <div :class="$style['legend-desc']" v-if="description">
             <!-- @vue-ignore -->
             <SanityContent :blocks="parsedDescription" />

@@ -54,6 +54,10 @@ const toggleInstance = (index = 0) => {
 
   if (!hasToggled) {
     addFeaturePoints(5);
+
+    umTrackEvent("UI", {
+      name: "Used open source filters",
+    });
   }
 
   hasToggled = true;
@@ -122,7 +126,7 @@ const toggleInstance = (index = 0) => {
           @on-complete="onComplete"
         />
 
-        <VExpandableLegend :class="$style.legend">
+        <VExpandableLegend :class="$style.legend" label="open source scene">
           <div :class="$style['legend-description']" v-if="legend">
             <!-- @vue-ignore -->
             <SanityContent :blocks="legend" />
