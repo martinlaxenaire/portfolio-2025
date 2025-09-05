@@ -2,6 +2,7 @@
 import { UIElements } from "~/assets/static-data/ui-elements";
 
 const emit = defineEmits(["onSkipGame"]);
+
 const {
   levels,
   features,

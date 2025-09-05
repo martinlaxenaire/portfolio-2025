@@ -23,10 +23,6 @@ onMounted(async () => {
   const { $gpuCurtains, $hasWebGPU, $isReducedMotion, $debugPane } =
     useNuxtApp();
 
-  if ($isReducedMotion) {
-    sliderProgress.value = 1;
-  }
-
   if ($hasWebGPU && canvas.value) {
     const { WebGPUHeroScene } = await import("~/scenes/hero/WebGPUHeroScene");
 
