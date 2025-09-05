@@ -19,8 +19,6 @@ const toggleLegend = () => {
       name: `Opened ${props.label} legend`,
     });
   }
-
-  console.log(props.label);
 };
 
 const onDocumentClick = (e: MouseEvent) => {
