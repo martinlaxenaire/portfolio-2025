@@ -1,9 +1,6 @@
 <script lang="ts" setup>
 const { currentFeature } = useLevelExperience();
 
-const { $isReducedMotion } = useNuxtApp();
-const isReducedMotion = ref($isReducedMotion);
-
 const header = useTemplateRef("header");
 
 const { isVisible } = useIsVisible(header);
@@ -29,10 +26,7 @@ const { isVisible } = useIsVisible(header);
               :enter-from-class="$style['header-element-enter-from']"
               :leave-to-class="$style['header-element-leave-to']"
             >
-              <div
-                :class="$style.palette"
-                v-if="currentFeature >= 3 || isReducedMotion"
-              >
+              <div :class="$style.palette" v-if="currentFeature >= 3">
                 <VColorPaletteButton />
               </div>
             </Transition>
@@ -44,10 +38,7 @@ const { isVisible } = useIsVisible(header);
               :enter-from-class="$style['header-element-enter-from']"
               :leave-to-class="$style['header-element-leave-to']"
             >
-              <div
-                v-if="currentFeature >= 2 || isReducedMotion"
-                :class="$style['theme-switcher']"
-              >
+              <div v-if="currentFeature >= 2" :class="$style['theme-switcher']">
                 <VThemeSwitcher />
               </div>
             </Transition>
@@ -60,10 +51,7 @@ const { isVisible } = useIsVisible(header);
             :enter-from-class="$style['header-element-enter-from']"
             :leave-to-class="$style['header-element-leave-to']"
           >
-            <div
-              :class="$style['source-code']"
-              v-show="currentFeature >= 1 || isReducedMotion"
-            >
+            <div :class="$style['source-code']" v-show="currentFeature >= 1">
               <VSourceCodeLink />
             </div>
           </Transition>

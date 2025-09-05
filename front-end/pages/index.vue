@@ -59,7 +59,7 @@ if (import.meta.server) {
         id="level-1"
         :inert="currentLevel >= 1 ? false : true"
       >
-        <LazyVIntro hydrate-on-idle :intro="data.intro" />
+        <LazyVIntro :hydrate-after="0" :intro="data.intro" />
 
         <LazyVProjectsList
           hydrate-on-idle

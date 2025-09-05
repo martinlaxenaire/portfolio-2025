@@ -2,6 +2,8 @@
 import { UIElements } from "~/assets/static-data/ui-elements";
 import { useTimeoutFn } from "@vueuse/core";
 
+const { $isReducedMotion } = useNuxtApp();
+
 const {
   levels,
   features,
@@ -44,6 +46,14 @@ const onDocumentClick = (e: MouseEvent) => {
 
 onMounted(() => {
   document.addEventListener("click", onDocumentClick);
+
+  // skip whole game if reduced motion
+  if ($isReducedMotion) {
+    currentLevelPoints.value =
+      levels.value[levels.value.length - 1].pointsNeeded;
+    currentFeaturePoints.value =
+      features.value[features.value.length - 1].pointsNeeded;
+  }
 });
 
 onBeforeUnmount(() => {
