@@ -230,10 +230,6 @@ export class WebGPUInvoicesScene extends WebGPUScene {
       color: this.mainColor,
       shadow: {
         depthTextureSize: new Vec2(256),
-        camera: {
-          near: 0.1,
-          far: 1000,
-        },
       },
     });
 
