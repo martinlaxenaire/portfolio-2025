@@ -86,9 +86,3 @@ body {
   overflow-y: scroll;
   overflow-x: hidden;
 }
-
-// hide piwik popup
-// should not happen anyway
-div[id^="ppms_cm"] {
-  display: none;
-}

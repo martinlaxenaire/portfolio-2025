@@ -3924,7 +3924,7 @@ gopd@^1.2.0:
   resolved "https://registry.yarnpkg.com/gopd/-/gopd-1.2.0.tgz#89f56b8217bdbc8802bd299df6d7f1081d7e51a1"
   integrity sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==
 
-gpu-curtains@^0.12.4:
+gpu-curtains@0.12.14:
   version "0.12.14"
   resolved "https://registry.yarnpkg.com/gpu-curtains/-/gpu-curtains-0.12.14.tgz#58f2bbcb9a4ac3987d2f75b194a1274bb4e5aa52"
   integrity sha512-144GkO4cUXXEY70R0q74wtIaw1af54qVcWzkAcM66htvHDeV0ZBn0lzioCJNppoVLq1GflEUzrsLZ5vzo5AKtA==
