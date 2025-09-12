@@ -95,10 +95,6 @@ export class CanvasOpenSourceScene extends Scene {
     this.contributionsCounts = this.contributions.map((c) => c.count);
     this.activeInstances = this.contributions.map((c, i) => true);
 
-    if (!this.instancesCount) {
-      this.instancesCount = 5_000;
-    }
-
     this.canvas = document.createElement("canvas");
     this.container.appendChild(this.canvas);
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
