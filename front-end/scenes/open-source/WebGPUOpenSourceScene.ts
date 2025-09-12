@@ -185,16 +185,20 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
       },
     });
 
-    //this.instancesCount = 1_000;
-    this.instancesPerContribution = 5;
-    this.instancesCount = this.contributions.reduce(
-      (acc, v) => acc + v.count * this.instancesPerContribution,
+    const contributionsTotal = this.contributions.reduce(
+      (acc, v) => acc + v.count,
       0
     );
 
-    if (!this.instancesCount) {
-      this.instancesCount = 20_000;
-    }
+    const totalTargetCount = 20_000;
+
+    this.instancesPerContribution = Math.ceil(
+      totalTargetCount / contributionsTotal
+    );
+
+    this.instancesCount = !!contributionsTotal
+      ? this.instancesPerContribution * contributionsTotal
+      : totalTargetCount;
 
     this._pointerMoveHandler = this.onPointerMove.bind(this);
 
@@ -281,12 +285,6 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
     super.onRender();
 
     this.mouse.lerped.lerp(this.mouse.current, 0.05);
-
-    // if (this.particlesSystem) {
-    //   this.particlesSystem.rotation.x = this.mouse.lerped.y * Math.PI * 0.25;
-    //   this.particlesSystem.rotation.y =
-    //     Math.PI * 0.75 + this.mouse.lerped.x * Math.PI * 0.25;
-    // }
   }
 
   override setColors(colors: ColorModelBase[]): void {

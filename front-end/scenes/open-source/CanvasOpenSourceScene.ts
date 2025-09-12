@@ -77,11 +77,20 @@ export class CanvasOpenSourceScene extends Scene {
     this.isReducedMotion = isReducedMotion;
     this.contributions = contributions;
 
-    this.instancesPerContribution = 5;
-    this.instancesCount = this.contributions.reduce(
-      (acc, v) => acc + v.count * this.instancesPerContribution,
+    const contributionsTotal = this.contributions.reduce(
+      (acc, v) => acc + v.count,
       0
     );
+
+    const totalTargetCount = 20_000;
+
+    this.instancesPerContribution = Math.ceil(
+      totalTargetCount / contributionsTotal
+    );
+
+    this.instancesCount = !!contributionsTotal
+      ? this.instancesPerContribution * contributionsTotal
+      : totalTargetCount;
 
     this.contributionsCounts = this.contributions.map((c) => c.count);
     this.activeInstances = this.contributions.map((c, i) => true);
