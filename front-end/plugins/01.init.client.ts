@@ -2,7 +2,6 @@ import { gsap } from "gsap";
 import { SplitText } from "gsap/all";
 import { ScrollTrigger } from "gsap/all";
 import { InertiaPlugin } from "gsap/all";
-import { Draggable } from "gsap/all";
 
 export default defineNuxtPlugin({
   name: "init",
@@ -11,7 +10,6 @@ export default defineNuxtPlugin({
     gsap.registerPlugin(SplitText);
     gsap.registerPlugin(ScrollTrigger);
     gsap.registerPlugin(InertiaPlugin);
-    gsap.registerPlugin(Draggable);
 
     gsap.ticker.fps(60);
 
