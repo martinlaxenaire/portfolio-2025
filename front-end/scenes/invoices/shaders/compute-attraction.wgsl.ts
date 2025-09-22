@@ -146,7 +146,7 @@ fn integrateQuaternion(q: vec4f, angularVel: vec3f, dt: f32) -> vec4f {
     angularVelocity *= 0.98;
     // let dq = quaternionFromAngularVelocity(angularVelocity, params.deltaT);
     // let updatedQuat = normalize(quaternionMul(dq, vQuat));
-    let updatedQuat = integrateQuaternion(vQuat, angularVelocity, params.deltaT);;
+    let updatedQuat = integrateQuaternion(vQuat, angularVelocity, params.deltaT);
     
     // Write back      
     particlesB[index].position = vec4(vPos, 0.0);
