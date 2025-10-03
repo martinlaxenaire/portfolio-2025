@@ -2,8 +2,6 @@
 import { CanvasSeparatorScene } from "~/scenes/separator/CanvasSeparatorScene";
 
 const props = defineProps<{
-  startAngle?: number;
-  endAngle?: number;
   invertColors?: boolean;
 }>();
 
@@ -14,7 +12,6 @@ const { isVisible } = useIsVisible(canvas, true, { threshold: 0.25 });
 const { colors } = usePaletteGenerator();
 
 onMounted(async () => {
-  // At this point, data has loaded
   const { $isReducedMotion } = useNuxtApp();
 
   if (canvas.value) {
@@ -24,8 +21,6 @@ onMounted(async () => {
       colors: colors.value,
       isReducedMotion: $isReducedMotion,
       theme: theme.value,
-      startAngle: props.startAngle,
-      endAngle: props.endAngle,
       invertColors: props.invertColors,
     });
 
