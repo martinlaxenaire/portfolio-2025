@@ -66,6 +66,9 @@ export default defineNuxtConfig({
             if (id.includes("gpu-curtains")) {
               return "gpu-curtains";
             }
+            if (id.includes("gsap")) {
+              return "gsap";
+            }
           },
         },
       },
