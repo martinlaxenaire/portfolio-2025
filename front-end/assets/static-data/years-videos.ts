@@ -56,6 +56,9 @@ export const yearsVideos = [
       {
         url: "./videos/2025/martin-laxenaire-2025-gpu-curtains-webgpu-skinning-shadows-720p.webm",
       },
+      {
+        url: "./videos/2025/martin-laxenaire-2025-blackbird-awards-720p.webm",
+      },
     ],
   },
 ];
