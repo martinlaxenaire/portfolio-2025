@@ -836,8 +836,6 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
       },
     });
 
-    console.log(this.renderer)
-
     this.floor.userData.time = 0;
 
     this.floor.parent = floorPivot;
