@@ -1,5 +1,4 @@
-import { GPUCurtains } from "gpu-curtains";
-import type { ComputeMaterial, RenderMaterial } from "gpu-curtains";
+import type { GPUCurtains, ComputeMaterial, RenderMaterial } from "gpu-curtains";
 import { Scene } from "./Scene";
 import type { SceneParams } from "./Scene";
 import { DebugPane } from "./DebugPane";
@@ -178,7 +177,7 @@ export class WebGPUScene extends Scene {
     this.qualityManager.active = this.isVisible && !document.hidden;
   }
 
-  compilteMaterialOnIdle(material: ComputeMaterial | RenderMaterial) {
+  compileMaterialOnIdle(material: ComputeMaterial | RenderMaterial) {
     if (!this.isVisible && "requestIdleCallback" in window) {
       window.requestIdleCallback(() => {
         material.compileMaterial();

@@ -1,6 +1,5 @@
 import { GPUCurtains } from "gpu-curtains";
 import { gsap } from "gsap";
-//import { GPUCurtains } from "~/assets/gpu-curtains/dist/esm";
 
 export default defineNuxtPlugin({
   name: "gpu-curtains",

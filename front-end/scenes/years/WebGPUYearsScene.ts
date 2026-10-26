@@ -339,7 +339,7 @@ export class WebGPUYearsScene extends WebGPUScene {
       ];
     });
 
-    this.compilteMaterialOnIdle(this.backgroundComputePass.material);
+    this.compileMaterialOnIdle(this.backgroundComputePass.material);
   }
 
   createPostProPass() {
@@ -389,7 +389,7 @@ export class WebGPUYearsScene extends WebGPUScene {
         this.renderer.boundingRect.height;
     });
 
-    this.compilteMaterialOnIdle(this.shaderPass.material);
+    this.compileMaterialOnIdle(this.shaderPass.material);
   }
 
   createMediaPlanes() {
@@ -513,7 +513,7 @@ export class WebGPUYearsScene extends WebGPUScene {
             sampler: this.anisotropicSampler,
           });
 
-          this.compilteMaterialOnIdle(yearTitlePlane.plane.material);
+          this.compileMaterialOnIdle(yearTitlePlane.plane.material);
 
           this.titlePlanes.push(yearTitlePlane);
         });

@@ -177,6 +177,10 @@ export class WebGPUInvoicesScene extends WebGPUScene {
       },
     });
 
+    // force storing the main depth texture result
+    // as we'll be using it in our volumetric passes
+    this.renderer.renderPass.setDepthStoreOp('store', true)
+
     this.depthRange = this.renderer.camera.far - this.renderer.camera.near;
     this.depthPosition = -this.renderer.camera.near - 1.25;
 
@@ -449,7 +453,7 @@ export class WebGPUInvoicesScene extends WebGPUScene {
         );
       });
 
-    this.compilteMaterialOnIdle(this.plane.material);
+    this.compileMaterialOnIdle(this.plane.material);
   }
 
   createWrappingBox() {
@@ -466,7 +470,6 @@ export class WebGPUInvoicesScene extends WebGPUScene {
       useCustomScenePassEntry: beforeScenePassEntry,
       material: {
         shading: "Lambert",
-        toneMapping: "Khronos",
         color: this.gridColor,
         alphaCutoff: 0.1,
         fragmentChunks: {
@@ -518,7 +521,7 @@ export class WebGPUInvoicesScene extends WebGPUScene {
       setScale();
     });
 
-    this.compilteMaterialOnIdle(this.wrappingBox.material);
+    this.compileMaterialOnIdle(this.wrappingBox.material);
   }
 
   override onResize() {
@@ -920,7 +923,7 @@ export class WebGPUInvoicesScene extends WebGPUScene {
           getBoxPlanes();
       });
 
-    this.compilteMaterialOnIdle(this.computeAttractionPass.material);
+    this.compileMaterialOnIdle(this.computeAttractionPass.material);
 
     this.instancedGeometry = new SphereGeometry({
       instancesCount: numParticles,
@@ -967,8 +970,6 @@ export class WebGPUInvoicesScene extends WebGPUScene {
       ],
     });
 
-    const toneMapping = "Khronos";
-
     this.normalTexture = new MediaTexture(this.renderer, {
       label: "Normal texture",
       name: "normalTexture",
@@ -999,7 +1000,6 @@ export class WebGPUInvoicesScene extends WebGPUScene {
       //transparent: true,
       material: {
         shading: "PBR",
-        toneMapping,
         additionalVaryings: [
           {
             name: "velocity",
@@ -1051,7 +1051,7 @@ export class WebGPUInvoicesScene extends WebGPUScene {
       this.instancedMesh.scale.set(this.scaleRef);
     });
 
-    this.compilteMaterialOnIdle(this.instancedMesh.material);
+    this.compileMaterialOnIdle(this.instancedMesh.material);
 
     // shadow casting for volumetric lighting
     this.pointLight.shadow.addShadowCastingMesh(this.instancedMesh, {
@@ -1088,7 +1088,7 @@ export class WebGPUInvoicesScene extends WebGPUScene {
             },
             glowPower: {
               type: "f32",
-              value: 0.25,
+              value: 2,
             },
           },
         },
@@ -1100,7 +1100,7 @@ export class WebGPUInvoicesScene extends WebGPUScene {
       this.mainSphere.scale.set(this.scaleRef);
     });
 
-    this.compilteMaterialOnIdle(this.mainSphere.material);
+    this.compileMaterialOnIdle(this.mainSphere.material);
   }
 
   createVolumetric() {
@@ -1136,7 +1136,7 @@ export class WebGPUInvoicesScene extends WebGPUScene {
     });
 
     const frustumSize = new Vec2();
-    this.volumetricDensityFactor = 1.0;
+    this.volumetricDensityFactor = 0.5;
     this.volumetricDensityAttractionFactor = 0.25;
 
     this.blueNoiseTexture = new MediaTexture(this.renderer, {
@@ -1150,7 +1150,6 @@ export class WebGPUInvoicesScene extends WebGPUScene {
     this.volumetricPass = new ShaderPass(this.renderer, {
       label: "Volumetric pass",
       outputTarget: this.volumetricOutputTarget,
-      copyOutputToRenderTexture: true,
       sampleCount: 1,
       depth: false,
       shaders: {
@@ -1237,7 +1236,7 @@ export class WebGPUInvoicesScene extends WebGPUScene {
       })
       .onAfterResize(() => setFrustumSize());
 
-    this.compilteMaterialOnIdle(this.volumetricPass.material);
+    this.compileMaterialOnIdle(this.volumetricPass.material);
 
     // gaussian blur in 2 passes
     this.horizontalGaussianBlurPass = new ShaderPass(this.renderer, {
@@ -1280,7 +1279,7 @@ export class WebGPUInvoicesScene extends WebGPUScene {
       );
     });
 
-    this.compilteMaterialOnIdle(this.horizontalGaussianBlurPass.material);
+    this.compileMaterialOnIdle(this.horizontalGaussianBlurPass.material);
 
     this.verticalGaussianBlurPass = new ShaderPass(this.renderer, {
       label: "Vertical gaussian blur",
@@ -1322,7 +1321,7 @@ export class WebGPUInvoicesScene extends WebGPUScene {
       );
     });
 
-    this.compilteMaterialOnIdle(this.verticalGaussianBlurPass.material);
+    this.compileMaterialOnIdle(this.verticalGaussianBlurPass.material);
 
     this.blendPass = new ShaderPass(this.renderer, {
       label: "Blend pass",
@@ -1344,7 +1343,7 @@ export class WebGPUInvoicesScene extends WebGPUScene {
       },
     });
 
-    this.compilteMaterialOnIdle(this.blendPass.material);
+    this.compileMaterialOnIdle(this.blendPass.material);
   }
 
   override onQualityChange(newQuality: number): void {
