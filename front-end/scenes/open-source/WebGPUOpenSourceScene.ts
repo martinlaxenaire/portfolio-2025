@@ -112,6 +112,11 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
         near: 10,
         far: 5000,
       },
+      // no tone mapping or color space conversion,
+      // particles will handle that in their own shaders
+      hdrRendering: false,
+      toneMapping: false,
+      colorSpace: 'linear'
     });
 
     this.contributions = contributions;
@@ -224,15 +229,14 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
 
     if (this.floor) {
       this.floor.uniforms.params.reflectionStrength.value =
-        this.floorColor.rgb.r > 155 ? 0.75 : 0.1;
+        this.floorColor.rgb.r > 155 ? 0.75 : 0.5;
 
-      this.floor.uniforms.material.color.value = sRGBToLinear(
+      this.floor.uniforms.material.color.value =
         new Vec3(
           this.floorColor.rgb.r,
           this.floorColor.rgb.g,
           this.floorColor.rgb.b
-        ).divideScalar(255)
-      );
+        ).divideScalar(255);
     }
   }
 
@@ -535,13 +539,11 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
           Math.hypot(this.visibleSize.width, this.visibleSize.height);
       });
 
-    this.compilteMaterialOnIdle(this.computePass.material);
+    this.compileMaterialOnIdle(this.computePass.material);
 
     //--------------------
     // RENDERING
     //--------------------
-
-    const toneMapping = "Khronos";
 
     //--------------------
     // PARTICLES
@@ -627,7 +629,6 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
       material: {
         shading: "Lambert",
         color: colors[0],
-        toneMapping,
         // we need an additional 'velocity' varying
         // to pass from the vertex to the fragment shader
         additionalVaryings: [
@@ -646,6 +647,11 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
         },
         fragmentChunks: {
           preliminaryContribution: curlPreliminaryFragmentParticle,
+          // apply tone mapping and sRGB conversion here
+          additionalContribution: /* wgsl */ `
+            outputColor = vec4(KhronosToneMapping(outputColor.rgb), outputColor.a);
+            outputColor = linearTosRGB_4(outputColor);
+          `,
         },
       },
       bindings: [particlesParamsBindings],
@@ -653,7 +659,7 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
 
     this.particlesSystem.position.copy(this.particlesPosition);
 
-    this.compilteMaterialOnIdle(this.particlesSystem.material);
+    this.compileMaterialOnIdle(this.particlesSystem.material);
 
     const scenePassEntry = this.renderer.scene.getObjectRenderPassEntry(
       this.particlesSystem
@@ -796,7 +802,7 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
       ],
       material: {
         shading: "Unlit",
-        toneMapping: false,
+        colorSpace: 'linear',
         color: new Vec3(
           this.floorColor.rgb.r,
           this.floorColor.rgb.g,
@@ -815,7 +821,7 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
           struct: {
             reflectionStrength: {
               type: "f32",
-              value: this.floorColor.rgb.r > 155 ? 0.75 : 0.1,
+              value: this.floorColor.rgb.r > 155 ? 0.75 : 0.5,
             },
             reflectionQuality: {
               type: "f32",
@@ -829,6 +835,8 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
         },
       },
     });
+
+    console.log(this.renderer)
 
     this.floor.userData.time = 0;
 
@@ -855,7 +863,7 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
         );
       });
 
-    this.compilteMaterialOnIdle(this.floor.material);
+    this.compileMaterialOnIdle(this.floor.material);
   }
 
   createPixelPass() {
@@ -926,7 +934,7 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
           this.renderer.boundingRect.width / this.renderer.boundingRect.height;
       });
 
-    this.compilteMaterialOnIdle(this.pingPongPlane.material);
+    this.compileMaterialOnIdle(this.pingPongPlane.material);
 
     this.pixelPass = new ShaderPass(this.renderer, {
       label: "Pixel pass",
@@ -978,7 +986,7 @@ export class WebGPUOpenSourceScene extends WebGPUScene {
       );
     });
 
-    this.compilteMaterialOnIdle(this.pixelPass.material);
+    this.compileMaterialOnIdle(this.pixelPass.material);
   }
 
   toggleParticleInstance(index = 0) {
