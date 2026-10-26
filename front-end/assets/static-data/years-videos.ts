@@ -61,4 +61,15 @@ export const yearsVideos = [
       },
     ],
   },
+  {
+    title: "2026",
+    videos: [
+      {
+        url: "./videos/2026/martin-laxenaire-2026-selective-bloom-720p.webm",
+      },
+      {
+        url: "./videos/2026/martin-laxenaire-2026-gpu-curtains-volumetric-lighting-720p.webm",
+      },
+    ],
+  },
 ];
