@@ -97,7 +97,7 @@ export class MediaPlane {
       domTextures: [this.videoTexture],
     });
 
-    this.yearsScene.compilteMaterialOnIdle(this.plane.material);
+    this.yearsScene.compileMaterialOnIdle(this.plane.material);
 
     // TODO handle play promises?
     this.plane
@@ -124,16 +124,18 @@ export class MediaPlane {
 
       this._videoLoadingTaskId =
         this.renderer.onBeforeCommandEncoderCreation.add(() => {
-          const loadedPercentage =
-            this.video.buffered.end(0) / this.video.duration;
+          if (this.video.buffered.length > 0) {
+            const loadedPercentage =
+              this.video.buffered.end(0) / this.video.duration;
 
-          if (loadedPercentage >= loadedThreshold && !isVideoLoaded) {
-            isVideoLoaded = true;
+            if (loadedPercentage >= loadedThreshold && !isVideoLoaded) {
+              isVideoLoaded = true;
 
-            // remove from tasks queue
-            this.clearVideoLoadingTask();
+              // remove from tasks queue
+              this.clearVideoLoadingTask();
 
-            callback();
+              callback();
+            }
           }
         });
 
